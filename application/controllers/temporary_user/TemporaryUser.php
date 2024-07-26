@@ -33,6 +33,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $this->load->view('temporarystudent/home', $data);
     }
 
+
     public function create()
     {
         $class = $this->Temporary_admission_model->getClass();

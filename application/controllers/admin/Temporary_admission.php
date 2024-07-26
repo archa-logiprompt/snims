@@ -12,7 +12,7 @@ class Temporary_admission extends Admin_Controller
         $this->load->model("live_class_model");
         $this->load->model("temporary_admission_model");
         $this->load->library('form_validation');
-
+        $this->load->model("Temporary_admission_model");
     }
 
     public function index()
@@ -78,7 +78,17 @@ class Temporary_admission extends Admin_Controller
     }
 
 
-
+    public function search()
+    {
+        $this->session->set_userdata('top_menu', 'Student Information');
+        $this->session->set_userdata('sub_menu', 'temporary_admission/search');
+        $data['sessionlist'] = $this->session_model->getsessionlist();
+        $class = $this->Temporary_admission_model->getClass();
+        $data['classlist'] = $class;
+        $this->load->view('layout/header');
+        $this->load->view('student/temporary_admission/search',$data);
+        $this->load->view('layout/footer');
+    }
     private function MakeUserId($length)
     {
         $salt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

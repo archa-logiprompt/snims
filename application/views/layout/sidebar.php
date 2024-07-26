@@ -185,7 +185,7 @@ $centre_id = $admin['centre_id'];
                             if ($this->rbac->hasPrivilege('temp_student_details', 'can_add') && $centre_id == 2) {
                                 ?>
     
-                                    <li class="<?php echo set_Submenu('temporary_admission/index'); ?>"><a href="<?php echo base_url(); ?>admin/temporary_admission/index"><i class="fa fa-angle-double-right"></i>
+                                    <li class="<?php echo set_Submenu('temporary_admission/search'); ?>"><a href="<?php echo base_url(); ?>admin/temporary_admission/search"><i class="fa fa-angle-double-right"></i>
                                             <?php echo "View Temporary Admission Details"; ?></a></li>
     
     
