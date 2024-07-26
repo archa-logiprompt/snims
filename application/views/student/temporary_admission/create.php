@@ -79,6 +79,15 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <select id="session_list" name="session_list" class="form-control">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
                                                 <label for="exampleInputFile"><?php echo "Upload CSV" ?></label>
                                                 <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' />
                                                 </div>

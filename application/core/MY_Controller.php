@@ -110,6 +110,7 @@ class Temporary_Student_Controller extends MY_Controller
         if (!$this->session->userdata('temporary_student')) {
             redirect('site/temporarystudentlogin');
         }
+        
 
         // $this->auth->is_logged_in_user('temp');
     }

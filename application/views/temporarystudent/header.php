@@ -27,7 +27,7 @@
             </ul>
 
             <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-outline-primary me-2">Logout</button>
+                <a  href="<?php echo base_url('site/logout')?>"type="button" class="btn btn-outline-primary me-2">Logout</a>
             </div>
         </header>
     </div>

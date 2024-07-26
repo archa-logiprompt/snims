@@ -165,11 +165,15 @@ class Site extends Public_Controller
     {
         $admin_session = $this->session->userdata('admin');
         $student_session = $this->session->userdata('student');
+        $temporary_session = $this->session->userdata('temporary_student');
+
         $this->auth->logout();
         if ($admin_session) {
             redirect('site/login');
         } else if ($student_session) {
             redirect('site/userlogin');
+        } else if ($temporary_session) {
+            redirect('site/temporarystudentlogin');
         } else {
             redirect('site/userlogin');
         }
@@ -481,7 +485,7 @@ class Site extends Public_Controller
                         $this->load->view('userlogin', $data);
                     }
                 } else {
-                    $data['error_message'] =  'Your account is disabled please contact to administrator';
+                    $data['error_message'] = 'Your account is disabled please contact to administrator';
                     $this->load->view('userlogin', $data);
                 }
             } else {
@@ -494,7 +498,10 @@ class Site extends Public_Controller
     public function temporarystudentlogin()
     {
 
-       
+        if ($this->session->userdata('temporary_student')) {
+            redirect('temporary_user/TemporaryUser');
+        }
+
         $type = $this->input->post("type");
 
 
@@ -562,10 +569,11 @@ class Site extends Public_Controller
         $password = $otp;
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
+        ;
         $msg = urlencode($msg);
         $num = $phone;
-        $api     = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
+        $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
 
         $url = $api;
         $ch = curl_init($url);
@@ -582,7 +590,7 @@ class Site extends Public_Controller
         $salt = "0123456789";
         $len = strlen($salt);
         $makepass = '';
-        mt_srand(10000000 * (float)microtime());
+        mt_srand(10000000 * (float) microtime());
         for ($i = 0; $i < $length; $i++) {
             $makepass .= $salt[mt_rand(0, $len - 1)];
         }

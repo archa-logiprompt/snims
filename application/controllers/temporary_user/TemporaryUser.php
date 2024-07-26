@@ -37,16 +37,30 @@ class TemporaryUser extends Temporary_Student_Controller
     {
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
+       
         $genderList = $this->customlib->getGender();
         $data['genderList'] = $genderList;
         $category = $this->Temporary_admission_model->getcat();
         $data['categorylist'] = $category;
         $feeyear = $this->Temporary_admission_model->getfee();
         $data['feeyearlist'] = $feeyear;
+  
         $sch = $this->Temporary_admission_model->getscholar();
         $data['sch'] = $sch;
-        $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
+        $userdata = $this->session->userdata('temporary_student');
+        
+        $existing_details=$this->Temporary_admission_model->getexistingdetails($userdata['id']);
+        $data['existing_details']=$existing_details;
+
+        $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
+        $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
+
+        $section= $this->Temporary_admission_model->getsections();
+        $data['section']=$section;
+      
+        // var_dump(  $data['getdatafromstudentdetails']);exit;
+        // $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
         $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
@@ -195,7 +209,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
 
             $data = array(
-
+                'user_id'=>$userdata['id'],
                 'admission_no' => $this->input->post('admission_no'),
                 'kuhs_reg' => $this->input->post('kuhs_reg'),
                 'roll_no' => $this->input->post('roll_no'),
@@ -247,7 +261,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 'qualifying_exam' => $this->input->post('qualifying_exam'),
                 'regno' => $this->input->post('regno'),
 
-
+                'previous_school'=>$this->input->post('previous_school'),
                 'monthyear' => $this->input->post('monthyear'),
                 'total_mark' => $this->input->post('total_mark'),
                 'neetrank' => $this->input->post('neetrank'),
@@ -285,7 +299,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 'first_mbbs_max' => $this->input->post('first_mbbs_max'),
                 'first_mbbs_per' => $this->input->post('first_mbbs_per'),
                 'first_mbbs_year' => $this->input->post('first_mbbs_year'),
-
+                'total_markobtained' => $this->input->post('total_markobtained'),
 
                 'second_mbbs_scored' => $this->input->post('second_mbbs_scored'),
                 'second_mbbs_max' => $this->input->post('second_mbbs_max'),
@@ -314,7 +328,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 'neet_chem_mark_obtained' => $this->input->post('neet_chem_mark_obtained'),
                 'neet_bio_mark_biology' => $this->input->post('neet_bio_mark_biology'),
                 'neet_percentile' => $this->input->post('neet_percentile'),
-                'keam_roll_no' => $this->input->post(' keam_roll_no'),
+                'keam_roll_no' => $this->input->post('keam_roll_no'),
                 'kerala_medical_rank' => $this->input->post('kerala_medical_rank'),
                 'seat_type' => $this->input->post('seat_type'),
 
@@ -324,19 +338,15 @@ class TemporaryUser extends Temporary_Student_Controller
                 'ifsc_code' => $this->input->post('ifsc_code'),
                 'samagra_id' => $this->input->post('samagra_id'),
                 'rte' => $this->input->post('rte'),
-                'previous_school' => $this->input->post('previous_school'),
+              
                 'note' => $this->input->post('note'),
                 'scholarship' => $this->input->post('scholarship'),
 
 
-
-
-
-
-
-
             );
+  
             $insert_id = $this->Temporary_admission_model->add($data);
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Student added Successfully</div>');
             redirect('temporary_user/TemporaryUser/create');
         }
