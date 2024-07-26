@@ -27,6 +27,12 @@ class Session_model extends CI_Model {
         
     }
 
+    public function getsessionlist()
+    {
+        $result=$this->db->select('*')->where('centre_id',2)->get('sessions')->result_array();
+  
+        return $result;
+    }
     public function getAllSession() {
 		$admin=$this->session->userdata('admin');
 		

@@ -79,9 +79,13 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <label for="exampleInputEmail1"><?php echo "Sessions" ?></label><small class="req"> *</small>
                                                 <select id="session_list" name="session_list" class="form-control">
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php foreach ($sessionlist as $session) { ?>
+                                                        <option value="<?php echo $session['id'] ?>" <?php if (set_value('class_id') == $session['id']) echo "selected=selected" ?>><?php echo $session['session'] ?></option>
+                                                    <?php $count++;
+                                                    } ?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('section_id'); ?></span>
                                             </div>

@@ -15,6 +15,7 @@ class Temporary_admission_model extends CI_Model
     public function create($data)
     {
         $this->db->insert('temporary_admission', $data);
+   
         // $this->session->set_userdata('sub_menu', 'temporary/create');
     }
 
