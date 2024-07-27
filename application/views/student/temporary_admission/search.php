@@ -23,7 +23,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <form role="form" action="<?php echo site_url('student/search') ?>" method="post" class="">
+                                    <form role="form" action="<?php echo site_url('admin/temporary_admission/search') ?>" method="post" class="">
                                         <?php echo $this->customlib->getCSRF(); ?>
                                         <div class="col-sm-4">
                                             <div class="form-group"> 
@@ -110,20 +110,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
-                                            <th><?php echo $this->lang->line('admission_no'); ?></th>
+                                    
                                             <th><?php echo $this->lang->line('student_name'); ?></th>
                                             <th><?php echo $this->lang->line('class'); ?></th>
-                                             <th>Batch</th>
-                                            <th><?php echo $this->lang->line('father_name'); ?></th>
-                                            <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                             <th><?php echo $this->lang->line('email'); ?></th>
-                                            <th><?php echo $this->lang->line('gender'); ?></th>
-                                           
                                             <th><?php echo $this->lang->line('mobile_no'); ?></th>
 
                                             <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                         </tr>
                                     </thead>
+                                   
+                                   
                                     <tbody>
                                         <?php
                                         if (empty($resultlist)) {
@@ -134,41 +131,48 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <?php
                                         } else {
                                             $count = 1;
+                                           
                                             foreach ($resultlist as $student) {
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo $student['admission_no']; ?></td>
                                                     <td>
                                                         <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
                                                         </a>
                                                     </td>
                                                     <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
-                                                    <td><?php echo $this->setting_model->getCurrentSessionName(); ?></td>
-                                                    <td><?php echo $student['father_name']; ?></td>
-                                                    <td><?php  if($student["dob"] != null){ echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])) ; }?></td>
-                                                    <td><?php echo $student['email']; ?></td>
-                                                    <td><?php echo $student['gender']; ?></td>
                                                     
-                                                    <td><?php echo $student['mobileno']; ?></td>
+                                                   
+                                                   
+                                                    <td><?php echo $student['email']; ?></td>
+                                                   
+                                                    
+                                                    <td><?php echo $student['phone']; ?></td>
 
                                                     <td class="pull-right">
-                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>" >
-                                                            <i class="fa fa-reorder"></i>
-                                                        </a>
-                                                         <?php 
-                                        if ($this->rbac->hasPrivilege('student', 'can_edit')) {
-                                            ?>
-                                                        <a href="<?php echo base_url(); ?>student/edit/<?php echo $student['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                         <?php }
-                                        if ($this->rbac->hasPrivilege('collect_fees', 'can_add')) {
-                                            ?>
-                                                        <a href="<?php echo base_url(); ?>studentfee/addfee/<?php echo $student['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add_fees'); ?>">
-                                                            <?php echo $currency_symbol; ?>
-                                                        </a>
-                                                    <?php } ?>
-                                                    </td>
+
+                                                    <?php $show_button = $student['picked_by'] == $userdata['id'];?>
+
+    <?php if ($show_button): ?>
+    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>">
+        <i class="fa fa-reorder"></i> <?php echo "Show"; ?>
+    </a>
+<?php endif; ?>
+<?php 
+
+$show_pickup = $student['picked_by']; 
+if ($show_pickup==null): ?>
+    <a href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('pickup'); ?>">
+        <i class="fa fa-hand-paper"></i> <?php echo "Pickup"; ?>
+    </a>
+<?php endif; ?>
+
+
+    
+    <button type="button"  onclick="leave(<?php echo $student['current_student_id']?>)" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('leave'); ?>">
+        <i class="fa fa-sign-out"></i> <?php echo "Leave" ?>
+</button>
+</td>
+
                                                 </tr>
                                                 <?php
                                                 $count++;
@@ -308,4 +312,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     });
                                                                 });
                                                             });
+
+
+                                                            function leave(id)
+                                                            {
+                                                                $.ajax({
+                                                                        type: "POST",
+                                                                        url: base_url + "admin/temporary_admission/leave",
+                                                                        data: {'id': id},
+                                                                        success: function (data) {
+                                                                            window.location.reload();
+                                                                        }
+                                                                    });
+                                                            }
                                                         </script>

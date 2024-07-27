@@ -33,6 +33,24 @@ class Temporary_admission_model extends CI_Model
         return ($user_data);
     }
 
+    public function pickupupdate($id, $curuserdata)
+{
+
+    $data = array(
+        'picked_by' => $curuserdata
+    );
+    $this->db->where('id', $id);
+    $this->db->update('temporary_admission', $data);
+    // echo $this->db->last_query();exit;
+
+}
+
+public function pickedbyupdate($id)
+{
+
+    $this->db->where('id',$id);
+    $this->db->update('temporary_admission',['picked_by'=>null]);
+}
     public function getSectionByClass($class_id)
     {
         $result = $this->db->select('section,sections.id as section_id')->join('sections', 'sections.id=class_sections.section_id')->where('class_id', $class_id)->get('class_sections')->result_array();

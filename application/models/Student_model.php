@@ -229,6 +229,22 @@ public function get($id = null)
         return $query->result_array();
     }
 
+    public function searchtemporarystudentadmission($class_id, $section_id, $session_id)
+{
+    $result = $this->db->select('temporary_admission.picked_by,temporary_admission.id as current_student_id,temporary_admission.*,classes.class,sections.section')
+        ->from('temporary_admission')
+        ->where('class_id', $class_id)
+        ->where('section_id', $section_id)
+        ->where('session', $session_id)
+        ->join('classes','classes.id=temporary_admission.class_id')
+        ->join('sections','sections.id=temporary_admission.section_id')
+        ->get()
+        ->result_array(); // Assuming you want to retrieve the result as an array of objects. Adjust as necessary.
+        // echo $this->db->last_query();exit;
+
+    return $result;
+}
+
     public function searchByClassSection($class_id = null, $section_id = null, $subject_id = null)
     {
         $admin = $this->session->userdata('admin');
