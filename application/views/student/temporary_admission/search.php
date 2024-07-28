@@ -153,7 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php $show_button = $student['picked_by'] == $userdata['id'];?>
 
     <?php if ($show_button): ?>
-    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>">
+    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-success btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>">
         <i class="fa fa-reorder"></i> <?php echo "Show"; ?>
     </a>
 <?php endif; ?>
@@ -161,17 +161,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 $show_pickup = $student['picked_by']; 
 if ($show_pickup==null): ?>
-    <a href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('pickup'); ?>">
+    <a href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>" class="btn btn-primary btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('pickup'); ?>">
         <i class="fa fa-hand-paper"></i> <?php echo "Pickup"; ?>
     </a>
 <?php endif; ?>
 
 
-    
-    <button type="button"  onclick="leave(<?php echo $student['current_student_id']?>)" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('leave'); ?>">
+<?php $show_button = $student['picked_by'] == $userdata['id'];?>
+<?php if ($show_button): ?>
+    <button type="button"  onclick="leave(<?php echo $student['current_student_id']?>)" class="btn btn-danger btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('leave'); ?>">
         <i class="fa fa-sign-out"></i> <?php echo "Leave" ?>
 </button>
 </td>
+<?php endif; ?>
 
                                                 </tr>
                                                 <?php
