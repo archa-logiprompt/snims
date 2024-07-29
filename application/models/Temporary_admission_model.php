@@ -44,6 +44,17 @@ class Temporary_admission_model extends CI_Model
     // echo $this->db->last_query();exit;
 
 }
+public function status($id)
+{
+
+    $data = array(
+        'status' => 1
+    );
+    $this->db->where('id', $id);
+    $this->db->update('temporary_admission', $data);
+    // echo $this->db->last_query();exit;
+
+}
 
 public function pickedbyupdate($id)
 {
@@ -119,7 +130,7 @@ public function pickedbyupdate($id)
     }
     public function getstudentdetails($id)
     {
-        $result = $this->db->select('temp_user.*, temporary_admission.*,classes.*,sections.*')
+        $result = $this->db->select('temp_user.*, temporary_admission.*,classes.*,sections.*,temporary_admission.id as uid')
         ->from('temp_user')
         ->join('temporary_admission', 'temporary_admission.id = temp_user.user_id')
         ->join('classes','temp_user.class_id=classes.id')
@@ -141,6 +152,22 @@ public function pickedbyupdate($id)
         // echo $this->db->last_query();exit;
         return $result;
 
+    }
+
+    public function addcomment($data)
+    {
+    
+        $this->db->insert('admission_comment', $data);
+        // echo $this->db->last_query();exit;
+    
+    }
+    public function commentdetails($id) {
+        $res = $this->db->select('*')
+                        ->from('admission_comment')
+                        ->where('stud_id', $id)
+                        ->get()
+                        ->result_array();
+        return $res;
     }
     public function add($data)
 {

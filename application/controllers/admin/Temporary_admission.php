@@ -257,7 +257,10 @@ class Temporary_admission extends Admin_Controller
         $userdata = $this->session->userdata();
         $curuserdata=$userdata['admin'];
         $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
+        $category_list = $this->category_model->get();
+        $data['category_list'] = $category_list;
 
+        $data['commentdetails']=$this->Temporary_admission_model->commentdetails($id);
         $userdata = $this->session->userdata();
         $this->load->view('layout/header', $data);
         $this->load->view('student/temporary_admission/show', $data);
@@ -277,6 +280,47 @@ class Temporary_admission extends Admin_Controller
         $this->load->view('layout/header');
         $this->load->view('student/temporary_admission/search',$data);
         $this->load->view('layout/footer');
+    }
+    public function approve($id)
+    {
+        
+        $userdata = $this->session->userdata();
+        $curuserdata=$userdata['admin'];
+        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
+        $category_list = $this->category_model->get();
+        $data['category_list'] = $category_list;
+        $status=$this->Temporary_admission_model->status($id);
+        
+        $userdata = $this->session->userdata();
+        redirect('admin/temporary_admission/show/'.$id);
+
+    }
+    public function comment($id) {
+    
+
+       
+        $comment = $this->input->post('comment');
+        $userdata = $this->session->userdata('admin');
+        
+        
+        $data = array(
+            'comment' => $comment,
+            'commented_by'=>$userdata['username'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'stud_id'=>$id
+        );
+        
+        
+        $insert_id = $this->Temporary_admission_model->addcomment($data);
+        // var_dump($data);exit;
+       
+
+        redirect('admin/temporary_admission/show/'.$id);
+      
+        // $this->db->where('id', $id);
+        // $update = $this->db->update('temporary_admission', $data);
+
+        
     }
     public function leave()
     {
