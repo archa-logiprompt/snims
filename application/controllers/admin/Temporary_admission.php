@@ -164,6 +164,105 @@ class Temporary_admission extends Admin_Controller
         $this->load->view('layout/footer');
         }
     }
+    // function show($id)
+    // {
+
+
+    //     if (!$this->rbac->hasPrivilege('student', 'can_view')) {
+    //         access_denied();
+    //     }
+
+    //     $data['title'] = 'Student Details';
+    //     $student = $this->student_model->get($id);
+    //     $gradeList = $this->grade_model->get();
+    //     $studentSession = $this->student_model->getStudentSession($id);
+    //     $timeline = $this->timeline_model->getStudentTimeline($id, $status = '');
+    //     $data["timeline_list"] = $timeline;
+
+    //     $student_session_id = $studentSession["student_session_id"];
+
+    //     $student_session = $studentSession["session"];
+    //     // $data["session"] = $student_session;       
+    //     $current_student_session = $this->student_model->get_studentsession($student['student_session_id']);
+
+    //     $data["session"] = $current_student_session["session"];
+    //     $student_due_fee = $this->studentfeemaster_model->getStudentFees($student['id']);
+
+    //     $student_discount_fee = $this->feediscount_model->getStudentFeesDiscount($student['student_session_id']);
+    //     $data['student_discount_fee'] = $student_discount_fee;
+    //     $data['student_due_fee'] = $student_due_fee;
+    //     $siblings = $this->student_model->getMySiblings($student['parent_id'], $student['id']);
+
+    //     $examList = $this->examschedule_model->getExamByClassandSection($student['class_id'], $student['section_id']);
+    //     $data['examSchedule'] = array();
+    //     if (!empty($examList)) {
+    //         $new_array = array();
+    //         foreach ($examList as $ex_key => $ex_value) {
+    //             $array = array();
+    //             $x = array();
+    //             $exam_id = $ex_value['exam_id'];
+    //             $student['id'];
+    //             $exam_subjects = $this->examschedule_model->getresultByStudentandExam($exam_id, $student['id']);
+    //             foreach ($exam_subjects as $key => $value) {
+    //                 $exam_array = array();
+    //                 $exam_array['exam_schedule_id'] = $value['exam_schedule_id'];
+    //                 $exam_array['exam_id'] = $value['exam_id'];
+    //                 $exam_array['full_marks'] = $value['full_marks'];
+    //                 $exam_array['passing_marks'] = $value['passing_marks'];
+    //                 $exam_array['exam_name'] = $value['name'];
+    //                 $exam_array['exam_type'] = $value['type'];
+    //                 $exam_array['attendence'] = $value['attendence'];
+    //                 $exam_array['get_marks'] = $value['get_marks'];
+    //                 $x[] = $exam_array;
+    //             }
+    //             $array['exam_name'] = $ex_value['name'];
+    //             $array['exam_result'] = $x;
+    //             $new_array[] = $array;
+    //         }
+    //         $data['examSchedule'] = $new_array;
+    //     }
+    //     $student_doc = $this->student_model->getstudentdoc($id);
+    //     $data['student_doc'] = $student_doc;
+    //     $data['student_doc_id'] = $id;
+    //     $category_list = $this->category_model->get();
+    //     $data['category_list'] = $category_list;
+    //     $data['gradeList'] = $gradeList;
+    //     $data['student'] = $student;
+    //     $data['siblings'] = $siblings;
+    //     $class_section = $this->student_model->getClassSection($student["class_id"]);
+    //     $data["class_section"] = $class_section;
+    //     $session = $this->setting_model->getCurrentSession();
+
+    //     $studentlistbysection = $this->student_model->getStudentClassSection($student["class_id"], $session);
+    //     $data["studentlistbysection"] = $studentlistbysection; 
+
+    //     // Bottom Tab
+    //     $student_due_fee = $this->studentfeemaster_model->getStudentFees($student['id']);
+    //     $fee_excess = $this->studentfeemaster_model->getFeeexcess($id);
+    //     $data['fee_excess'] = $fee_excess;
+    //     $fee_advance = $this->studentfeemaster_model->getFeeadvance($id);
+    //     $data['fee_advance'] = $fee_advance;
+ 
+    //     $data['excess_balance'] = $this->db->select('amount')->where('student_id', $id)->get('excess_balance')->row()->amount;
+    //     $data['advance_balance'] = $this->db->select('amount')->where('student_id', $id)->get('advance_balance')->row()->amount;
+    //     $data["studentlistbysection"] = $studentlistbysection;
+    //     $this->load->view('layout/header', $data);
+    //     $this->load->view('student/temporary_admission/show', $data);
+    //     $this->load->view('layout/footer', $data);
+    // }
+
+    public function show($id){
+
+      
+        $userdata = $this->session->userdata();
+        $curuserdata=$userdata['admin'];
+        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
+
+        $userdata = $this->session->userdata();
+        $this->load->view('layout/header', $data);
+        $this->load->view('student/temporary_admission/show', $data);
+        $this->load->view('layout/footer', $data);
+    }
     public function pickup($id)
     {
         $userdata = $this->session->userdata();

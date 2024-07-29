@@ -153,7 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php $show_button = $student['picked_by'] == $userdata['id'];?>
 
     <?php if ($show_button): ?>
-    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-success btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>">
+    <a href="<?php echo base_url(); ?>admin/temporary_admission/show/<?php echo $student['id'] ?>" class="btn btn-success btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>">
         <i class="fa fa-reorder"></i> <?php echo "Show"; ?>
     </a>
 <?php endif; ?>

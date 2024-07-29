@@ -117,6 +117,19 @@ public function pickedbyupdate($id)
         $result=$this->db->select('firstname,lastname,email,phone')->where('id',$id)->from('temporary_admission')->get()->row();
         return $result;
     }
+    public function getstudentdetails($id)
+    {
+        $result = $this->db->select('temp_user.*, temporary_admission.*,classes.*,sections.*')
+        ->from('temp_user')
+        ->join('temporary_admission', 'temporary_admission.id = temp_user.user_id')
+        ->join('classes','temp_user.class_id=classes.id')
+        ->join('sections','temp_user.section_id=sections.id')
+        ->where('temp_user.user_id', $id)
+        ->get()
+        ->row_array();
+       
+    return $result;
+    }
     public function getdatafromstudentdetails($id)
     {
         $result = $this->db->select('temp_user.*, temporary_admission.*')
