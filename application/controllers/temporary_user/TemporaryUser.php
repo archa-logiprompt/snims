@@ -230,7 +230,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 // 'firstname' => $this->input->post('firstname'),
                 // 'lastname' => $this->input->post('lastname'),
                 'gender' => $this->input->post('gender'),
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                'dob' =>$this->input->post('dob'),
                 'age' => $this->input->post('age'),
                 'category_id' => $this->input->post('category_id'),
                 'religion' => $this->input->post('religion'),
@@ -239,7 +239,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 // 'email' => $this->input->post('email'),
 
                 'year' => $this->input->post('year'),
-                'admission_date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('admission_date'))),
+                'admission_date' => $this->input->post('admission_date'),
                 // 'file' => $this->input->post('file'),
                 // 'file' => 'uploads/student_images/no_image.png',
                 'blood_group' => $this->input->post('blood_group'),
