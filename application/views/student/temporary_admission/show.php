@@ -88,8 +88,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 // echo "style='background-color:#f0dddd;'";
             } ?>>
                     <div class="box-body box-profile">
-                        <img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails['image'])) {
-                            echo base_url() . $getstudentdetails['image'];
+                        <img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails['file'])) {
+                            echo base_url() . $getstudentdetails['file'];
                         } else {
                             echo base_url() . "uploads/student_images/no_image.png";
                         } ?>" alt="User profile picture">
@@ -476,11 +476,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <tr>
                                             <td><?php echo $this->lang->line('guardian_name'); ?></td>
                                             <td><?php echo $getstudentdetails['guardian_name']; ?></td>
-                                            <td rowspan="3"><img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails["guardian_pic"])) {
-                                                echo base_url() . $getstudentdetails["guardian_pic"];
-                                            } else {
-                                                echo base_url() . "uploads/student_images/no_image.png";
-                                            } ?>"></td>
+                                            
                                         </tr>
                                         <tr>
                                             <td><?php echo $this->lang->line('guardian_email'); ?></td>
