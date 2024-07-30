@@ -13,15 +13,14 @@
             </div>
         </div>
         <div class="row bg-light rounded-bottom shadow p-3 mb-4">
-            <?php if ($this->session->flashdata('msg')) { ?>
-                <?php echo $this->session->flashdata('msg') ?>
+            <?php if ($this->session->flashdata('msg1')) { ?>
+                <?php echo $this->session->flashdata('msg1') ?>
             <?php } ?>
 
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small
-                            class="text-danger"> *</small>
+                        <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label>
                         <input id="firstname" name="firstname" placeholder="" type="text" class="form-control"
                             value="<?php echo $existing_details->firstname ?>" readonly />
                         <span class="text-danger"><?php echo form_error('firstname'); ?></span>
@@ -241,15 +240,22 @@
             </div>
             <div class="row">
 
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputFile"><?php echo $this->lang->line('student'); ?>
-                            <?php echo $this->lang->line('photo'); ?></label>
-                        <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' />
-                        </div>
-                        <span class="text-danger"><?php echo form_error('file'); ?></span>
-                    </div>
-                </div>
+            <div class="col-md-3">
+    <div class="form-group">
+        <label for="exampleInputFile">
+            <?php echo $this->lang->line('student'); ?>
+            <?php echo $this->lang->line('photo'); ?>
+        </label>
+        <div>
+            <?php if (!empty($getdatafromstudentdetails->file)) : ?>
+                <img src="<?php echo base_url($getdatafromstudentdetails->file); ?>" alt="Student's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+            <?php endif; ?>
+            <input class="filestyle form-control" type='file' name='file' id="file" size='20' />
+        </div>
+        <span class="text-danger"><?php echo form_error('file'); ?></span>
+    </div>
+</div>
+
 
                 <div class="col-md-3 col-xs-12">
                     <div class="form-group">
@@ -383,14 +389,21 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputFile"><?php echo $this->lang->line('father'); ?>
-                            <?php echo $this->lang->line('photo'); ?></label>
-                        <div><input class="filestyle form-control" type='file' name='father_pic' id="file" size='20' />
-                        </div>
-                        <span class="text-danger"><?php echo form_error('file'); ?></span>
-                    </div>
-                </div>
+    <div class="form-group">
+        <label for="exampleInputFile">
+            <?php echo $this->lang->line('father'); ?>
+            <?php echo $this->lang->line('photo'); ?>
+        </label>
+        <div>
+            <?php if (!empty($getdatafromstudentdetails->father_pic)) : ?>
+                <img src="<?php echo base_url($getdatafromstudentdetails->father_pic); ?>" alt="Father's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+            <?php endif; ?>
+            <input class="filestyle form-control" type='file' name='father_pic' id="file" size='20' />
+        </div>
+        <span class="text-danger"><?php echo form_error('father_pic'); ?></span>
+    </div>
+</div>
+
             </div>
             <div class="row">
                 <div class="col-md-3">
@@ -417,15 +430,23 @@
                         <span class="text-danger"><?php echo form_error('mother_occupation'); ?></span>
                     </div>
                 </div>
+             
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="exampleInputFile"><?php echo $this->lang->line('mother'); ?>
-                            <?php echo $this->lang->line('photo'); ?></label>
-                        <div><input class="filestyle form-control" type='file' name='mother_pic' id="file" size='20' />
+                        <label for="exampleInputFile">
+                            <?php echo $this->lang->line('mother'); ?>
+                            <?php echo $this->lang->line('photo'); ?>
+                        </label>
+                        <div>
+                            <?php if (!empty($getdatafromstudentdetails->mother_pic)) : ?>
+                                <img src="<?php echo base_url($getdatafromstudentdetails->mother_pic); ?>" alt="Mother's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+                            <?php endif; ?>
+                            <input class="filestyle form-control" type='file' name='mother_pic' id="file" size='20' />
                         </div>
-                        <span class="text-danger"><?php echo form_error('file'); ?></span>
+                        <span class="text-danger"><?php echo form_error('mother_pic'); ?></span>
                     </div>
                 </div>
+
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="exampleInputEmail1">

@@ -28,14 +28,24 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['feeyearlist'] = $feeyear;
         $sch = $this->Temporary_admission_model->getscholar();
         $data['sch'] = $sch;
-
-        $this->load->view('temporarystudent/header');
+        $userdata = $this->session->userdata('temporary_student');
+        $section= $this->Temporary_admission_model->getsections();
+        $data['section']=$section;
+         $data['commentdetails']=$this->Temporary_admission_model->commentdetails($userdata['id']);
+         $existing_details=$this->Temporary_admission_model->getexistingdetails($userdata['id']);
+         $data['existing_details']=$existing_details;
+         $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
+         $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
+ 
+         
+        $this->load->view('temporarystudent/header',$data);
         $this->load->view('temporarystudent/home', $data);
     }
 
 
     public function create()
     {
+       
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
        
@@ -55,6 +65,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
+        $data['commentdetails']=$this->Temporary_admission_model->commentdetails($userdata['id']);
 
         $section= $this->Temporary_admission_model->getsections();
         $data['section']=$section;
@@ -62,7 +73,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // var_dump(  $data['getdatafromstudentdetails']);exit;
         // $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
         $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
 
@@ -208,7 +219,6 @@ class TemporaryUser extends Temporary_Student_Controller
             $this->load->view('temporarystudent/home', $data);
         } else {
 
-
             $data = array(
                 'user_id'=>$userdata['id'],
                 'admission_no' => $this->input->post('admission_no'),
@@ -217,16 +227,16 @@ class TemporaryUser extends Temporary_Student_Controller
                 'class_id' => $this->input->post('class_id'),
                 'section_id' => $this->input->post('section_id'),
                 // 'full_name' => $this->input->post('firstname') . ' ' . $this->input->post('lastname'),
-                'firstname' => $this->input->post('firstname'),
-                'lastname' => $this->input->post('lastname'),
+                // 'firstname' => $this->input->post('firstname'),
+                // 'lastname' => $this->input->post('lastname'),
                 'gender' => $this->input->post('gender'),
                 'dob' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
                 'age' => $this->input->post('age'),
                 'category_id' => $this->input->post('category_id'),
                 'religion' => $this->input->post('religion'),
                 'cast' => $this->input->post('cast'),
-                'mobileno' => $this->input->post('mobileno'),
-                'email' => $this->input->post('email'),
+                // 'mobileno' => $this->input->post('mobileno'),
+                // 'email' => $this->input->post('email'),
 
                 'year' => $this->input->post('year'),
                 'admission_date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('admission_date'))),
@@ -339,17 +349,43 @@ class TemporaryUser extends Temporary_Student_Controller
                 'ifsc_code' => $this->input->post('ifsc_code'),
                 'samagra_id' => $this->input->post('samagra_id'),
                 'rte' => $this->input->post('rte'),
-              
+                // 'file'=>$this->input->post('file'),
+                // 'father_pic'=>$this->input->post('father_pic'),
+                // 'mother_pic'=>$this->input->post('mother_pic'),
+
+
                 'note' => $this->input->post('note'),
                 'scholarship' => $this->input->post('scholarship'),
 
-
             );
-  
+ 
             $insert_id = $this->Temporary_admission_model->add($data);
+     
+            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                $fileInfo = pathinfo($_FILES["file"]["name"]);
+                $img_name = time() . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
+    
+                $this->Temporary_admission_model->add($data_img);
+            }
+            if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
+                $img_name = time() . "father" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'father_pic' => 'uploads/temporary_admission/' . $img_name);
+                $this->Temporary_admission_model->add($data_img);
+            }
+            if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
+                $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
+                $this->Temporary_admission_model->add($data_img);
+            }
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">Student added Successfully</div>');
-            redirect('temporary_user/TemporaryUser/create');
+            $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
+            redirect('temporary_user/TemporaryUser');
         }
     }
 

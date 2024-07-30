@@ -15,7 +15,7 @@ class Temporary_admission_model extends CI_Model
     public function create($data)
     {
         $this->db->insert('temporary_admission', $data);
-   
+
         // $this->session->set_userdata('sub_menu', 'temporary/create');
     }
 
@@ -34,42 +34,43 @@ class Temporary_admission_model extends CI_Model
     }
 
     public function pickupupdate($id, $curuserdata)
-{
+    {
 
-    $data = array(
-        'picked_by' => $curuserdata
-    );
-    $this->db->where('id', $id);
-    $this->db->update('temporary_admission', $data);
-    // echo $this->db->last_query();exit;
+        $data = array(
+            'picked_by' => $curuserdata
+        );
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', $data);
+        // echo $this->db->last_query();exit;
 
-}
-public function status($id)
-{
+    }
+    public function status($id)
+    {
 
-    $data = array(
-        'status' => 1
-    );
-    $this->db->where('id', $id);
-    $this->db->update('temporary_admission', $data);
-    // echo $this->db->last_query();exit;
+        $data = array(
+            'status' => 1
+        );
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', $data);
+        // echo $this->db->last_query();exit;
 
-}
+    }
 
-public function pickedbyupdate($id)
-{
+    public function pickedbyupdate($id)
+    {
 
-    $this->db->where('id',$id);
-    $this->db->update('temporary_admission',['picked_by'=>null]);
-}
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', ['picked_by' => null]);
+    }
     public function getSectionByClass($class_id)
     {
         $result = $this->db->select('section,sections.id as section_id')->join('sections', 'sections.id=class_sections.section_id')->where('class_id', $class_id)->get('class_sections')->result_array();
         echo json_encode($result);
     }
-    
-    public function getscholar($id = null) {
-       
+
+    public function getscholar($id = null)
+    {
+
         $this->db->select()->from('scholarship');
         if ($id != null) {
             $this->db->where('id', $id);
@@ -88,13 +89,15 @@ public function pickedbyupdate($id)
         $result = $this->db->select('class,id')->where('centre_id', 2)->get('classes')->result_array();
         return $result;
     }
-    public function getsections(){
-        $result=$this->db->select('*')->get('sections')->result_array();
-        
+    public function getsections()
+    {
+        $result = $this->db->select('*')->get('sections')->result_array();
+
         return $result;
     }
-    public function getcat($id = null) {
-       
+    public function getcat($id = null)
+    {
+
         $this->db->select()->from('categories');
         if ($id != null) {
             $this->db->where('id', $id);
@@ -108,8 +111,9 @@ public function pickedbyupdate($id)
             return $query->result_array();
         }
     }
-    public function getfee($id = null) {
-       
+    public function getfee($id = null)
+    {
+
         $this->db->select()->from('feeyear');
         if ($id != null) {
             $this->db->where('id', $id);
@@ -125,30 +129,31 @@ public function pickedbyupdate($id)
     }
     public function getexistingdetails($id)
     {
-        $result=$this->db->select('firstname,lastname,email,phone')->where('id',$id)->from('temporary_admission')->get()->row();
+        $result = $this->db->select('firstname,lastname,email,phone')->where('id', $id)->from('temporary_admission')->get()->row();
         return $result;
     }
     public function getstudentdetails($id)
     {
+
         $result = $this->db->select('temp_user.*, temporary_admission.*,classes.*,sections.*,temporary_admission.id as uid')
-        ->from('temp_user')
-        ->join('temporary_admission', 'temporary_admission.id = temp_user.user_id')
-        ->join('classes','temp_user.class_id=classes.id')
-        ->join('sections','temp_user.section_id=sections.id')
-        ->where('temp_user.user_id', $id)
-        ->get()
-        ->row_array();
-       
-    return $result;
+            ->from('temp_user')
+            ->join('temporary_admission', 'temporary_admission.id = temp_user.user_id')
+            ->join('classes', 'temp_user.class_id=classes.id')
+            ->join('sections', 'temp_user.section_id=sections.id')
+            ->where('temp_user.user_id', $id)
+            ->get()
+            ->row_array();
+
+        return $result;
     }
     public function getdatafromstudentdetails($id)
     {
         $result = $this->db->select('temp_user.*, temporary_admission.*')
-                   ->from('temporary_admission')
-                   ->join('temp_user', 'temp_user.user_id = temporary_admission.id', 'left')
-                   ->where('temporary_admission.id', $id)
-                   ->get()
-                   ->row();
+            ->from('temporary_admission')
+            ->join('temp_user', 'temp_user.user_id = temporary_admission.id', 'left')
+            ->where('temporary_admission.id', $id)
+            ->get()
+            ->row();
         // echo $this->db->last_query();exit;
         return $result;
 
@@ -156,37 +161,40 @@ public function pickedbyupdate($id)
 
     public function addcomment($data)
     {
-    
+
         $this->db->insert('admission_comment', $data);
         // echo $this->db->last_query();exit;
-    
+
     }
-    public function commentdetails($id) {
+    public function commentdetails($id)
+    {
         $res = $this->db->select('*')
-                        ->from('admission_comment')
-                        ->where('stud_id', $id)
-                        ->get()
-                        ->result_array();
+            ->from('admission_comment')
+            ->where('stud_id', $id)
+            ->get()
+            ->result_array();
         return $res;
     }
     public function add($data)
-{
-    if (!empty($data) && isset($data['user_id'])) {
-        
-        $this->db->where('user_id', $data['user_id']);
-        $query = $this->db->get('temp_user');
-        
-        if ($query->num_rows() > 0) {
-          
+    {
+        if (!empty($data) && isset($data['user_id'])) {
             $this->db->where('user_id', $data['user_id']);
-            $this->db->update('temp_user', $data);
-        } else {
-            
-            $this->db->insert('temp_user', $data);
+            $query = $this->db->get('temp_user')->row();
+
+            if ($query) {
+                
+                $this->db->where('user_id', $data['user_id']);
+                $this->db->update('temp_user', $data);
+              
+                return $data['user_id'];
+            } else {
+                $this->db->insert('temp_user', $data);
+                return $this->db->insert_id();
+            }
         }
     }
-}
 
-    
+
+
 
 }
