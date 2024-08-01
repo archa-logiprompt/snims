@@ -872,6 +872,16 @@ class CI_Session {
 				: NULL;
 		}
 
+		// if (isset($key))
+		// {
+		// 	return (isset($_SESSION['__ci_vars'], $_SESSION['__ci_vars'][$key], $_SESSION[$key]) && !($_SESSION['__ci_vars'][$key]=='old'))
+		// 		? $_SESSION[$key]
+		// 		: NULL;
+		// 	// return (isset($_SESSION['__ci_vars'], $_SESSION['__ci_vars'][$key], $_SESSION[$key]) && ! is_int($_SESSION['__ci_vars'][$key]))
+		// 	// 	? $_SESSION[$key]
+		// 	// 	: NULL;
+		// }
+
 		$flashdata = array();
 
 		if ( ! empty($_SESSION['__ci_vars']))

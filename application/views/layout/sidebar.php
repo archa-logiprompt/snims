@@ -468,6 +468,18 @@ $centre_id = $admin['centre_id'];
                                         <?php echo $this->lang->line('fees_master'); ?></a></li>
                             <?php
                             }
+                            if ($this->rbac->hasPrivilege('admission_fees_master', 'can_view')) {
+                                ?>
+                                    <li class="<?php echo set_Submenu('admin/feemaster/admission_fees_master'); ?>"><a href="<?php echo base_url(); ?>admin/feemaster/admission_fees_master"><i class="fa fa-angle-double-right"></i>
+                                            <?php echo $this->lang->line('admission_fees_master'); ?>Admission Fees Master</a></li>
+                                <?php
+                                }
+                                if ($this->rbac->hasPrivilege('admission_quota', 'can_view')) {
+                                    ?>
+                                        <li class="<?php echo set_Submenu('admin/feemaster/admission_quota'); ?>"><a href="<?php echo base_url(); ?>admin/feemaster/admission_quota"><i class="fa fa-angle-double-right"></i>
+                                                <?php echo $this->lang->line('admission_quota'); ?>Admission Quota</a></li>
+                                    <?php
+                                    }
                             if ($this->rbac->hasPrivilege('hostel_fee_master', 'can_view')) {
                             ?>
                                 <li class="<?php echo set_Submenu('admin/feemaster/hostelfeemaster'); ?>"><a href="<?php echo base_url(); ?>admin/feemaster/hostelfeemaster"><i class="fa fa-angle-double-right"></i>

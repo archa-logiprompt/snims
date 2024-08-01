@@ -25,7 +25,20 @@ class Feesessiongroup_model extends CI_Model {
             return TRUE;
         }
     }
-	
+	public function admissionfeescheck($fee_group_id,  $feetype)
+    {
+        $this->db->where('fee_groups_id', $fee_group_id);
+        $this->db->where('feetype_id', $feetype);
+        $query = $this->db->get('admissionfees')->row_array(); 
+     
+        return $query;
+    }
+    public function addadmissionfees($data)
+    {
+       
+        $this->db->insert('admissionfees', $data);
+    //    echo $this->db->last_query();exit;
+    }
 	
 	
 
@@ -161,9 +174,18 @@ class Feesessiongroup_model extends CI_Model {
 	
 	
 	
+	public function removeadmissionfees($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('admissionfees');
+      
+    }
 	
-	
-	
+	public function deletequota($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('admision_quota');
+    }
 	
 
     public function remove($id) {

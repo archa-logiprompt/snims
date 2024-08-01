@@ -87,6 +87,103 @@ class Feemaster extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
+    public function admission_quota()
+    {
+        $this->session->set_userdata('top_menu', 'Fees Collection');
+        $this->session->set_userdata('sub_menu', 'admin/feemaster/admission_quota');
+        $data['title'] = 'Feemaster List';
+        $feeyear = $this->feemaster_model->getfeeyear();
+        $data['feeyearlist'] = $feeyear;
+    
+        $class = $this->class_model->get();
+		$data['classlist'] = $class;
+        $admin=$this->session->userdata('admin');
+        $centre_id=$admin['centre_id'];
+        $this->form_validation->set_rules('year', 'Year', 'trim|required|xss_clean'); 
+        $this->form_validation->set_rules('name','Name','is_unique[admision_quota.name]'); 
+        if ($this->form_validation->run() == FALSE) {
+            
+        } 
+        else{
+
+            $result = array(
+                'centre_id'=>$centre_id,
+                'name' => $this->input->post('name'),
+                'year'=>$this->input->post('year'),
+                'class_id'=>$this->input->post('class_id'),
+                'section_id'=>$this->input->post('section_id'),
+                'description' => $this->input->post('description'),
+            );
+        }
+        $this->feegroup_model->addquota($result);
+        $admission_quota = $this->feegroup_model->getquotalist();
+
+        $data['admissionquotalist'] = $admission_quota;
+        
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/feemaster/admissionquota', $data);
+        $this->load->view('layout/footer', $data);
+    }
+
+    public function admission_fees_master()
+    {
+        $this->session->set_userdata('top_menu', 'Fees Collection');
+        $this->session->set_userdata('sub_menu', 'admin/feemaster/admission_fees_master');
+        $data['title'] = 'Feemaster List';
+        $feegroup = $this->feegroup_model->get();
+        $data['feegroupList'] = $feegroup;
+        $feetype = $this->feetype_model->get();
+        $data['feetypeList'] = $feetype;
+        $admission_quota = $this->feegroup_model->getquotalist();
+        $data['admissionquotalist'] = $admission_quota;
+        $admin=$this->session->userdata('admin');
+        $centre_id=$admin['centre_id'];
+        $this->form_validation->set_rules('fee_groups_id', 'Fees Group', 'trim|required|xss_clean'); 
+        $this->form_validation->set_rules('feetype_id', 'Fee Type', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('due_date', 'Due Date', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('amount', 'Amount', 'trim|required|xss_clean');
+        
+        if ($this->form_validation->run() == FALSE) {
+           
+        } 
+        else
+        {
+
+            $fee_group_id=$this->input->post('fee_groups_id');
+            $feetype=$this->input->post('feetype_id');
+
+            $check=$this->feesessiongroup_model->admissionfeescheck( $fee_group_id,  $feetype);
+            if($check)
+            {
+                $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">The combination of Fees Group and Fee Type already exists.</div>');
+            }
+            else
+            {
+                $result=array(
+                        'centre_id'=>$centre_id,
+                        'fee_groups_id' =>  $fee_group_id,
+                        'feetype_id' => $feetype,
+                        'due_date' =>  $this->input->post('due_date'),
+                        'amount' => $this->input->post('amount'),
+                );
+
+                $feegroup_result = $this->feesessiongroup_model->addadmissionfees($result) ;
+                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Admission Fees added successfully</div>');
+            //    return redirect('admin/feemaster/admission_fees_master');
+            }
+            
+        }
+        // var_dump($_SESSION);exit;
+        $admission_quota = $this->feegroup_model->getquotalist();
+        $data['admissionquotalist'] = $admission_quota;
+        $admissionfeeslist = $this->feegroup_model->getadmissionlist();
+        $data['admissionfeeslist'] = $admissionfeeslist;
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/feemaster/admissionfees', $data);
+        $this->load->view('layout/footer', $data);
+       
+    }
     function delete($id) {
         if (!$this->rbac->hasPrivilege('fees_master', 'can_delete')) {
             access_denied();
@@ -101,7 +198,18 @@ class Feemaster extends Admin_Controller {
         $this->feesessiongroup_model->remove($id);
         redirect('admin/feemaster');
     }
+    function deletequota($id)
+    {
+        $data['title'] = 'Fees Master List';
+        $this->feesessiongroup_model->deletequota($id);
+        redirect('admin/feemaster/admission_quota');
+    }
 
+    function deleteadmissionfees($id) {
+        $data['title'] = 'Fees Master List';
+        $this->feesessiongroup_model->removeadmissionfees($id);
+        redirect('admin/feemaster/admission_fees_master');
+    }
     function edit($id) {
         if (!$this->rbac->hasPrivilege('fees_master', 'can_edit')) {
             access_denied();

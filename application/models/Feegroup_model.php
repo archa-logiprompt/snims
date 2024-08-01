@@ -10,6 +10,17 @@ class Feegroup_model extends CI_Model {
         $this->current_session = $this->setting_model->getCurrentSession();
     }
 
+    public function getquotalist()
+    {
+    $res=$this->db->select('admision_quota.*,feeyear.year')->from('admision_quota')->join('feeyear','feeyear.id=admision_quota.year')->get()->result_array();
+    return $res;
+    }
+    public function getadmissionlist()
+    {
+        $result=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->get()->result_array();
+        
+        return $result;
+    }
     public function get($id = null) {
         $admin=$this->session->userdata('admin');
         $centre_id=$admin['centre_id'];
@@ -36,7 +47,7 @@ class Feegroup_model extends CI_Model {
             return $query->row_array();
         } else {
             return $query->result_array();
-        } echo $this->db->last_query();exit;
+        }
     }
 
     /**
@@ -61,6 +72,16 @@ class Feegroup_model extends CI_Model {
             $this->db->update('fee_groups', $data);
         } else {
             $this->db->insert('fee_groups', $data);
+            return $this->db->insert_id();
+        }
+    }
+    public function addquota($data) {
+        if (isset($data['id'])) {
+            $this->db->where('id', $data['id']);
+            $this->db->update('admision_quota', $data);
+        } else {
+            $this->db->insert('admision_quota', $data);
+       
             return $this->db->insert_id();
         }
     }

@@ -50,6 +50,8 @@ class Feemaster extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
+    
+
     function view($id) {
         $data['title'] = 'Fees Master List';
         $feemaster = $this->feemaster_model->get($id);

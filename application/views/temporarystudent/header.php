@@ -43,7 +43,10 @@
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <?php echo $commentCount ?>
                     </span></button>
-
+                  
+                    <?php if ($status['status'] == '1'): ?>
+    <a href="<?php echo base_url('site/logout') ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
+<?php endif; ?>
 
                 <a href="<?php echo base_url('site/logout') ?>" type="button"
                     class="btn btn-outline-primary me-2">Logout</a>

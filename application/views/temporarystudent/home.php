@@ -315,8 +315,27 @@
                         <span class="text-danger"><?php echo form_error('weight'); ?></span>
                     </div>
                 </div>
-
-
+            
+               <div class="col-md-3 col-xs-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1"><?php echo "Admission Quota" ?></label>
+                        <select class="form-control" rows="3" placeholder="" name="quota">
+                        <option value=""><?php echo $this->lang->line('select'); ?></option>
+                            <?php
+                            foreach ($quota as $quotalist) {
+                                ?>
+                                <option value="<?php echo $quotalist['id'] ?>" <?php if ($getdatafromstudentdetails->quota == $quotalist['id'])
+                                       echo "selected=selected" ?>>
+                                    <?php echo $quotalist['name'] ?>
+                                </option>
+                                <?php
+                                $count++;
+                            }
+                            ?>
+                        </select>
+                        <span class="text-danger"><?php echo form_error('quota'); ?></span>
+                    </div>
+                </div>
 
 
                 <div class="col-md-3">

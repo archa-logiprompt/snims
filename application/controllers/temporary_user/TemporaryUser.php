@@ -36,8 +36,9 @@ class TemporaryUser extends Temporary_Student_Controller
          $data['existing_details']=$existing_details;
          $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
          $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
- 
-         
+         $data['status']=$this->Temporary_admission_model->getstatus($userdata['id']);
+         $quota= $this->Temporary_admission_model->getquota();
+         $data['quota']=$quota;
         $this->load->view('temporarystudent/header',$data);
         $this->load->view('temporarystudent/home', $data);
     }
@@ -69,7 +70,10 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $section= $this->Temporary_admission_model->getsections();
         $data['section']=$section;
+        $quota= $this->Temporary_admission_model->getquota();
+        $data['quota']=$quota;
       
+    
         // var_dump(  $data['getdatafromstudentdetails']);exit;
         // $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
@@ -302,7 +306,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
 
 
-
+                'quota'=>$this->input->post('quota'),
 
 
                 'dfs' => $this->input->post('dfs'),
@@ -358,6 +362,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 'scholarship' => $this->input->post('scholarship'),
 
             );
+        
  
             $insert_id = $this->Temporary_admission_model->add($data);
      

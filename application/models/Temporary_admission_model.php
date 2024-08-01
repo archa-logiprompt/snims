@@ -33,6 +33,14 @@ class Temporary_admission_model extends CI_Model
         return ($user_data);
     }
 
+    public function getquota()
+    {
+       
+    $res=$this->db->select('admision_quota.*')->from('admision_quota')->get()->result_array();
+
+    return $res;
+    
+    }
     public function pickupupdate($id, $curuserdata)
     {
 
@@ -56,6 +64,12 @@ class Temporary_admission_model extends CI_Model
 
     }
 
+    public function getstatus($id)
+    {
+         $res =$this->db->select('status')->from('temporary_admission')->where('id',$id)->get()->row_array();
+        
+         return $res;
+    }
     public function pickedbyupdate($id)
     {
 
