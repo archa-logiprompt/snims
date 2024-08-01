@@ -585,9 +585,20 @@ class Site extends Public_Controller
         $http_result = $info['http_code'];
         curl_close($ch);
     }
-    private function generateOTP($length)
+    // private function generateOTP($length)
+    // {
+    //     $salt = "0123456789";
+    //     $len = strlen($salt);
+    //     $makepass = '';
+    //     mt_srand(10000000 * (float) microtime());
+    //     for ($i = 0; $i < $length; $i++) {
+    //         $makepass .= $salt[mt_rand(0, $len - 1)];
+    //     }
+    //     return $makepass;
+    // }
+   private function generateOTP($length)
     {
-        $salt = "0123456789";
+        $salt = "0";
         $len = strlen($salt);
         $makepass = '';
         mt_srand(10000000 * (float) microtime());
@@ -596,4 +607,6 @@ class Site extends Public_Controller
         }
         return $makepass;
     }
+    
+
 }

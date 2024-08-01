@@ -1467,6 +1467,79 @@
         </div>
         <div class="row bg-secondary rounded-top p-3">
             <div class="text-white p-2 text-center text-md-start">
+                <span class="fw-bold "><?php echo "Upload Documents"; ?></span>
+            </div>
+        </div>
+        <div class="row bg-light rounded-bottom shadow p-3 mb-4">
+
+            <div class="row">
+            <div class="col-md-4">
+    <div class="form-group">
+        <label for="tenth_doc"><?php echo "Upload 10th Certificate"; ?></label>
+        
+        <?php if (!empty($getdatafromstudentdetails->tenth_doc)) : ?>
+            <div style="margin-bottom: 10px;">
+                <?php 
+                $file_path = base_url( $getdatafromstudentdetails->tenth_doc);
+                $file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
+                
+                // Display the file based on its type
+                if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                    <img src="<?php echo $file_path; ?>" alt="10th Certificate" class="img-thumbnail" style="max-width: 100%; height: auto;">
+                <?php else : ?>
+                    <a href="<?php echo $file_path; ?>" download>Download Uploaded Document</a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <input id="tenth_doc" name="tenth_doc" type="file" class="form-control" />
+        <span class="text-danger"><?php echo form_error('tenth_doc'); ?></span>
+    </div>
+</div>
+
+                <div class="col-md-4">
+                <div class="form-group">
+        <label for="twelth_doc"><?php echo "Upload 10th Certificate"; ?></label>
+        
+        <?php if (!empty($getdatafromstudentdetails->twelth_doc)) : ?>
+            <div style="margin-bottom: 10px;">
+                <?php 
+                $file_path = base_url( $getdatafromstudentdetails->twelth_doc);
+                $file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
+                
+                // Display the file based on its type
+                if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
+                    <img src="<?php echo $file_path; ?>" alt="10th Certificate" class="img-thumbnail" style="max-width: 100%; height: auto;">
+                <?php else : ?>
+                    <a href="<?php echo $file_path; ?>" download>Download Uploaded Document</a>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
+        <input id="twelth_doc" name="twelth_doc" type="file" class="form-control" />
+        <span class="text-danger"><?php echo form_error('twelth_doc'); ?></span>
+    </div>
+                </div>
+               
+            </div>
+
+            <div class="row around10">
+
+                <!-- <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">
+                            <?php echo $this->lang->line('local_identification_no'); ?>
+                        </label>
+                        <input id="samagra_id" name="samagra_id" placeholder="" type="text" class="form-control"
+                            value="<?php echo set_value('samagra_id'); ?>" />
+                        <span class="text-danger"><?php echo form_error('samagra_id'); ?></span>
+                    </div>
+                </div> -->
+
+            </div>
+        </div>
+        <div class="row bg-secondary rounded-top p-3">
+            <div class="text-white p-2 text-center text-md-start">
                 <span class="fw-bold "><?php echo "BANK ACCOUNT DETAILS"; ?></span>
             </div>
         </div>
@@ -1560,7 +1633,6 @@
             </div>
 
         </div>
-
 
 </div>
 

@@ -384,6 +384,20 @@ class TemporaryUser extends Temporary_Student_Controller
                 $this->Temporary_admission_model->add($data_img);
             }
 
+            if (isset($_FILES["tenth_doc"]) && !empty($_FILES['tenth_doc']['name'])) {
+                $fileInfo = pathinfo($_FILES["tenth_doc"]["name"]);
+                $img_name = time() . "10th" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["tenth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'tenth_doc' => 'uploads/temporary_admission/' . $img_name);
+                $this->Temporary_admission_model->add($data_img);
+            }
+            if (isset($_FILES["twelth_doc"]) && !empty($_FILES['twelth_doc']['name'])) {
+                $fileInfo = pathinfo($_FILES["twelth_doc"]["name"]);
+                $img_name = time() . "12th" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["twelth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'twelth_doc' => 'uploads/temporary_admission/' . $img_name);
+                $this->Temporary_admission_model->add($data_img);
+            }
             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
             redirect('temporary_user/TemporaryUser');
         }
