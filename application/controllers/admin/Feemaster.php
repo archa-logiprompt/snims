@@ -86,6 +86,51 @@ class Feemaster extends Admin_Controller {
         $this->load->view('admin/feemaster/feemasterList', $data);
         $this->load->view('layout/footer', $data);
     }
+    public function editquota($id)
+    {
+       
+        $this->session->set_userdata('top_menu', 'Fees Collection');
+        $this->session->set_userdata('sub_menu', 'admin/feemaster/admission_quota');
+        $data['title'] = 'Feemaster List';
+        $feeyear = $this->feemaster_model->getfeeyear();
+        $data['feeyearlist'] = $feeyear;
+    
+        $class = $this->class_model->get();
+		$data['classlist'] = $class;
+        $admin=$this->session->userdata('admin');
+        $centre_id=$admin['centre_id'];
+        $admission_quota_id = $this->feegroup_model->getquotalistbasedonid($id);
+        $data['admission_quota_id']=$admission_quota_id;
+        $data['id'] = $id;
+       
+        $this->form_validation->set_rules('year', 'Year', 'trim|required|xss_clean'); 
+        $this->form_validation->set_rules('name','Name','is_unique[admision_quota.name]'); 
+        if ($this->form_validation->run() == FALSE) {
+            
+        } 
+        else{
+
+            $result = array(
+                'centre_id'=>$centre_id,
+                'name' => $this->input->post('name'),
+                'year'=>$this->input->post('year'),
+                'id' => $id,
+                'class_id'=>$this->input->post('class_id'),
+                'section_id'=>$this->input->post('section_id'),
+                'description' => $this->input->post('description'),
+            );
+        }
+        
+    
+        $this->feegroup_model->addquota($result);
+        $admission_quota = $this->feegroup_model->getquotalist();
+    
+        $data['admissionquotalist'] = $admission_quota;
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/feemaster/editadmissionquota', $data);
+        $this->load->view('layout/footer', $data);
+
+    }
 
     public function admission_quota()
     {
@@ -110,6 +155,7 @@ class Feemaster extends Admin_Controller {
                 'centre_id'=>$centre_id,
                 'name' => $this->input->post('name'),
                 'year'=>$this->input->post('year'),
+                
                 'class_id'=>$this->input->post('class_id'),
                 'section_id'=>$this->input->post('section_id'),
                 'description' => $this->input->post('description'),
@@ -163,6 +209,7 @@ class Feemaster extends Admin_Controller {
                         'centre_id'=>$centre_id,
                         'fee_groups_id' =>  $fee_group_id,
                         'feetype_id' => $feetype,
+                        
                         'due_date' =>  $this->input->post('due_date'),
                         'amount' => $this->input->post('amount'),
                 );
