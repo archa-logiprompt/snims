@@ -28,7 +28,7 @@ class Feesessiongroup_model extends CI_Model {
 	public function admissionfeescheck($fee_group_id,  $feetype)
     {
         $this->db->where('fee_groups_id', $fee_group_id);
-        $this->db->where('feetype_id', $feetype);
+        // $this->db->where('feetype_id', $feetype);
         $query = $this->db->get('admissionfees')->row_array(); 
      
         return $query;
@@ -36,7 +36,15 @@ class Feesessiongroup_model extends CI_Model {
     public function addadmissionfees($data)
     {
        
-        $this->db->insert('admissionfees', $data);
+        // $this->db->insert('admissionfees', $data);
+        if (isset($data['id'])) {
+            $this->db->where('id', $data['id']);
+            $this->db->update('admissionfees', $data);
+            // echo $this->db->last_query();exit;
+        } else {
+            $this->db->insert('admissionfees', $data);
+            return $this->db->insert_id();
+        }
     //    echo $this->db->last_query();exit;
     }
 	

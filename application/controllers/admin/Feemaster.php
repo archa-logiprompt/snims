@@ -171,6 +171,62 @@ class Feemaster extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
+    public function editadmissionfees($id)
+    {
+        $this->session->set_userdata('top_menu', 'Fees Collection');
+        $this->session->set_userdata('sub_menu', 'admin/feemaster/admission_fees_master');
+        $data['title'] = 'Feemaster List';
+        $feegroup = $this->feegroup_model->get();
+        $data['feegroupList'] = $feegroup;
+        $feetype = $this->feetype_model->get();
+        $data['feetypeList'] = $feetype;
+        $admission_quota = $this->feegroup_model->getquotalist();
+        $data['admissionquotalist'] = $admission_quota;
+        $admin=$this->session->userdata('admin');
+        $centre_id=$admin['centre_id'];
+        $data['id']=$id;
+        $editadmissionfeelist = $this->feegroup_model->getadmissionlisttoedit($id);
+        $data['editadmissionfeelist'] = $editadmissionfeelist;
+        $this->form_validation->set_rules('fee_groups_id', 'Fees Group', 'trim|required|xss_clean'); 
+        // $this->form_validation->set_rules('feetype_id', 'Fee Type', 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('due_date', 'Due Date', 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('amount', 'Amount', 'trim|required|xss_clean');
+        
+        if ($this->form_validation->run() == FALSE) {
+            
+        } 
+        else
+        {
+
+
+            
+            
+            
+                $result=array(
+                        'centre_id'=>$centre_id,
+                        'fee_groups_id' =>$this->input->post('fee_groups_id'),
+                        'feetype_id' => $this->input->post('feetype_id'),
+                        'id'=>$this->input->post('id'),
+                        'due_date' =>  $this->input->post('due_date'),
+                        'amount' => $this->input->post('amount'),
+                );
+                $feegroup_result = $this->feesessiongroup_model->addadmissionfees($result) ;
+                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Admission Fees added successfully</div>');
+            //    return redirect('admin/feemaster/admission_fees_master');
+            
+            
+        }
+        // var_dump($_SESSION);exit;
+        $admission_quota = $this->feegroup_model->getquotalist();
+        $data['admissionquotalist'] = $admission_quota;
+        $admissionfeeslist = $this->feegroup_model->getadmissionlist();
+        $data['admissionfeeslist'] = $admissionfeeslist;
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/feemaster/editadmissionfees', $data);
+        $this->load->view('layout/footer', $data);
+       
+    }
     public function admission_fees_master()
     {
         $this->session->set_userdata('top_menu', 'Fees Collection');

@@ -32,7 +32,8 @@
                         <div class="box-header with-border">
                             <h3 class="box-title"><?php echo "Add Admission fees" . " : " . $this->setting_model->getCurrentSessionName(); ?></h3>
                         </div><!-- /.box-header -->
-                        <form id="form1" action="<?php echo base_url() ?>admin/feemaster/admission_fees_master"  id="feemasterform" name="feemasterform" method="post" accept-charset="utf-8">
+                        <form action="<?php echo site_url("admin/feemaster/editadmissionfees/" . $id) ?>"  id="employeeform" name="employeeform" method="post" accept-charset="utf-8">
+
                             <div class="box-body">
                                 <?php if ($this->session->flashdata('msg')) { ?>
                                     <?php echo $this->session->flashdata('msg') ?>
@@ -70,6 +71,7 @@
                                         </div>
 -->
 
+                                    <input name="id" type="hidden" class="form-control"  value="<?php echo set_value('id', $editadmissionfeelist['aid']); ?>" />
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('fees_group'); ?></label> <small class="req">*</small>
@@ -78,17 +80,12 @@
                                                 <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                 <?php
                                                 foreach ($admissionquotalist as $feegroup) {
-													
                                                     ?>
-                                                    
-                                                  
-                                                    
                                                     <option value="<?php echo $feegroup['id'] ?>"<?php
-                                                    if (set_value('fee_groups_id') == $feegroup['id']) {
+                                                    if (set_value('fee_groups_id',$editadmissionfeelist['fee_groups_id']) == $feegroup['id']) {
                                                         echo "selected =selected";
                                                     }
-													
-                                                    ?>><?php echo $feegroup['name'].' [ '. $feegroup['year'].' ] '; ?></option>
+                                                    ?>><?php echo $feegroup['name'] ?></option>
 
                                                     <?php
                                                     $count++;
@@ -101,13 +98,13 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('fees_type'); ?></label><small class="req"> *</small>
 
-                                            <select  id="feetype_id" name="feetype_id" class="form-control" >
+                                            <select autofocus="" id="feetype_id" name="feetype_id" class="form-control" >
                                                 <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                 <?php
                                                 foreach ($feetypeList as $feetype) {
                                                     ?>
                                                     <option value="<?php echo $feetype['id'] ?>"<?php
-                                                    if (set_value('feetype_id') == $feetype['id']) {
+                                                    if (set_value('feetype_id',$editadmissionfeelist['feetype_id']) == $feetype['id']) {
                                                         echo "selected =selected";
                                                     }
                                                     ?>><?php echo $feetype['type'] ?></option>
@@ -123,28 +120,16 @@
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('due_date'); ?></label>
-                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control"  value="<?php echo set_value('due_date'); ?>" readonly="readonly"/>
+                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control"  value="<?php echo $editadmissionfeelist['due_date']?>" readonly="readonly"/>
                                             <span class="text-danger"><?php echo form_error('due_date'); ?></span>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('amount'); ?></label><small class="req"> *</small>
-                                            <input id="amount" name="amount" placeholder="" type="text" class="form-control"  value="<?php echo set_value('amount'); ?>" />
+                                            <input id="amount" name="amount" placeholder="" type="text" class="form-control"  value="<?php echo $editadmissionfeelist['amount'] ?>" />
                                             <span class="text-danger"><?php echo form_error('amount'); ?></span>
                                         </div>
-                                        <!-- <div class="form-group">
-                                        <div  class="col-md-12 col-sm-12 img_div_modal minh45">
-                                        
-                                                <label><?php echo $this->lang->line('Add_fine'); ?> </label>
-                                                <div class="material-switch switchcheck">
-                                               <input id="enable_student_img" name="is_active_student_img" type="checkbox" class="chk" value="1" onclick="valueChanged()">
-                                               
-                                                    <label for="enable_student_img" class="label-success"></label>
-                                                </div>
-                                        
-                                        </div>
-                                        </div>
-                                         -->
+                                       
                                         
                                        
                                         <div id="fineid" hidden>

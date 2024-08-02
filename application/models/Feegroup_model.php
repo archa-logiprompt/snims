@@ -21,6 +21,12 @@ class Feegroup_model extends CI_Model {
         // echo $this->db->last_query();exit;
     return $res;
     }
+    public function getadmissionlisttoedit($id)
+    {
+        $result=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->where('admissionfees.id',$id)->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->get()->row_array();
+        // echo $this->db->last_query();exit;
+return $result;
+    }
     public function getadmissionlist()
     {
         $result=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->get()->result_array();
