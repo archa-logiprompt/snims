@@ -28,7 +28,7 @@ class Feesessiongroup_model extends CI_Model {
 	public function admissionfeescheck($fee_group_id,  $feetype)
     {
         $this->db->where('fee_groups_id', $fee_group_id);
-        // $this->db->where('feetype_id', $feetype);
+        $this->db->where('feetype_id', $feetype);
         $query = $this->db->get('admissionfees')->row_array(); 
      
         return $query;

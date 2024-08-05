@@ -29,51 +29,119 @@ class TemporaryUser extends Temporary_Student_Controller
         $sch = $this->Temporary_admission_model->getscholar();
         $data['sch'] = $sch;
         $userdata = $this->session->userdata('temporary_student');
-        $section= $this->Temporary_admission_model->getsections();
-        $data['section']=$section;
-         $data['commentdetails']=$this->Temporary_admission_model->commentdetails($userdata['id']);
-         $existing_details=$this->Temporary_admission_model->getexistingdetails($userdata['id']);
-         $data['existing_details']=$existing_details;
-         $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
-         $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
-         $data['status']=$this->Temporary_admission_model->getstatus($userdata['id']);
-         $quota= $this->Temporary_admission_model->getquota();
-         $data['quota']=$quota;
-        $this->load->view('temporarystudent/header',$data);
+        $data['userdata'] = $userdata;
+        $section = $this->Temporary_admission_model->getsections();
+        $data['section'] = $section;
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
+        $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
+        $data['existing_details'] = $existing_details;
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
+        $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+        $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
+        $quota = $this->Temporary_admission_model->getquota();
+        $data['quota'] = $quota;
+        $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/home', $data);
     }
 
 
+    public function payment()
+    {
+        $this->session->set_userdata('top_menu', 'Library');
+        $this->session->set_userdata('sub_menu', 'book/index');
+        $data = array();
+        $data['params'] = $this->session->userdata('params');
+        $data['setting'] = $this->setting;
+        $userdata = $this->session->userdata('temporary_student');
+
+
+        $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
+        $data['categoryamount'] = $categoryamount;
+        //    var_dump( $data['categoryamount']);exit;
+        $this->load->view('parent/nttdata', $data);
+
+    }
+
+
+    public function worldline()
+    {
+        $admin_data = file_get_contents("./worldline_AdminData.json");
+        $mer_array = json_decode($admin_data, true);
+
+        $val = $_POST;
+
+       
+        $userdata = $this->session->userdata('temporary_student');
+        $student_id = $userdata['id'];
+        $student_details = $this->db->select('firstname,lastname')->where('id', $student_id)->get('temporary_admission')->row();
+
+
+        $details = array(
+            'amount' => $val['amount'],
+            'date' => date('Y-m-d'),
+            'amount_discount' => 0,
+            'description' => "Online fees deposit through WorldLine TXN ID: " . $val['txn_id'],
+            'payment_mode' => 'WorldLine',
+            'temporary_student_id' => $student_id
+        );
+
+
+        
+
+        $send = array(
+            'details' => json_encode($details),
+            'transaction_id' => $val['txn_id']
+        );
+
+        $this->db->insert('admission_payment_session', $send);
+        if ($mer_array['typeOfPayment'] == "TEST") {
+            $finalAmount = 1;
+        }
+        if ($mer_array['enableEmandate'] == 1 && $mer_array['enableSIDetailsAtMerchantEnd'] == 1) {
+            $val['debitStartDate'] = date("d-m-Y");
+            $val['debitEndDate'] = date("d-m-Y", strtotime($val['debitEndDate']));
+        }
+        $datastring = $val['mrctCode'] . "|" . $val['txn_id'] . "|" . $val['amount'] . "|" . $val['accNo'] . "|" . $val['custID'] . "|" . $val['mobNo'] . "|" . $val['email'] . "|" . $val['debitStartDate'] . "|" . $val['debitEndDate'] . "|" . $val['maxAmount'] . "|" . $val['amountType'] . "|" . $val['frequency'] . "|" . $val['cardNumber'] . "|" . $val['expMonth'] . "|" . $val['expYear'] . "|" . $val['cvvCode'] . "|" . '3976262521OAOQBJ';
+        // 3976262521OAOQBJ test
+        // 9089678839PDEWYP live
+        $hashed = hash('sha512', $datastring);
+
+        $data = array("hash" => $hashed, "data" => array($val['mrctCode'], $val['txn_id'], $val['amount'], "", "", "", "", "", $val['custID'], "", "", "", base_url("site/successadmissionpayment"),"", $val['scheme'], $val['currency'], "", "", ""));
+
+
+        echo json_encode($data);
+    }
+
     public function create()
     {
-       
+
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
-       
+
         $genderList = $this->customlib->getGender();
         $data['genderList'] = $genderList;
         $category = $this->Temporary_admission_model->getcat();
         $data['categorylist'] = $category;
         $feeyear = $this->Temporary_admission_model->getfee();
         $data['feeyearlist'] = $feeyear;
-  
+
         $sch = $this->Temporary_admission_model->getscholar();
         $data['sch'] = $sch;
         $userdata = $this->session->userdata('temporary_student');
-        
-        $existing_details=$this->Temporary_admission_model->getexistingdetails($userdata['id']);
-        $data['existing_details']=$existing_details;
 
-        $getdatafromstudentdetails=$this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
-        $data['getdatafromstudentdetails']= $getdatafromstudentdetails;
-        $data['commentdetails']=$this->Temporary_admission_model->commentdetails($userdata['id']);
+        $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
+        $data['existing_details'] = $existing_details;
 
-        $section= $this->Temporary_admission_model->getsections();
-        $data['section']=$section;
-        $quota= $this->Temporary_admission_model->getquota();
-        $data['quota']=$quota;
-      
-    
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
+        $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
+
+        $section = $this->Temporary_admission_model->getsections();
+        $data['section'] = $section;
+        $quota = $this->Temporary_admission_model->getquota();
+        $data['quota'] = $quota;
+
+
         // var_dump(  $data['getdatafromstudentdetails']);exit;
         // $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
@@ -224,7 +292,7 @@ class TemporaryUser extends Temporary_Student_Controller
         } else {
 
             $data = array(
-                'user_id'=>$userdata['id'],
+                'user_id' => $userdata['id'],
                 'admission_no' => $this->input->post('admission_no'),
                 'kuhs_reg' => $this->input->post('kuhs_reg'),
                 'roll_no' => $this->input->post('roll_no'),
@@ -234,7 +302,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 // 'firstname' => $this->input->post('firstname'),
                 // 'lastname' => $this->input->post('lastname'),
                 'gender' => $this->input->post('gender'),
-                'dob' =>$this->input->post('dob'),
+                'dob' => $this->input->post('dob'),
                 'age' => $this->input->post('age'),
                 'category_id' => $this->input->post('category_id'),
                 'religion' => $this->input->post('religion'),
@@ -276,7 +344,7 @@ class TemporaryUser extends Temporary_Student_Controller
                 'qualifying_exam' => $this->input->post('qualifying_exam'),
                 'regno' => $this->input->post('regno'),
 
-                'previous_school'=>$this->input->post('previous_school'),
+                'previous_school' => $this->input->post('previous_school'),
                 'monthyear' => $this->input->post('monthyear'),
                 'total_mark' => $this->input->post('total_mark'),
                 'neetrank' => $this->input->post('neetrank'),
@@ -306,7 +374,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
 
 
-                'quota'=>$this->input->post('quota'),
+                'quota' => $this->input->post('quota'),
 
 
                 'dfs' => $this->input->post('dfs'),
@@ -362,16 +430,16 @@ class TemporaryUser extends Temporary_Student_Controller
                 'scholarship' => $this->input->post('scholarship'),
 
             );
-        
- 
+
+
             $insert_id = $this->Temporary_admission_model->add($data);
-     
+
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = time() . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
                 $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
-    
+
                 $this->Temporary_admission_model->add($data_img);
             }
             if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {

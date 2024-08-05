@@ -215,41 +215,49 @@
                                     <tr>
                                         <th><?php echo "Admission Quota"; ?></th>
                                         <th><?php echo "Amount" ?></th>
-                                        <th><?php echo "Fees Type"?></th>
-                                        <th><?php echo "Due Date"?></th>
-                                        <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
+                                      
+                                      
+                                       
                                     </tr>
                                 </thead>
                          
                                 <tbody>
                                     <?php 
-                                    foreach ($admissionfeeslist as $feegroup) {
+                                       foreach ($admissionfeeslist as $index => $feegroup) {
                                         ?>
                                         <tr>
-                                            <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup['name'] ?></a>
+                                        <td class="mailbox-name">
+                                                <a href="#" data-toggle="popover"
+                                                    class="detail_popover"><?php echo $feegroup['name'] ?></a>
 
-
+ 
                                             </td>
-                                            <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup['amount'] ?></a>
-
-
-                                            </td>
-                                            <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup['type'] ?></a>
-
-
-                                            </td>
-                                            <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup['due_date'] ?></a>
+                                            <td>
+                                                <?php foreach ($arr[$index] as $key => $array) {
+                                                    echo $array['type'] . "-" . $array['amount'] ?>
+                                                    
+                                                    <a href="<?php echo base_url(); ?>admin/feemaster/editadmissionfees/<?php echo $array['aid'] ?>"
+                                                        class="btn btn-default btn-xs" data-toggle="tooltip"
+                                                        title="<?php echo $this->lang->line('edit'); ?>">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                    <a href="<?php echo base_url(); ?>admin/feemaster/deleteadmissionfees/<?php echo $array['aid'] ?>"
+                                                        class="btn btn-default btn-xs" data-toggle="tooltip"
+                                                        title="<?php echo $this->lang->line('delete'); ?>"
+                                                        onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+                                                    <br>
+                                                    <?php
+                                                }
+                                                ?>
                                             </td>
 
 
                                         
                                             
                                           
-                                            <td class="mailbox-date pull-right">
+                                            <!-- <td class="mailbox-date pull-right">
                                             <?php
                                                 if ($this->rbac->hasPrivilege('fees_group', 'can_edit')) {
                                                     ?>
@@ -264,7 +272,7 @@
                                                     </a>
     <?php } ?>
 
-                                            </td>
+                                            </td> -->
                                         </tr>
                                         <?php
                                     }

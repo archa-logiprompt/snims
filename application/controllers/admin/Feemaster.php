@@ -221,6 +221,14 @@ class Feemaster extends Admin_Controller {
         $data['admissionquotalist'] = $admission_quota;
         $admissionfeeslist = $this->feegroup_model->getadmissionlist();
         $data['admissionfeeslist'] = $admissionfeeslist;
+        $arr=array();
+        foreach($admissionfeeslist as $key=>$value)
+        {
+            $arr[$key]=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->where('admision_quota.id',$value['id'])->get()->result_array();
+           
+            
+        }
+        $data['arr']= $arr;
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feemaster/editadmissionfees', $data);
@@ -281,7 +289,15 @@ class Feemaster extends Admin_Controller {
         $data['admissionquotalist'] = $admission_quota;
         $admissionfeeslist = $this->feegroup_model->getadmissionlist();
         $data['admissionfeeslist'] = $admissionfeeslist;
-
+        $arr=array();
+        foreach($admissionfeeslist as $key=>$value)
+        {
+            $arr[$key]=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->where('admision_quota.id',$value['id'])->get()->result_array();
+           
+            
+        }
+        $data['arr']= $arr;
+        
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feemaster/admissionfees', $data);
         $this->load->view('layout/footer', $data);

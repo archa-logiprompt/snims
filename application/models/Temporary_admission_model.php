@@ -32,14 +32,27 @@ class Temporary_admission_model extends CI_Model
         $user_data = $this->db->where('id', $id)->where('otp', $otp)->get('temporary_admission')->row();
         return ($user_data);
     }
+    public function getamountbasedoncategory($id)
+    {
+        $result = $this->db->select('temp_user.id as tid,admissionfees.id as aid ,admissionfees.*,admision_quota.id as aqid,admision_quota.*,feetype.id as fid,feetype.*')
+            ->from('temp_user') // Specify the primary table
+            ->where('temp_user.user_id', $id)
+            ->join('admision_quota', 'admision_quota.id = temp_user.quota')
+            ->join('admissionfees', 'admissionfees.fee_groups_id = admision_quota.id')
+            ->join('feetype', 'feetype.id=admissionfees.feetype_id')
+            ->get()
+            ->result_array();
+        // echo $this->db->last_query();exit;
 
+        return $result;
+    }
     public function getquota()
     {
-       
-    $res=$this->db->select('admision_quota.*')->from('admision_quota')->get()->result_array();
 
-    return $res;
-    
+        $res = $this->db->select('admision_quota.*')->from('admision_quota')->get()->result_array();
+
+        return $res;
+
     }
     public function pickupupdate($id, $curuserdata)
     {
@@ -66,9 +79,9 @@ class Temporary_admission_model extends CI_Model
 
     public function getstatus($id)
     {
-         $res =$this->db->select('status')->from('temporary_admission')->where('id',$id)->get()->row_array();
-        
-         return $res;
+        $res = $this->db->select('status')->from('temporary_admission')->where('id', $id)->get()->row_array();
+
+        return $res;
     }
     public function pickedbyupdate($id)
     {
@@ -196,10 +209,10 @@ class Temporary_admission_model extends CI_Model
             $query = $this->db->get('temp_user')->row();
 
             if ($query) {
-                
+
                 $this->db->where('user_id', $data['user_id']);
                 $this->db->update('temp_user', $data);
-              
+
                 return $data['user_id'];
             } else {
                 $this->db->insert('temp_user', $data);

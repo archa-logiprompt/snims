@@ -29,8 +29,11 @@ return $result;
     }
     public function getadmissionlist()
     {
-        $result=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->get()->result_array();
+        // $result=$this->db->select('admissionfees.*,admision_quota.*,feetype.*,admissionfees.id as aid')->from('admissionfees')->join('feetype','feetype.id=admissionfees.feetype_id')->join('admision_quota','admision_quota.id=admissionfees.fee_groups_id')->get()->result_array();
+        $result=$this->db->select('admision_quota.name,admision_quota.id')->from('admision_quota')->get()->result_array();
+        // var_dump($result);exit;
         
+       
         return $result;
     }
     public function get($id = null) {
