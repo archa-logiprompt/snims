@@ -79,7 +79,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $details = array(
             'amount' => $val['amount'],
             'date' => date('Y-m-d'),
-            'amount_discount' => 0,
+            'transaction_id' => $val['txn_id'],
             'description' => "Online fees deposit through WorldLine TXN ID: " . $val['txn_id'],
             'payment_mode' => 'WorldLine',
             'temporary_student_id' => $student_id

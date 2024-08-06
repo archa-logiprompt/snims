@@ -115,7 +115,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <th><?php echo $this->lang->line('class'); ?></th>
                                             <th><?php echo $this->lang->line('email'); ?></th>
                                             <th><?php echo $this->lang->line('mobile_no'); ?></th>
-
+                                            <th><?php echo "Payment Id" ?></th>
                                             <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                         </tr>
                                     </thead>
@@ -147,6 +147,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                    
                                                     
                                                     <td><?php echo $student['phone']; ?></td>
+                                                    <td><?php echo isset($student['transaction_id']) ? $student['transaction_id'] : 'Pending'; ?></td>
 
                                                     <td class="pull-right">
 

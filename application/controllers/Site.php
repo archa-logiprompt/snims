@@ -16,11 +16,14 @@ class Site extends Public_Controller
 
         $this->load->model("staff_model");
         $this->load->model("temporary_admission_model");
+        $this->load->model("Temporary_admission_model");
+
         $this->load->library('Auth');
         $this->load->library('Enc_lib');
         $this->load->library('mailer');
         $this->load->config('ci-blog');
         $this->mailer;
+        $this->load->library('session');
     }
 
     public function privacy_policy()
@@ -608,5 +611,22 @@ class Site extends Public_Controller
         return $makepass;
     }
     
+    public function successadmissionpayment()
+    {
+        $postData = explode('|', $this->input->post('msg'));
+        
+        if( $postData[0]=='0399')
+        {
+            $details = $this->Temporary_admission_model->getdetails($postData[3]);
+            $res=json_decode($details->details,true);
+             $this->db->insert('payment_suceess', $res);
+             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Payment Successfull</div>');
+             redirect('temporary_user/TemporaryUser');
+        }
+        else{
+            $this->session->set_flashdata('msg1', '<div class="alert alert-danger">Payment Failed</div>');
+            redirect('temporary_user/TemporaryUser');
+        }
+    }
 
 }

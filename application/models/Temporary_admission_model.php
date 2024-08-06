@@ -54,6 +54,13 @@ class Temporary_admission_model extends CI_Model
         return $res;
 
     }
+    public function getdetails($txn_id)
+    {
+        $res=$this->db->select('details')->where('transaction_id', $txn_id)->get('admission_payment_session')->row();
+  
+        return $res;
+
+    }
     public function pickupupdate($id, $curuserdata)
     {
 
