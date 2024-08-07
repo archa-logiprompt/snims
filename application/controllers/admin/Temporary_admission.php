@@ -364,44 +364,158 @@ class Temporary_admission extends Admin_Controller
     }
     public function upload_signature()
     {
+     
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_add')) {
             access_denied();
         }
+    
+      
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
-        
+        $res=$this->Temporary_admission_model->getalldocuments();
+        $data['res']=$res;
+  
+       
         $this->form_validation->set_rules('staffname', 'staffname', 'required');
         $this->form_validation->set_rules('mail', 'Mail', 'required');
-        
+    
+      
         if ($this->form_validation->run() == FALSE) {
            
-           
             $this->load->view('layout/header');
-            $this->load->view('student/temporary_admission/upload_signature');
+            $this->load->view('student/temporary_admission/upload_signature',$data);
             $this->load->view('layout/footer');
         } else {
-            $admin=$this->session->userdata('admin');
-            $centre_id=$admin['centre_id'];
+          
+            $admin = $this->session->userdata('admin');
+            $centre_id = $admin['centre_id'];
+    
             $data = array(
                 'staffname' => $this->input->post('staffname'),
-                'centre_id'=>$centre_id,
+                'centre_id' => $centre_id,
                 'mail' => $this->input->post('mail'),
                 'xcordinate' => $this->input->post('xcordinate'),
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
             );
+    
           
-			
             $visitor_id = $this->Temporary_admission_model->upload_signature($data);
+    
+          
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
-                $img_name = 'id' . $visitor_id . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/upload_signature/" . $img_name);
-                $this->Temporary_admission_model->upload_signature($visitor_id, $img_name);
+                $img_name = $visitor_id . "signature" . '.' . $fileInfo['extension'];
+                $upload_path = "./uploads/upload_signature/" . $img_name;
+    
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
+                   
+                    $data_img = array('file' => $upload_path);
+                    $this->Temporary_admission_model->update_signature($visitor_id, $data_img);
+                } else {
+                    
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
+                    redirect('admin/temporary_admission/upload_signature');
+                }
             }
-
-            $this->session->set_flashdata('msg', '<div class="alert alert-success"> Visitors added successfully</div>');
-            redirect('temporary_admission/upload_signature');
+    
+            
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature added successfully</div>');
+            redirect('admin/temporary_admission/upload_signature');
         }
-}
+    }
+
+    public function signedit($id)
+    {
+        
+        if (!$this->rbac->hasPrivilege('upload_signature', 'can_edit')) {
+            access_denied();
+        }
+    
+       
+        $this->session->set_userdata('top_menu', 'Student Information');
+        $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
+        $res=$this->Temporary_admission_model->getalldocuments();
+        $data['res']=$res;
+   
+        $document = $this->Temporary_admission_model->getDocumentById($id);
+        if (!$document) {
+           
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger">Document not found</div>');
+            redirect('admin/temporary_admission/upload_signature');
+        }
+        $data['document'] = $document;
+    
+        
+        $this->form_validation->set_rules('staffname', 'Staff Name', 'required');
+        $this->form_validation->set_rules('mail', 'Mail', 'required');
+    
+       
+        if ($this->form_validation->run() == FALSE) {
+           
+            $this->load->view('layout/header');
+            $this->load->view('student/temporary_admission/edit_signature', $data);
+            $this->load->view('layout/footer');
+        } else {
+           
+            $admin = $this->session->userdata('admin');
+            $centre_id = $admin['centre_id'];
+    
+            
+            $data = array(
+                'staffname' => $this->input->post('staffname'),
+                'centre_id' => $centre_id,
+                'mail' => $this->input->post('mail'),
+                'xcordinate' => $this->input->post('xcordinate'),
+                'ycoordinate' => $this->input->post('ycoordinate'),
+                'orders' => $this->input->post('orders'),
+            );
+    
+           
+            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                $fileInfo = pathinfo($_FILES["file"]["name"]);
+                $img_name = $id . "signature" . '.' . $fileInfo['extension'];
+                $upload_path = "./uploads/upload_signature/" . $img_name;
+    
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
+                  
+                    $data['file'] = $upload_path;
+    
+                   
+                    if (!empty($document['file']) && file_exists($document['file'])) {
+                        unlink($document['file']);
+                    }
+                } else {
+                   
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
+                    redirect('admin/temporary_admission/edit_signature/' . $id);
+                }
+            }
+    
+     
+            $this->Temporary_admission_model->update_signature($id, $data);
+    
+          
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature updated successfully</div>');
+            redirect('admin/temporary_admission/upload_signature');
+        }
+    }
+    public function signdelete($id)
+    {
+        if (!$this->rbac->hasPrivilege('upload_signature', 'can_delete')) {
+            access_denied();
+        }
+       
+        $this->Temporary_admission_model->signdelete($id);
+    }
+
+    
+    // public function download($documents) {
+    //     $this->load->helper('download');
+    //     $filepath = "./uploads/upload_signature/". $documents;
+    //     $data = file_get_contents($filepath);
+    //     $name = $documents;
+    //     force_download($name, $data);
+    // }
+    
 }

@@ -13,7 +13,7 @@
                             <h3 class="box-title"><?php echo "Upload Signature"  ?></h3>
                         </div><!-- /.box-header -->
                         <?php //echo $this->session->flashdata('msg')  ?>
-                        <form id="form1" action="<?php echo site_url('admin/temporary_admission/upload_signature') ?>"   method="post" accept-charset="utf-8" enctype="multipart/form-data" >
+                        <form id="form1" action="<?php echo site_url('admin/temporary_admission/signedit/'.$document['id']) ?>"   method="post" accept-charset="utf-8" enctype="multipart/form-data" >
                             <div class="box-body">
 
                                 <?php echo $this->session->flashdata('msg') ?>
@@ -35,33 +35,37 @@
 
                                 <div class="form-group">
                                     <label for="pwd"><?php echo "Name of the Staff" ?></label>  <small class="req"> *</small>
-                                    <input type="text" class="form-control" value="<?php echo set_value('name'); ?>" name="staffname">
+                                    <input type="text" class="form-control" value="<?php echo $document['staffname'] ?>" name="staffname">
                                     <span class="text-danger"><?php echo form_error('name'); ?></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="pwd"><?php echo "Mail Id" ?></label>
-                                    <input type="text" class="form-control" value="<?php echo set_value('contact'); ?>" name="mail">
+                                    <input type="text" class="form-control" value="<?php echo $document['mail'] ?>" name="mail">
 
                                 </div>
                                 <div class="form-group">
                                     <label for="pwd"><?php echo "X-coordinate"?></label>
-                                    <input type="text" class="form-control" value="<?php echo set_value('id_proof'); ?>" name="xcordinate">
+                                    <input type="text" class="form-control" value="<?php echo $document['xcordinate'] ?>" name="xcordinate">
 
                                 </div>
                                 <div class="form-group">
                                     <label for="email"><?php echo "Y-coordinate" ?></label> 
-                                    <input type="text" class="form-control" value="<?php echo set_value('pepples'); ?>" name="ycoordinate">
+                                    <input type="text" class="form-control" value="<?php echo $document['ycoordinate'] ?>" name="ycoordinate">
                                 </div>
                                 <div class="form-group">
                                     <label for="email"><?php echo "Hierarchy of mail" ?></label> 
-                                    <input type="text" class="form-control" value="<?php echo set_value('order'); ?>" name="orders">
+                                    <input type="text" class="form-control" value="<?php echo $document['orders'] ?>" name="orders">
                                 </div>
                               
                                 <div class="form-group">
                                     <label for="exampleInputFile"><?php echo $this->lang->line('visitor'); ?> <?php echo $this->lang->line('attach_document'); ?></label>
-                                    <div><input class="filestyle form-control" type='file' name='file'  />
-                                    </div>
+                                    <div>
+                <a href="<?php echo base_url($document['file']); ?>" target="_blank" class="btn btn-info btn-xs">View Document</a>
+                <a href="<?php echo base_url($document['file']); ?>" download class="btn btn-success btn-xs">Download Document</a>
+                <input class="filestyle form-control" type='file' name='file'  />
+            </div>
+         
                                     <span class="text-danger"><?php echo form_error('file'); ?></span></div>
 
                             </div><!-- /.box-body -->
@@ -87,7 +91,7 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header ptbnull">
-                        <h3 class="box-title titlefix"><?php echo "Upload Signature" ?></h3>
+                        <h3 class="box-title titlefix"><?php echo "Uploaded Signature List" ?></h3>
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
@@ -141,7 +145,7 @@
                                                     ?>
 
         <?php if ($this->rbac->hasPrivilege('visitor_book', 'can_delete')) { ?>
-                                                        <?php if ($value['file'] !== "") { ?><a href="<?php echo base_url(); ?>admin/temporary_admission/signdelete/<?php echo $value['id']; ?><?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
+                                                        <?php if ($value['image'] !== "") { ?><a href="<?php echo base_url(); ?>admin/temporary_admission/signdelete/<?php echo $value['id']; ?><?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
             <?php } else { ?>

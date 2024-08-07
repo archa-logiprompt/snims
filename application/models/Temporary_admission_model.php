@@ -18,12 +18,37 @@ class Temporary_admission_model extends CI_Model
 
         // $this->session->set_userdata('sub_menu', 'temporary/create');
     }
-    public function upload_signature($data,$img_name)
+    public function upload_signature($data)
     {
         $this->db->insert('upload_signature', $data);
+        return $this->db->insert_id(); // Return the inserted ID
+    }
+    public function signdelete($id)
+    {
+        $this->db->where('id',$id);
+        $this->db->delete('upload_signature');
+        $this->session->set_flashdata('msg', '<div class="alert alert-success"> Signature deleted successfully</div>');
+        redirect('admin/temporary_admission/upload_signature');
+    }
+    
+    public function update_signature($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('upload_signature', $data);
+    }
+    public function getalldocuments()
+    {
+       $res= $this->db->select('*')->get('upload_signature')->result_array();
+       return $res;
 
     }
-    public function checkUser($username, $otp)
+
+    public function getDocumentById($id)
+{
+    $query = $this->db->get_where('upload_signature', array('id' => $id));
+    return $query->row_array();
+}
+        public function checkUser($username, $otp)
     {
 
         $user_id = $this->db->select('id,phone')->where('user_id', $username)->get('temporary_admission')->row();
