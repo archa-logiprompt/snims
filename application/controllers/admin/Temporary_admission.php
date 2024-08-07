@@ -362,4 +362,46 @@ class Temporary_admission extends Admin_Controller
         $http_result = $info['http_code'];
         curl_close($ch);
     }
+    public function upload_signature()
+    {
+        if (!$this->rbac->hasPrivilege('upload_signature', 'can_add')) {
+            access_denied();
+        }
+        $this->session->set_userdata('top_menu', 'Student Information');
+        $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
+        
+        $this->form_validation->set_rules('staffname', 'staffname', 'required');
+        $this->form_validation->set_rules('mail', 'Mail', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+           
+           
+            $this->load->view('layout/header');
+            $this->load->view('student/temporary_admission/upload_signature');
+            $this->load->view('layout/footer');
+        } else {
+            $admin=$this->session->userdata('admin');
+            $centre_id=$admin['centre_id'];
+            $data = array(
+                'staffname' => $this->input->post('staffname'),
+                'centre_id'=>$centre_id,
+                'mail' => $this->input->post('mail'),
+                'xcordinate' => $this->input->post('xcordinate'),
+                'ycoordinate' => $this->input->post('ycoordinate'),
+                'orders' => $this->input->post('orders'),
+            );
+          
+			
+            $visitor_id = $this->Temporary_admission_model->upload_signature($data);
+            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                $fileInfo = pathinfo($_FILES["file"]["name"]);
+                $img_name = 'id' . $visitor_id . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/upload_signature/" . $img_name);
+                $this->Temporary_admission_model->upload_signature($visitor_id, $img_name);
+            }
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success"> Visitors added successfully</div>');
+            redirect('temporary_admission/upload_signature');
+        }
+}
 }

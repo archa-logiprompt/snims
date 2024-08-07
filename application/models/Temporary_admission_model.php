@@ -18,7 +18,11 @@ class Temporary_admission_model extends CI_Model
 
         // $this->session->set_userdata('sub_menu', 'temporary/create');
     }
+    public function upload_signature($data,$img_name)
+    {
+        $this->db->insert('upload_signature', $data);
 
+    }
     public function checkUser($username, $otp)
     {
 
