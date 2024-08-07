@@ -4,6 +4,34 @@
             <h3>APPLICATION FORM FOR ADMISSION TO M.B.B.S. DEGREE COURSE</h3>
         </div>
     </div>
+  
+<?php if ($status['status'] == '1'): ?>
+    <?php if ($paymentsucceess['temporary_student_id'] == $userdata['id']): ?>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                50%
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
+                25%
+            </div>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <!-- <hr class="line-default"> -->
+    <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" >
+                0%
+            </div>
+        </div>
+
+<?php endif; ?>
+
+
+
+<br/> 
     <form id="form1" action="<?php echo site_url('temporary_user/TemporaryUser/create') ?>" id="employeeform"
         name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 

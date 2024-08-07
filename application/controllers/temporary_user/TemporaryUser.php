@@ -40,7 +40,10 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['existing_details'] = $existing_details;
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+
+
         $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
+        
         $quota = $this->Temporary_admission_model->getquota();
         $data['quota'] = $quota;
         $this->load->view('temporarystudent/header', $data);
