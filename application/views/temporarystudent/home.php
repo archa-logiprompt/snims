@@ -351,11 +351,6 @@
 
 
 
-
-
-
-
-
                 <div class="col-md-3 col-xs-12">
                     <div class="form-group">
                         <label for="exampleInputEmail1">
@@ -561,7 +556,12 @@
                     <div class="form-group">
                         <label for="exampleInputFile"><?php echo $this->lang->line('guardian'); ?>
                             <?php echo $this->lang->line('photo'); ?></label>
-                        <div><input class="filestyle form-control" type='file' name='guardian_pic' id="file"
+                            
+                        <div>
+                        <?php if (!empty($getdatafromstudentdetails->guardian_pic)) : ?>
+                                <img src="<?php echo base_url($getdatafromstudentdetails->guardian_pic); ?>" alt="Mother's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+                            <?php endif; ?>
+                            <input class="filestyle form-control" type='file' name='guardian_pic' id="file"
                                 size='20' />
                         </div>
                         <span class="text-danger"><?php echo form_error('file'); ?></span>

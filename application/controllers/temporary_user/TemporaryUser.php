@@ -471,6 +471,13 @@ class TemporaryUser extends Temporary_Student_Controller
                 $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
                 $this->Temporary_admission_model->add($data_img);
             }
+            if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
+                $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
+                $this->Temporary_admission_model->add($data_img);
+            }
 
             if (isset($_FILES["tenth_doc"]) && !empty($_FILES['tenth_doc']['name'])) {
                 $fileInfo = pathinfo($_FILES["tenth_doc"]["name"]);
