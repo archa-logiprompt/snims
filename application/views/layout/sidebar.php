@@ -192,6 +192,17 @@ $centre_id = $admin['centre_id'];
                                 <?php
     
                                 }
+
+                                if ($this->rbac->hasPrivilege('upload_signature', 'can_add') && $centre_id == 2) {
+                                    ?>
+        
+                                        <li class="<?php echo set_Submenu('temporary_admission/upload_signature'); ?>"><a href="<?php echo base_url(); ?>admin/temporary_admission/upload_signature"><i class="fa fa-angle-double-right"></i>
+                                                <?php echo "Upload Signature"; ?></a></li>
+        
+        
+                                    <?php
+        
+                                    }
                             if ($this->rbac->hasPrivilege('parent_feedback', 'can_view')) {
                             ?>
 
