@@ -34,6 +34,9 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['section'] = $section;
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
         $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
+
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+       
         $data['existing_details'] = $existing_details;
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
@@ -112,6 +115,18 @@ class TemporaryUser extends Temporary_Student_Controller
         echo json_encode($data);
     }
 
+
+    public function downloadreceipt()
+    {
+
+        $userdata = $this->session->userdata('temporary_student');
+        $data['userdata'] = $userdata;
+
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        // $this->load->view('temporarystudent/header', $data);
+        $this->load->view('temporarystudent/downloadreceipt', $data);
+
+    }
     public function create()
     {
 

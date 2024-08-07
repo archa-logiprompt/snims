@@ -196,7 +196,18 @@ class Temporary_admission_model extends CI_Model
         return $result;
 
     }
-
+    public function paymentsucceess($id)
+    {
+        $payment = $this->db->select('payment_suceess.*,temporary_admission.*')
+            ->from('payment_suceess')
+            // ->join('payment_suceess', 'payment_suceess.temporary_student_id = temporary_admission.id')
+            ->join('temporary_admission', 'temporary_admission.id =payment_suceess.temporary_student_id')
+            ->where('payment_suceess.temporary_student_id', $id)
+            ->get()
+            ->row_array();
+            //   echo $this->db->last_query();exit;
+        return $payment;
+    }
     public function addcomment($data)
     {
 
@@ -213,6 +224,7 @@ class Temporary_admission_model extends CI_Model
             ->result_array();
         return $res;
     }
+
     public function add($data)
     {
         if (!empty($data) && isset($data['user_id'])) {

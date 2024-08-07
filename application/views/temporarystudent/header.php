@@ -44,10 +44,19 @@
                         <?php echo $commentCount ?>
                     </span></button>
                   
-                    <?php if ($status['status'] == '1'): ?>
+                    <!-- <?php if ($status['status'] == '1'): ?>
                             <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/'.$userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
 
+                 
+
+    <?php if (!empty($paymentsucceess) && $paymentsucceess['temporary_student_id'] == $userdata['id']): ?>
+    <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Download Receipt</a>
+    <?php elseif ($status['status'] == '1'): ?>
+    <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
+<?php endif; ?>
+
+             
                 <a href="<?php echo base_url('site/logout') ?>" type="button"
                     class="btn btn-outline-primary me-2">Logout</a>
             </div>
