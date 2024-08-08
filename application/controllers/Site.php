@@ -618,8 +618,10 @@ class Site extends Public_Controller
         if( $postData[0]=='0399')
         {
             $details = $this->Temporary_admission_model->getdetails($postData[3]);
-            $res=json_decode($details->details,true);
+            $res=json_decode($details['details'],true);
+          
              $this->db->insert('payment_suceess', $res);
+             $this->Temporary_admission_model->update_status( $res['temporary_student_id']);
              $this->session->set_flashdata('msg1', '<div class="alert alert-success">Payment Successfull</div>');
              redirect('temporary_user/TemporaryUser');
         }

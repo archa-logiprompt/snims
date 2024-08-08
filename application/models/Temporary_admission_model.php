@@ -11,7 +11,13 @@ class Temporary_admission_model extends CI_Model
         parent::__construct();
         $this->current_session = $this->setting_model->getCurrentSession();
     }
-
+    public function update_status($id)
+    {
+     
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', array('status' => 2));
+        
+    }
     public function create($data)
     {
         $this->db->insert('temporary_admission', $data);
@@ -85,7 +91,7 @@ class Temporary_admission_model extends CI_Model
     }
     public function getdetails($txn_id)
     {
-        $res=$this->db->select('details')->where('transaction_id', $txn_id)->get('admission_payment_session')->row();
+        $res=$this->db->select('details')->where('transaction_id', $txn_id)->get('admission_payment_session')->row_array();
   
         return $res;
 
