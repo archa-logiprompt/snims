@@ -101,6 +101,10 @@
                             <td><?php echo date('d-m-Y', strtotime($paymentsucceess['date'])); ?></td>
                         </tr>
                         <tr>
+                            <th>Fee Type:</th>
+                            <td><?php echo $paymentsucceess['fee_details']; ?></td>
+                        </tr>
+                        <tr>
                             <th>Description:</th>
                             <td><?php echo $paymentsucceess['description']; ?></td>
                         </tr>
@@ -130,12 +134,11 @@
                 </svg>
                 Download Receipt
             </button>
-        </div>
-        <div class="btn-container">
             <button class="btn-receipt" onclick="confirmPayment()" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
                 </svg>Verify Payment</button>
         </div>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
             function downloadReceipt() {
@@ -176,15 +179,15 @@
 
                 if (confirmation) {
                     $.ajax({
-                        
-                        url: '<?php echo base_url(); ?>temporary_user/TemporaryUser/updateStatus/' +student_id,
+
+                        url: '<?php echo base_url(); ?>temporary_user/TemporaryUser/updateStatus/' + student_id,
                         type: 'POST',
-                       
+
                         success: function(data) {
-                           
-                            window.location.href = "<?php echo base_url(); ?>/admin/temporary_admission/search/"+student_id;
+
+                            window.location.href = "<?php echo base_url(); ?>/admin/temporary_admission/search/" + student_id;
                         },
-                        
+
                     });
                 } else {
                     alert("Operation canceled.");

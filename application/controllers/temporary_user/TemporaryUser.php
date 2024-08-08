@@ -89,6 +89,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $details = array(
             'amount' => $val['amount'],
             'date' => date('Y-m-d'),
+            'fee_details' => $val['fee_details'],
             'transaction_id' => $val['txn_id'],
             'description' => "Online fees deposit through WorldLine TXN ID: " . $val['txn_id'],
             'payment_mode' => 'WorldLine',
@@ -133,15 +134,64 @@ class TemporaryUser extends Temporary_Student_Controller
         // $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/downloadreceipt', $data);
     }
-    
+
     public function updateStatus($id)
     {
 
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 3]);
 
+        $this->sendmail();
+
 
         echo json_encode(['success' => true]);
+    }
+
+    public function sendmail()
+    {
+        require 'PHPMailer/src/Exception.php';
+        require 'PHPMailer/src/PHPMailer.php';
+        require 'PHPMailer/src/SMTP.php';
+
+        $this->load->library('form_validation');
+        $this->load->library('email');
+
+        $email_subject = 'Your Registration Details';
+        $email_message = '<html><body>';
+        $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
+        $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
+        $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
+        $email_message .= '<tr><td>Name</td><td>' . htmlspecialchars($data['name']) . '</td></tr>';
+        $email_message .= '<tr><td>Email</td><td>' . htmlspecialchars($data['email']) . '</td></tr>';
+        $email_message .= '<tr><td>Phone</td><td>' . htmlspecialchars($data['phone']) . '</td></tr>';
+        $email_message .= '<tr><td>City</td><td>' . htmlspecialchars($data['city']) . '</td></tr>';
+        $email_message .= '<tr><td>State</td><td>' . htmlspecialchars($data['state']) . '</td></tr>';
+        $email_message .= '<tr><td>Course Level</td><td>' . htmlspecialchars($data['courselevel']) . '</td></tr>';
+        $email_message .= '<tr><td>Stream</td><td>' . htmlspecialchars($data['stream']) . '</td></tr>';
+        $email_message .= '<tr><td>Course</td><td>' . htmlspecialchars($data['course']) . '</td></tr>';
+        $email_message .= '</table>';
+        $email_message .= '</body></html>';
+
+        // Send the email using PHPMailer
+
+        $Body = "hai";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Host = "smtp.gmail.com";
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "medicalcollege@drmoopensmc.ac.in";
+        $mail->Password = "ayxuwqtlvgmxwnbi";
+        $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
+        $mail->addAddress('govindr.logiprompt@gmail.com');
+        $mail->Subject = $email_subject;
+        $mail->Body = $email_message;
+        $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
+        $mail->msgHTML($email_message);
+        // $mail->AltBody = 'HTML messaging not supported';
+        $mail->send();
     }
     public function create()
     {

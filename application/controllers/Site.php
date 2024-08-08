@@ -572,8 +572,7 @@ class Site extends Public_Controller
         $password = $otp;
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
-        ;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -599,7 +598,7 @@ class Site extends Public_Controller
     //     }
     //     return $makepass;
     // }
-   private function generateOTP($length)
+    private function generateOTP($length)
     {
         $salt = "0";
         $len = strlen($salt);
@@ -610,25 +609,22 @@ class Site extends Public_Controller
         }
         return $makepass;
     }
-    
+
     public function successadmissionpayment()
     {
         $postData = explode('|', $this->input->post('msg'));
-        
-        if( $postData[0]=='0399')
-        {
+
+        if ($postData[0] == '0399') {
             $details = $this->Temporary_admission_model->getdetails($postData[3]);
-            $res=json_decode($details['details'],true);
-          
-             $this->db->insert('payment_suceess', $res);
-             $this->Temporary_admission_model->update_status( $res['temporary_student_id']);
-             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Payment Successfull</div>');
-             redirect('temporary_user/TemporaryUser');
-        }
-        else{
-            $this->session->set_flashdata('msg1', '<div class="alert alert-danger">Payment Failed</div>');
+            $res = json_decode($details['details'], true);
+
+            $this->db->insert('payment_suceess', $res);
+            $this->Temporary_admission_model->update_status($res['temporary_student_id']);
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">Payment Successfull</div>');
+            redirect('temporary_user/TemporaryUser');
+        } else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger">Payment Failed</div>');
             redirect('temporary_user/TemporaryUser');
         }
     }
-
 }

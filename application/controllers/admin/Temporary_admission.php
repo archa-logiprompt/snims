@@ -80,7 +80,7 @@ class Temporary_admission extends Admin_Controller
 
     // public function search()
     // {
-       
+
     //     $this->session->set_userdata('top_menu', 'Student Information');
     //     $this->session->set_userdata('sub_menu', 'temporary_admission/search');
     //     $data['sessionlist'] = $this->session_model->getsessionlist();
@@ -104,7 +104,7 @@ class Temporary_admission extends Admin_Controller
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
         $userdata = $this->session->userdata();
-        $data['userdata']=$userdata['admin'];
+        $data['userdata'] = $userdata['admin'];
         // var_dump($data['userdata']);exit;
         $userdata = $this->customlib->getUserData();
         $carray = array();
@@ -119,28 +119,27 @@ class Temporary_admission extends Admin_Controller
         $button = $this->input->post('search');
         if ($this->input->server('REQUEST_METHOD') == "GET") {
             $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
-        $this->load->view('layout/footer');
+            $this->load->view('student/temporary_admission/search', $data);
+            $this->load->view('layout/footer');
         } else {
             $class = $this->input->post('class_id');
             $section = $this->input->post('section_id');
             $session_id = $this->input->post('session_list');
             $search = $this->input->post('search');
-        
+
             $search_text = $this->input->post('search_text');
             if (isset($search)) {
                 if ($search == 'search_filter') {
                     $this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
                     $this->form_validation->set_rules('section_id', 'Section', 'trim|required|xss_clean');
                     if ($this->form_validation->run() == FALSE) {
-
                     } else {
                         $data['searchby'] = "filter";
                         $data['class_id'] = $this->input->post('class_id');
                         $data['section_id'] = $this->input->post('section_id');
-                        $data['session_id']=$this->input->post('session_id');
+                        $data['session_id'] = $this->input->post('session_id');
                         $data['search_text'] = $this->input->post('search_text');
-                        $resultlist = $this->student_model->searchtemporarystudentadmission($class, $section,$session_id);
+                        $resultlist = $this->student_model->searchtemporarystudentadmission($class, $section, $session_id);
                         $data['resultlist'] = $resultlist;
                         $title = $this->classsection_model->getDetailbyClassSection($data['class_id'], $data['section_id']);
                         $data['title'] = 'Student Details for ' . $title['class'] . "(" . $title['section'] . ")";
@@ -160,8 +159,8 @@ class Temporary_admission extends Admin_Controller
                 //var_dump($resultlist);
             }
             $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
-        $this->load->view('layout/footer');
+            $this->load->view('student/temporary_admission/search', $data);
+            $this->load->view('layout/footer');
         }
     }
     // function show($id)
@@ -242,7 +241,7 @@ class Temporary_admission extends Admin_Controller
     //     $data['fee_excess'] = $fee_excess;
     //     $fee_advance = $this->studentfeemaster_model->getFeeadvance($id);
     //     $data['fee_advance'] = $fee_advance;
- 
+
     //     $data['excess_balance'] = $this->db->select('amount')->where('student_id', $id)->get('excess_balance')->row()->amount;
     //     $data['advance_balance'] = $this->db->select('amount')->where('student_id', $id)->get('advance_balance')->row()->amount;
     //     $data["studentlistbysection"] = $studentlistbysection;
@@ -251,18 +250,19 @@ class Temporary_admission extends Admin_Controller
     //     $this->load->view('layout/footer', $data);
     // }
 
-    public function show($id){
+    public function show($id)
+    {
 
-      
+
         $userdata = $this->session->userdata();
-        $data['userdata']=$userdata['temporary_student'];
-        $curuserdata=$userdata['admin'];
-        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
-      
+        $data['userdata'] = $userdata['temporary_student'];
+        $curuserdata = $userdata['admin'];
+        $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
+
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
 
-        $data['commentdetails']=$this->Temporary_admission_model->commentdetails($id);
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $userdata = $this->session->userdata();
         $this->load->view('layout/header', $data);
         $this->load->view('student/temporary_admission/show', $data);
@@ -272,64 +272,64 @@ class Temporary_admission extends Admin_Controller
     public function pickup($id)
     {
         $userdata = $this->session->userdata();
-        $curuserdata=$userdata['admin'];
+        $curuserdata = $userdata['admin'];
         $data['sessionlist'] = $this->session_model->getsessionlist();
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
         $userdata = $this->session->userdata();
-        $pickup=$this->temporary_admission_model->pickupupdate($id,$curuserdata['id']);
-       
-        
+        $pickup = $this->temporary_admission_model->pickupupdate($id, $curuserdata['id']);
+
+
         $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
+        $this->load->view('student/temporary_admission/search', $data);
         $this->load->view('layout/footer');
     }
     public function approve($id)
     {
-        
+
         $userdata = $this->session->userdata();
-        $curuserdata=$userdata['admin'];
-        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
+        $curuserdata = $userdata['admin'];
+        $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
-        $status=$this->Temporary_admission_model->status($id);
-        
+        $status = $this->Temporary_admission_model->status($id);
+
         $userdata = $this->session->userdata();
-        redirect('admin/temporary_admission/show/'.$id);
-
+        redirect('admin/temporary_admission/show/' . $id);
     }
-    public function comment($id) {
-    
+    public function comment($id)
+    {
 
-       
+
+
         $comment = $this->input->post('comment');
         $userdata = $this->session->userdata('admin');
-        
-        
+
+
         $data = array(
             'comment' => $comment,
-            'commented_by'=>$userdata['username'],
+            'commented_by' => $userdata['username'],
             'created_at' => date('Y-m-d H:i:s'),
-            'stud_id'=>$id
+            'stud_id' => $id
         );
-        
-        
+
+
         $insert_id = $this->Temporary_admission_model->addcomment($data);
         // var_dump($data);exit;
-       
 
-        redirect('admin/temporary_admission/show/'.$id);
-      
+
+        redirect('admin/temporary_admission/show/' . $id);
+
         // $this->db->where('id', $id);
         // $update = $this->db->update('temporary_admission', $data);
 
-        
+
     }
     public function leave()
     {
-    $id=$this->input->post('id');
-    $this->Temporary_admission_model->pickedbyupdate($id);
-    echo ( 'success');
+        $id = $this->input->post('id');
+        $this->Temporary_admission_model->pickedbyupdate($id);
+        echo ('success');
     }
     private function MakeUserId($length)
     {
@@ -348,8 +348,7 @@ class Temporary_admission extends Admin_Controller
         $password = "test";
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
-        ;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -366,32 +365,32 @@ class Temporary_admission extends Admin_Controller
     }
     public function upload_signature()
     {
-     
+
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_add')) {
             access_denied();
         }
-    
-      
+
+
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
-        $res=$this->Temporary_admission_model->getalldocuments();
-        $data['res']=$res;
-  
-       
+        $res = $this->Temporary_admission_model->getalldocuments();
+        $data['res'] = $res;
+
+
         $this->form_validation->set_rules('staffname', 'staffname', 'required');
         $this->form_validation->set_rules('mail', 'Mail', 'required');
-    
-      
+
+
         if ($this->form_validation->run() == FALSE) {
-           
+
             $this->load->view('layout/header');
-            $this->load->view('student/temporary_admission/upload_signature',$data);
+            $this->load->view('student/temporary_admission/upload_signature', $data);
             $this->load->view('layout/footer');
         } else {
-          
+
             $admin = $this->session->userdata('admin');
             $centre_id = $admin['centre_id'];
-    
+
             $data = array(
                 'staffname' => $this->input->post('staffname'),
                 'centre_id' => $centre_id,
@@ -400,28 +399,28 @@ class Temporary_admission extends Admin_Controller
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
             );
-    
-          
+
+
             $visitor_id = $this->Temporary_admission_model->upload_signature($data);
-    
-          
+
+
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $visitor_id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
-    
+
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
-                   
+
                     $data_img = array('file' => $upload_path);
                     $this->Temporary_admission_model->update_signature($visitor_id, $data_img);
                 } else {
-                    
+
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
                     redirect('admin/temporary_admission/upload_signature');
                 }
             }
-    
-            
+
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature added successfully</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
@@ -429,41 +428,41 @@ class Temporary_admission extends Admin_Controller
 
     public function signedit($id)
     {
-        
+
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_edit')) {
             access_denied();
         }
-    
-       
+
+
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
-        $res=$this->Temporary_admission_model->getalldocuments();
-        $data['res']=$res;
-   
+        $res = $this->Temporary_admission_model->getalldocuments();
+        $data['res'] = $res;
+
         $document = $this->Temporary_admission_model->getDocumentById($id);
         if (!$document) {
-           
+
             $this->session->set_flashdata('msg', '<div class="alert alert-danger">Document not found</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
         $data['document'] = $document;
-    
-        
+
+
         $this->form_validation->set_rules('staffname', 'Staff Name', 'required');
         $this->form_validation->set_rules('mail', 'Mail', 'required');
-    
-       
+
+
         if ($this->form_validation->run() == FALSE) {
-           
+
             $this->load->view('layout/header');
             $this->load->view('student/temporary_admission/edit_signature', $data);
             $this->load->view('layout/footer');
         } else {
-           
+
             $admin = $this->session->userdata('admin');
             $centre_id = $admin['centre_id'];
-    
-            
+
+
             $data = array(
                 'staffname' => $this->input->post('staffname'),
                 'centre_id' => $centre_id,
@@ -472,32 +471,32 @@ class Temporary_admission extends Admin_Controller
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
             );
-    
-           
+
+
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
-    
+
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
-                  
+
                     $data['file'] = $upload_path;
-    
-                   
+
+
                     if (!empty($document['file']) && file_exists($document['file'])) {
                         unlink($document['file']);
                     }
                 } else {
-                   
+
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
                     redirect('admin/temporary_admission/edit_signature/' . $id);
                 }
             }
-    
-     
+
+
             $this->Temporary_admission_model->update_signature($id, $data);
-    
-          
+
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature updated successfully</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
@@ -507,22 +506,22 @@ class Temporary_admission extends Admin_Controller
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_delete')) {
             access_denied();
         }
-       
+
         $this->Temporary_admission_model->signdelete($id);
     }
 
     public function admindownloadreceipt($id)
     {
-        
+
         $userdata = $this->session->userdata('temporary_student');
         $data['userdata'] = $userdata;
 
-        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($id);
         // $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/admindownloadreceipt', $data);
     }
 
-    
+
     // public function download($documents) {
     //     $this->load->helper('download');
     //     $filepath = "./uploads/upload_signature/". $documents;
@@ -530,5 +529,5 @@ class Temporary_admission extends Admin_Controller
     //     $name = $documents;
     //     force_download($name, $data);
     // }
-    
+
 }
