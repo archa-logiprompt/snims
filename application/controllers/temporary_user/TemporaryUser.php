@@ -1,6 +1,8 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -39,14 +41,14 @@ class TemporaryUser extends Temporary_Student_Controller
         $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
 
         $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
-       
+
         $data['existing_details'] = $existing_details;
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
 
         $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
-        
+
         $quota = $this->Temporary_admission_model->getquota();
         $data['quota'] = $quota;
         $this->load->view('temporarystudent/header', $data);
@@ -68,7 +70,6 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['categoryamount'] = $categoryamount;
         //    var_dump( $data['categoryamount']);exit;
         $this->load->view('parent/nttdata', $data);
-
     }
 
 
@@ -79,7 +80,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $val = $_POST;
 
-       
+
         $userdata = $this->session->userdata('temporary_student');
         $student_id = $userdata['id'];
         $student_details = $this->db->select('firstname,lastname')->where('id', $student_id)->get('temporary_admission')->row();
@@ -95,7 +96,7 @@ class TemporaryUser extends Temporary_Student_Controller
         );
 
 
-        
+
 
         $send = array(
             'details' => json_encode($details),
@@ -115,7 +116,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // 9089678839PDEWYP live
         $hashed = hash('sha512', $datastring);
 
-        $data = array("hash" => $hashed, "data" => array($val['mrctCode'], $val['txn_id'], $val['amount'], "", "", "", "", "", $val['custID'], "", "", "", base_url("site/successadmissionpayment"),"", $val['scheme'], $val['currency'], "", "", ""));
+        $data = array("hash" => $hashed, "data" => array($val['mrctCode'], $val['txn_id'], $val['amount'], "", "", "", "", "", $val['custID'], "", "", "", base_url("site/successadmissionpayment"), "", $val['scheme'], $val['currency'], "", "", ""));
 
 
         echo json_encode($data);
@@ -131,30 +132,15 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
         // $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/downloadreceipt', $data);
-
     }
-    public function admindownloadreceipt()
-    {
-        var_dump("here");exit;
-        $userdata = $this->session->userdata('temporary_student');
-        $data['userdata'] = $userdata;
-
-        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
-        // $this->load->view('temporarystudent/header', $data);
-        $this->load->view('temporarystudent/admindownloadreceipt', $data);
-
-    }
+    
     public function updateStatus($id)
     {
-        
-    
-            
-               
-                $this->db->where('id', $id);
-                $this->db->update('temporary_admission', ['status' =>3]);
 
-                
-    
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', ['status' => 3]);
+
+
         echo json_encode(['success' => true]);
     }
     public function create()

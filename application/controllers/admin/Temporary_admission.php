@@ -511,6 +511,17 @@ class Temporary_admission extends Admin_Controller
         $this->Temporary_admission_model->signdelete($id);
     }
 
+    public function admindownloadreceipt($id)
+    {
+        
+        $userdata = $this->session->userdata('temporary_student');
+        $data['userdata'] = $userdata;
+
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        // $this->load->view('temporarystudent/header', $data);
+        $this->load->view('temporarystudent/admindownloadreceipt', $data);
+    }
+
     
     // public function download($documents) {
     //     $this->load->helper('download');
