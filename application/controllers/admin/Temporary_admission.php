@@ -255,6 +255,7 @@ class Temporary_admission extends Admin_Controller
 
       
         $userdata = $this->session->userdata();
+        $data['userdata']=$userdata['temporary_student'];
         $curuserdata=$userdata['admin'];
         $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
       

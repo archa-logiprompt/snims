@@ -20,7 +20,7 @@
         </div>
     <?php endif; ?>
 <?php else: ?>
-    <!-- <hr class="line-default"> -->
+
     <div class="progress">
             <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" >
                 0%

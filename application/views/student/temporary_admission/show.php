@@ -286,6 +286,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 class="btn btn-success pull-right" style="margin-top: 4px; margin-right: 4px">Approve</a>
                         <?php } ?>
 
+                        <?php if ($getstudentdetails['status'] == 2) { ?>
+                        <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' .$userdata['id']) ?>" type="button"
+                        class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
+                        <?php } ?>
+
                         <button class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px"
                             data-toggle="modal" data-target="#previouscommentsModal">Previous Comments</button>
 
