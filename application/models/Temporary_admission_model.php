@@ -29,6 +29,12 @@ class Temporary_admission_model extends CI_Model
         $this->db->insert('upload_signature', $data);
         return $this->db->insert_id(); // Return the inserted ID
     }
+    public function getsignatureorder()
+    {
+    $result=$this->this->select('*')->from('upload_signature')->get()->result_array();
+    return $result;
+
+    }
     public function signdelete($id)
     {
         $this->db->where('id',$id);

@@ -1,5 +1,6 @@
 <?php
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -13,6 +14,8 @@ class TemporaryUser extends Temporary_Student_Controller
         $this->load->model("live_class_model");
         $this->load->model("Temporary_admission_model");
         $this->load->library('form_validation');
+        $this->load->library('mailer');
+        $this->mailer;
     }
 
     public function index()
@@ -143,10 +146,14 @@ class TemporaryUser extends Temporary_Student_Controller
     }
     public function updateStatus($id)
     {
-    
-        $this->db->where('id', $id);
-        $this->db->update('temporary_admission', ['status' =>3]);
         
+    
+            
+               
+                $this->db->where('id', $id);
+                $this->db->update('temporary_admission', ['status' =>3]);
+
+                
     
         echo json_encode(['success' => true]);
     }

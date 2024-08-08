@@ -147,18 +147,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                    
                                                     
                                                     <td><?php echo $student['phone']; ?></td>
-                                                    <!-- <td>
-                                                        <?php echo isset($student['transaction_id']) ? $student['transaction_id'] : 'Pending'; ?>
-                                                </td> -->
-                                                <td>
-    <?php if (isset($student['transaction_id']) && !empty($student['transaction_id'])): ?>
+                                                 
+                                                    <td>
+    <?php if (isset($student['status']) && $student['status'] == '3'): ?>
+        Payment Approved
+    <?php elseif (isset($student['transaction_id']) && !empty($student['transaction_id'])): ?>
         Paid
-        <!-- <?php echo $student['transaction_id']; ?>
-        <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' .$userdata['id']) ?>" type="button"  class="btn btn-success btn-xs">Download Receipt</a> -->
     <?php else: ?>
         Pending
     <?php endif; ?>
 </td>
+
 
 
                                                     <td class="pull-right">
