@@ -135,7 +135,7 @@ class TemporaryUser extends Temporary_Student_Controller
     }
     public function admindownloadreceipt()
     {
-
+        var_dump("here");exit;
         $userdata = $this->session->userdata('temporary_student');
         $data['userdata'] = $userdata;
 
