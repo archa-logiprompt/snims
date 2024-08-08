@@ -268,6 +268,7 @@ class Temporary_admission extends Admin_Controller
         $this->load->view('student/temporary_admission/show', $data);
         $this->load->view('layout/footer', $data);
     }
+
     public function pickup($id)
     {
         $userdata = $this->session->userdata();

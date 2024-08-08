@@ -130,6 +130,26 @@ class TemporaryUser extends Temporary_Student_Controller
         $this->load->view('temporarystudent/downloadreceipt', $data);
 
     }
+    public function admindownloadreceipt()
+    {
+
+        $userdata = $this->session->userdata('temporary_student');
+        $data['userdata'] = $userdata;
+
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        // $this->load->view('temporarystudent/header', $data);
+        $this->load->view('temporarystudent/admindownloadreceipt', $data);
+
+    }
+    public function updateStatus($id)
+    {
+    
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', ['status' =>3]);
+        
+    
+        echo json_encode(['success' => true]);
+    }
     public function create()
     {
 

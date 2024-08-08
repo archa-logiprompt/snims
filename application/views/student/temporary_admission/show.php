@@ -287,7 +287,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <?php } ?>
 
                         <?php if ($getstudentdetails['status'] == 2) { ?>
-                        <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' .$userdata['id']) ?>" type="button"
+                        <a href="<?php echo base_url('temporary_user/TemporaryUser/admindownloadreceipt/' .$userdata['id']) ?>" type="button"
                         class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
                         <?php } ?>
 
