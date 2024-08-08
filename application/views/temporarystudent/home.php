@@ -6,27 +6,17 @@
     </div>
   
 <?php if ($status['status'] == '1'): ?>
-    <?php if ($paymentsucceess['temporary_student_id'] == $userdata['id']): ?>
-        <div class="progress">
-            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-                50%
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="progress">
+    <div class="progress">
             <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
                 25%
             </div>
         </div>
-    <?php endif; ?>
-<?php else: ?>
-
-    <div class="progress">
-            <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" >
-                0%
+        <?php elseif ($status['status'] == '2'): ?> 
+            <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
+                40%
             </div>
         </div>
-
 <?php endif; ?>
 
 
