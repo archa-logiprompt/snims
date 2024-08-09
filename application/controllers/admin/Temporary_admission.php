@@ -608,11 +608,12 @@ class Temporary_admission extends Admin_Controller
         $mail->Username = "medicalcollege@drmoopensmc.ac.in";
         $mail->Password = "ayxuwqtlvgmxwnbi";
         $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
-        $mail->addAddress('govindr.logiprompt@gmail.com');
+        $mail->addAddress('archaaslogiprompt@gmail.com');
         $mail->Subject = $email_subject;
         $mail->Body = $email_message;
         $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
         $mail->msgHTML($email_message);
+        $mail->addAttachment('C:\wamp64\www\snims\uploads\pdf_20231009093449.pdf','pdf_20231009093449.pdf');
         // $mail->AltBody = 'HTML messaging not supported';
         $mail->send();
     }
