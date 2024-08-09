@@ -2,6 +2,8 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -530,11 +532,43 @@ class Temporary_admission extends Admin_Controller
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 3]);
 
+
         $this->sendmail();
 
 
         echo json_encode(['success' => true]);
     }
+
+    public function doctest()
+    {
+        $data['test'] = "test";
+        $html = $this->load->view('student/temporary_admission/test', $data, true);
+
+        // Include Dompdf library
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
+
+        // Use the correct namespace for Dompdf and Options
+
+
+        // Initialize Dompdf
+        $options = new Options();
+        $options->set('isRemoteEnabled', true); // Enable loading of remote content like images
+        $dompdf = new Dompdf($options);
+
+        // Load HTML content
+        $dompdf->loadHtml($html);
+
+        // (Optional) Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        $output = $dompdf->output();
+        $file_path = FCPATH . 'uploads/test/test.pdf';
+        file_put_contents($file_path, $output);
+    }
+
 
     public function sendmail()
     {
