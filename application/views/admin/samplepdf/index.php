@@ -1,17 +1,44 @@
-<html>
-        <head>
-        </head>
-        <body>
-            <form method="post" action="send_mail.php" enctype="multipart/form-data">
-            To : <input type="text" name="mail_to"> <br/>
-            Subject :   <input type="text" name="mail_sub">
-           <br/>
-             Message   <input type="text" name="mail_msg">
-             <br/>
-            File: <input type="file" name="file" >
-            <br/>
-                <input type="submit" value="Send Email">
+<!DOCTYPE html>
+<html lang="en">
 
-            </form>
-        </body>
-    </html>
+<head>
+    <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+      </script>
+</head>
+
+<body>
+    <h3>Create a PDF from Form Content using html2pdf</h3>
+    <form id="pdfForm">
+        <label for="fullName">Full Name:</label>
+        <input type="text"
+               id="fullName"
+               name="fullName" 
+               placeholder="Enter your full name"><br><br>
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" 
+               id="phoneNumber" 
+               name="phoneNumber" 
+               placeholder="Enter your phone number"><br><br>
+
+        <label for="message">Message:</label>
+        <textarea id="message" 
+                  name="message" 
+                  placeholder="Write your message">
+          </textarea><br><br>
+
+        <input type="button" 
+               value="Generate PDF" 
+               onclick="generatePdf()">
+    </form>
+
+    <script>
+        function generatePdf() {
+            let formElement = document.getElementById('pdfForm');
+            html2pdf().from(formElement).save();
+        }
+    </script>
+</body>
+
+</html>
