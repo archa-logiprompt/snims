@@ -76,11 +76,10 @@
                 float: right;
             }
         </style>
-
         <div class="col-lg-12">
             <div class="receipt" id="receipt">
 
-                <input type="hidden" id="user_id" value="<?php echo $userdata['id']; ?>" />
+                <input type="hidden" id="user_id" value="<?php echo $student_id; ?>" />
 
                 <div class="header">
                     <h1>Payment Receipt</h1>
@@ -171,21 +170,22 @@
             }
 
             function confirmPayment() {
+
                 // Get the user ID from the hidden input field
                 var student_id = $("#user_id").val();
-                console.log($("#user_id").val());
                 // Ask for user confirmation
                 var confirmation = confirm("Are you sure you want to proceed?");
 
                 if (confirmation) {
+                    console.log(student_id);
                     $.ajax({
 
-                        url: '<?php echo base_url(); ?>temporary_user/TemporaryUser/updateStatus/' + student_id,
+                        url: '<?php echo base_url(); ?>/admin/temporary_admission/updateStatus/' + student_id,
                         type: 'POST',
 
                         success: function(data) {
 
-                            window.location.href = "<?php echo base_url(); ?>/admin/temporary_admission/search/" + student_id;
+                            window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;
                         },
 
                     });
