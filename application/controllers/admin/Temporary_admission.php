@@ -528,18 +528,18 @@ class Temporary_admission extends Admin_Controller
 
     public function updateStatus($id)
     {
-
         $this->db->where('id', $id);
-        $this->db->update('temporary_admission', ['status' => 3]);
+        $this->db->update('temporary_admission', ['status' => 2]);
 
 
-        $this->sendmail();
+        $documentName = $this->createDocument($id);
+        $this->sendmail($documentName);
 
 
         echo json_encode(['success' => true]);
     }
 
-    public function doctest()
+    public function createDocument($id)
     {
         $data['test'] = "test";
         $html = $this->load->view('student/temporary_admission/test', $data, true);
@@ -565,12 +565,14 @@ class Temporary_admission extends Admin_Controller
         $dompdf->render();
 
         $output = $dompdf->output();
-        $file_path = FCPATH . 'uploads/test/test.pdf';
+        $file_name = $id . '_' . time() . '.pdf';
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
         file_put_contents($file_path, $output);
+        return $file_name;
     }
 
 
-    public function sendmail()
+    public function sendmail($documentName)
     {
         require 'PHPMailer/src/Exception.php';
         require 'PHPMailer/src/PHPMailer.php';
@@ -578,7 +580,6 @@ class Temporary_admission extends Admin_Controller
 
         $this->load->library('form_validation');
         $this->load->library('email');
-
         $email_subject = 'Your Registration Details';
         $email_message = '<html><body>';
         $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
@@ -596,7 +597,7 @@ class Temporary_admission extends Admin_Controller
         $email_message .= '</body></html>';
 
         // Send the email using PHPMailer
-
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $documentName;
         $Body = "hai";
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -613,7 +614,7 @@ class Temporary_admission extends Admin_Controller
         $mail->Body = $email_message;
         $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
         $mail->msgHTML($email_message);
-        $mail->addAttachment('C:\wamp64\www\snims\uploads\pdf_20231009093449.pdf','pdf_20231009093449.pdf');
+        $mail->addAttachment($file_path, 'document.pdf');
         // $mail->AltBody = 'HTML messaging not supported';
         $mail->send();
     }
