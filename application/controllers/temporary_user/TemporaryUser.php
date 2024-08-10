@@ -134,7 +134,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $this->load->view('temporarystudent/downloadreceipt', $data);
     }
 
-    
+
     public function create()
     {
 
@@ -157,6 +157,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
 
         $section = $this->Temporary_admission_model->getsections();
@@ -486,20 +487,33 @@ class TemporaryUser extends Temporary_Student_Controller
                 $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
                 $this->Temporary_admission_model->add($data_img);
             }
+            $image_arr = array();
+            if (!empty($_FILES['images']['name'][0])) {
+                foreach ($_FILES['images']['name'] as $key => $name) {
+                    if ($_FILES['images']['error'][$key] == 0) {
+                        $file_name = $insert_id . '_' . time() . '_' . $key;
+                        $file_path = './uploads/temporary_admission/' . $file_name;
+                        $image_arr[] = $file_name;
 
-            if (isset($_FILES["tenth_doc"]) && !empty($_FILES['tenth_doc']['name'])) {
-                $fileInfo = pathinfo($_FILES["tenth_doc"]["name"]);
-                $img_name = time() . "10th" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["tenth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'tenth_doc' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
-            }
-            if (isset($_FILES["twelth_doc"]) && !empty($_FILES['twelth_doc']['name'])) {
-                $fileInfo = pathinfo($_FILES["twelth_doc"]["name"]);
-                $img_name = time() . "12th" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["twelth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'twelth_doc' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
+
+                        move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
+
+
+                    }
+                }
+                $image_arr = implode(',', $image_arr);
+                $this->db->where('id', $insert_id);
+                $query = $this->db->get('temp_user')->row();
+                if ($query) {
+                    $this->db->where('id', $insert_id);
+                    $this->db->update('temp_user', ['documents' => $image_arr]);
+                } else {
+
+                    $this->db->insert('temp_user', [
+                        'id' => $insert_id,
+                        'documents' => $image_arr
+                    ]);
+                }
             }
             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
             redirect('temporary_user/TemporaryUser');

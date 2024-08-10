@@ -51,7 +51,7 @@
                         <p>Stay connected with your child's academic journey</p>
                     </a>
                 </div>
-                <div><a href="<?php echo base_url(); ?>site/temporarystudentlogin" class="btn btn-primary">Login as Temporary Student</a></div>
+                <div><a href="<?php echo base_url(); ?>site/temporarystudentlogin" class="btn btn-primary">Candidate Login</a></div>
             </div>
         </section>
     </main>

@@ -889,12 +889,12 @@
 
 
         </div>
-        <div class="row bg-secondary rounded-top p-3">
+        <!-- <div class="row bg-secondary rounded-top p-3">
             <div class="text-white p-2 text-center text-md-start">
                 <span class="fw-bold "><?php echo "Details of qualifying details(MBBS)"; ?></span>
             </div>
-        </div>
-        <div class="row bg-light rounded-bottom shadow p-3 mb-4">
+        </div> -->
+        <!-- <div class="row bg-light rounded-bottom shadow p-3 mb-4">
 
             <div class="row">
                 <div class="col-md-3">
@@ -947,177 +947,9 @@
                 </div>
             </div>
             <div class="row">
-                <!-- <div class="col-md-3">
-                                          <div class="form-group">
-                                              <label for="exampleInputEmail1"><?php echo "Total mark Scored" ?></label><small class="text-danger"> *</small> 
-                                              <input id="total_mark" name="total_mark" placeholder="" type="number" class="form-control"  value="<?php echo set_value('total_mark'); ?>" />
-                                              <span class="text-danger"><?php echo form_error('total_mark'); ?></span>
-                                          </div>
-                                      </div> -->
+             
                 <div class="col-md-12">
-                    <!-- <table class="table">
-                        <thead>
-                            <tr>
-                                <th><?php echo "Subject" ?></th>
-                                <th><?php echo "Mark Awarded" ?></th>
-                                <th><?php echo "Maximum Marks" ?></th>
-                                <th><?php echo "%Mark" ?></th>
-                                <th><?php echo "Year" ?></th>
-
-
-                            </tr>
-                        </thead>
-                        <tbody>
-
-
-
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <?php echo "12th Exam details" ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="first_mbbs_scored" class="form-control" name="first_mbbs_scored" value="<?php echo set_value('table_data[' . $i . '][column2]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="first_mbbs_max" class="form-control" name="first_mbbs_max" value="<?php echo set_value('table_data[' . $i . '][column3]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="first_mbbs_per" class="form-control chem-percentage" name="first_mbbs_per" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="first_mbbs_year" class="form-control chem-percentage" name="first_mbbs_year" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <td>
-                                    <div class="form-group">
-                                        <?php echo "2nd Year MBBS" ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="phy_markob" class="form-control" name="second_mbbs_scored" value="<?php echo set_value('table_data[' . $i . '][column2]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="phy_maxmark" class="form-control" name="second_mbbs_max" value="<?php echo set_value('table_data[' . $i . '][column3]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="phy_per" class="form-control" name="second_mbbs_per" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="phy_per" class="form-control" name="second_mbbs_year" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <td>
-                                    <div class="form-group">
-                                        <?php echo "3rd Year MBBS (Part 1)" ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_scored" class="form-control" name="third_mbbs_scored" value="<?php echo set_value('table_data[' . $i . '][column2]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_max" class="form-control" name="third_mbbs_max" value="<?php echo set_value('table_data[' . $i . '][column3]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_per" class="form-control" name="third_mbbs_per" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_year" class="form-control" name="third_mbbs_year" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <?php echo "3rd Year MBBS(Part 2)" ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_scored2" class="form-control" name="third_mbbs_scored2" value="<?php echo set_value('table_data[' . $i . '][column2]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_max2" class="form-control" name="third_mbbs_max2" value="<?php echo set_value('table_data[' . $i . '][column3]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_per2" class="form-control" name="third_mbbs_per2" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="third_mbbs_year2" class="form-control" name="third_mbbs_year2" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <?php echo "Total" ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="med_total" class="form-control" name="med_total_scored" value="<?php echo set_value('table_data[' . $i . '][column2]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="med_total" class="form-control" name="med_total_max" value="<?php echo set_value('table_data[' . $i . '][column3]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="med_total" class="form-control eng-percentage" name="med_total_per" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" id="med_total" class="form-control eng-percentage" name="med_total_year" value="<?php echo set_value('table_data[' . $i . '][column4]'); ?>" />
-                                    </div>
-                                </td>
-
-                            </tr>
-
-
-                        </tbody>
-                    </table> -->
-
+                  
 
 
 
@@ -1322,7 +1154,7 @@
             </div>
 
 
-        </div>
+        </div> -->
         <div class="row bg-secondary rounded-top p-3">
             <div class="text-white p-2 text-center text-md-start">
                 <span class="fw-bold "><?php echo "NEET DETAILS"; ?></span>
@@ -1488,14 +1320,18 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo "Seat Type AIQ/Open merit/NRI" ?></label> <small
-                            class="text-danger"> *</small>
-                        <input id="seat_type" name="seat_type" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->seat_type ?>" />
-                        <span class="text-danger"><?php echo form_error('seat_type'); ?></span>
-                    </div>
-                </div>
+    <div class="form-group">
+        <label for="seat_type"><?php echo "Seat Type AIQ/Open merit/NRI"; ?></label> <small class="text-danger"> *</small>
+        <select id="seat_type" name="seat_type" class="form-control">
+            <option value="">Select Seat Type</option>
+            <option value="AIQ" <?php echo ($getdatafromstudentdetails->seat_type == 'AIQ') ? 'selected' : ''; ?>>AIQ</option>
+            <option value="Open Merit" <?php echo ($getdatafromstudentdetails->seat_type == 'Open Merit') ? 'selected' : ''; ?>>Open Merit</option>
+            <option value="NRI" <?php echo ($getdatafromstudentdetails->seat_type == 'NRI') ? 'selected' : ''; ?>>NRI</option>
+        </select>
+        <span class="text-danger"><?php echo form_error('seat_type'); ?></span>
+    </div>
+</div>
+
 
 
             </div>
@@ -1511,53 +1347,29 @@
 
             <div class="row">
             <div class="col-md-4">
-    <div class="form-group">
-        <label for="tenth_doc"><?php echo "Upload 10th Certificate"; ?></label>
+            <div class="form-group">
         
-        <?php if (!empty($getdatafromstudentdetails->tenth_doc)) : ?>
-            <div style="margin-bottom: 10px;">
-                <?php 
-                $file_path = base_url( $getdatafromstudentdetails->tenth_doc);
-                $file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
+             <input type="file" multiple="" name="images[]">    
                 
-                // Display the file based on its type
-                if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                    <img src="<?php echo $file_path; ?>" alt="10th Certificate" class="img-thumbnail" style="max-width: 100%; height: auto;">
-                <?php else : ?>
-                    <a href="<?php echo $file_path; ?>" download>Download Uploaded Document</a>
-                <?php endif; ?>
+             <?php if (!empty($getdatafromstudentdetails)): ?>
+                <ul>
+                    <?php foreach ($getdatafromstudentdetails->documents as $document): ?>
+                        <li>
+                            <!-- <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" target="_blank"><?= htmlspecialchars($document) ?></a> -->
+                            <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" >View Uploaded Document
+                    
+                </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p>No documents uploaded.</p>
+            <?php endif; ?>                  
+                    
+             </div>
             </div>
-        <?php endif; ?>
 
-        <input id="tenth_doc" name="tenth_doc" type="file" class="form-control" />
-        <span class="text-danger"><?php echo form_error('tenth_doc'); ?></span>
-    </div>
-</div>
-
-                <div class="col-md-4">
-                <div class="form-group">
-        <label for="twelth_doc"><?php echo "Upload 10th Certificate"; ?></label>
-        
-        <?php if (!empty($getdatafromstudentdetails->twelth_doc)) : ?>
-            <div style="margin-bottom: 10px;">
-                <?php 
-                $file_path = base_url( $getdatafromstudentdetails->twelth_doc);
-                $file_ext = pathinfo($file_path, PATHINFO_EXTENSION);
-                
-                // Display the file based on its type
-                if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) : ?>
-                    <img src="<?php echo $file_path; ?>" alt="10th Certificate" class="img-thumbnail" style="max-width: 100%; height: auto;">
-                <?php else : ?>
-                    <a href="<?php echo $file_path; ?>" download>Download Uploaded Document</a>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
-
-        <input id="twelth_doc" name="twelth_doc" type="file" class="form-control" />
-        <span class="text-danger"><?php echo form_error('twelth_doc'); ?></span>
-    </div>
-                </div>
-               
+             
             </div>
 
             <div class="row around10">
@@ -1575,12 +1387,12 @@
 
             </div>
         </div>
-        <div class="row bg-secondary rounded-top p-3">
+        <!-- <div class="row bg-secondary rounded-top p-3">
             <div class="text-white p-2 text-center text-md-start">
                 <span class="fw-bold "><?php echo "BANK ACCOUNT DETAILS"; ?></span>
             </div>
-        </div>
-        <div class="row bg-light rounded-bottom shadow p-3 mb-4">
+        </div> -->
+        <!-- <div class="row bg-light rounded-bottom shadow p-3 mb-4">
 
             <div class="row">
                 <div class="col-md-4">
@@ -1611,16 +1423,7 @@
 
             <div class="row around10">
 
-                <!-- <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">
-                            <?php echo $this->lang->line('local_identification_no'); ?>
-                        </label>
-                        <input id="samagra_id" name="samagra_id" placeholder="" type="text" class="form-control"
-                            value="<?php echo set_value('samagra_id'); ?>" />
-                        <span class="text-danger"><?php echo form_error('samagra_id'); ?></span>
-                    </div>
-                </div> -->
+               
                 <div class="col-md-4">
     <label><?php echo $this->lang->line('rte'); ?></label>
     <div class="radio" style="margin-top: 2px;">
@@ -1665,10 +1468,10 @@
 
 
             </div>
-            <div class="box-footer">
-                <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
-            </div>
-
+            
+        </div> -->
+        <div class="box-footer">
+            <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
         </div>
 
 </div>
