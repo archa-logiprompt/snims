@@ -133,7 +133,7 @@
                 </svg>
                 Download Receipt
             </button>
-            <button class="btn-receipt" onclick="confirmPayment()" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+            <button class="btn-receipt" id="verify-payment" onclick="confirmPayment()" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
                 </svg>Verify Payment</button>
         </div>
@@ -170,14 +170,12 @@
             }
 
             function confirmPayment() {
-
                 // Get the user ID from the hidden input field
                 var student_id = $("#user_id").val();
                 // Ask for user confirmation
                 var confirmation = confirm("Are you sure you want to proceed?");
 
                 if (confirmation) {
-                    console.log(student_id);
                     $.ajax({
 
                         url: '<?php echo base_url(); ?>/admin/temporary_admission/updateStatus/' + student_id,
