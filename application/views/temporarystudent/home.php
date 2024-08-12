@@ -1387,6 +1387,19 @@
 
             </div>
         </div>
+
+      
+
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="declarationCheckbox" required>
+        <label class="form-check-label" for="declarationCheckbox" >
+            I hereby declare that the information provided above is true to the best of my knowledge and belief.
+        </label>
+    </div>
+    <span class="text-danger"><?php echo form_error('declarationCheckbox'); ?></span>
+</div>
+
         <!-- <div class="row bg-secondary rounded-top p-3">
             <div class="text-white p-2 text-center text-md-start">
                 <span class="fw-bold "><?php echo "BANK ACCOUNT DETAILS"; ?></span>

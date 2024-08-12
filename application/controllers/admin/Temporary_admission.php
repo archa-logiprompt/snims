@@ -353,7 +353,8 @@ class Temporary_admission extends Admin_Controller
         $password = "test";
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
+        ;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -530,22 +531,227 @@ class Temporary_admission extends Admin_Controller
     {
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 2]);
+        
+        $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
+     
+        if (count($result) > 0) {
+
+            $order_no = $result[0]['order_no'];
+
+        } else {
+            $order_no = 0;
+
+        }
+        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+        // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+
+        $arr = [
+            'temp_user_id'=>$id,
+            'sign_id'=>$signer_details['id'],
+            'signer_email'=>$signer_details['mail'],
+            'order_no'=>$signer_details['orders'],
+            'status'=>0
+        ];
+
+        $this->db->insert('temp_admission_approval',$arr);
+
+        // $documentName = $this->createDocument($id);
+        $documentName = $this->sampledocument($id,$order_no);
+
+        $this->sendmail($documentName,$signer_details['mail'],$id);
 
 
-        $documentName = $this->createDocument($id);
-        $this->sendmail($documentName);
+        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+
+        echo json_encode(['message' => $response_message]);
+    }
+
+    public function sampledocument($id,$order_no)
+    {
+        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $images=[];
+
+        if($order_no>0){
+
+            $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
+            foreach ($uploadsignature as $key) {
+    
+                $images[] = 
+                    [
+                        'src' => $key['file'],
+                        'pageno' =>  $key['pageno'],
+                        'x' => $key['xcordinate'],
+                        'y' => $key['ycoordinate'],
+                        'width' => 200,
+                        'height' => 100,
+                    ];
+     
+            } 
+        }
+        $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
+        $pageIndexArray = [
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ],
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ]
+        ];
+        $html = "<html><head><style>
+        .page-break { page-break-before: always; }
+        .image-container { position: absolute; }
+        </style></head><body>";
+        $html .= "
+        <div style='position: relative;'>
+                <table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>
+                <tr><th colspan='2'>Student Details</th></tr>";
 
 
-        echo json_encode(['success' => true]);
+        foreach ($pageIndexArray as $pageno => $pageData) {
+            $pagecontentcount = 0;
+            foreach ($pageData as $pageContentTitle => $pageContent) {
+
+                $html .= "<tr><td>" . $pageContentTitle . "</td><td>" . $pageContent . "</td></tr>";
+
+                $pagecontentcount++;
+
+                if ($pagecontentcount == count($pageData)) {
+                    $html .= "
+                </table><table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>";
+                
+                $signatureimage = array_filter($images,function($im)use($pageno){
+                    return $im['pageno']==$pageno+1;
+                });
+
+                if(count($signatureimage)>0){
+                    foreach($signatureimage as $signature){
+                        $impath = $signature['src'];
+                        $type = pathinfo($impath, PATHINFO_EXTENSION);
+                        $data = file_get_contents($impath);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            
+                        // Create the page content with the image and table
+                        if($signature['x']>400){
+                            $signaturex = $signature['x']-400;
+                            $html .= "
+                            <div class='image-container' style='right: {$signaturex}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+                        }else{
+                            $html .= "
+                            <div class='image-container' style='left: {$signature['x']}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+
+                        }
+
+                    }
+                }
+                
+                }
+
+
+            }
+            if ($pageno == 1) {
+
+                $html .= " 
+                <p style='margin-top: 20px;'><strong>Declaration:</strong> I hereby declare that the information provided above is true and accurate to the best of my knowledge and belief.</p>    
+                </div>";
+            }
+            $html .= " <div class='page-break'></div> ";
+        } 
+ 
+
+
+
+        $html .= "</body></html>";
+ 
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+        // var_dump( $html);
+        // exit;
+        // Output the PDF to the browser or save it to a file
+        // $dompdf->stream("sample.pdf", ["Attachment" => false]); // Set to true to download the PDF
+        $file_name = $id . '_approval_' . time() . '.pdf';
+
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+
+        return $file_path;
     }
 
     public function createDocument($id)
     {
         $data['test'] = "test";
+        $studentdetails = $this->Temporary_admission_model->getstudentdetails($id);
+        $data['studentdetails'] = $studentdetails;
         $html = $this->load->view('student/temporary_admission/test', $data, true);
 
         // Include Dompdf library
-        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
+        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
 
         // Use the correct namespace for Dompdf and Options
 
@@ -565,15 +771,15 @@ class Temporary_admission extends Admin_Controller
         $dompdf->render();
 
         $output = $dompdf->output();
-        $file_name = $id . '_' . time() . '.pdf';
+        $file_name = $id . '_approval_' . time() . '.pdf';
         $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
         file_put_contents($file_path, $output);
         return $file_name;
     }
 
 
-    public function sendmail($documentName)
-    {
+    public function sendmail($documentName,$signermail,$tempid)
+    { 
         require 'PHPMailer/src/Exception.php';
         require 'PHPMailer/src/PHPMailer.php';
         require 'PHPMailer/src/SMTP.php';
@@ -593,11 +799,13 @@ class Temporary_admission extends Admin_Controller
         $email_message .= '<tr><td>Course Level</td><td>' . htmlspecialchars($data['courselevel']) . '</td></tr>';
         $email_message .= '<tr><td>Stream</td><td>' . htmlspecialchars($data['stream']) . '</td></tr>';
         $email_message .= '<tr><td>Course</td><td>' . htmlspecialchars($data['course']) . '</td></tr>';
+        $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
         $email_message .= '</table>';
+
         $email_message .= '</body></html>';
 
         // Send the email using PHPMailer
-        $file_path = FCPATH . 'uploads/candidate_documents/' . $documentName;
+        $file_path = $documentName;
         $Body = "hai";
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -609,7 +817,7 @@ class Temporary_admission extends Admin_Controller
         $mail->Username = "medicalcollege@drmoopensmc.ac.in";
         $mail->Password = "ayxuwqtlvgmxwnbi";
         $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
-        $mail->addAddress('archaaslogiprompt@gmail.com');
+        $mail->addAddress($signermail);
         $mail->Subject = $email_subject;
         $mail->Body = $email_message;
         $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';

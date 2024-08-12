@@ -54,7 +54,11 @@ class Temporary_admission_model extends CI_Model
        return $res;
 
     }
-
+    public function getsignaturedetails($order_no)
+    {
+        $res=$this->db->select('*')->where('orders<=',$order_no)->get('upload_signature')->result_array();
+        return $res;
+    }
     public function getDocumentById($id)
 {
     $query = $this->db->get_where('upload_signature', array('id' => $id));

@@ -65,6 +65,15 @@
 </head>
 
 <body>
+    <!-- Loading Screen Overlay -->
+<div id="loading-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(255, 255, 255, 0.8); z-index:9999; text-align:center;">
+    <div style="position:relative; top:50%; transform:translateY(-50%);">
+    <img src="<?php echo base_url(); ?>uploads/loader.gif" alt="Loading..." style="width:50px; height:50px;">
+
+        <p>Please wait while we verify your payment...</p>
+    </div>
+</div>
+
     <div class="row d-flex justify-content-evenly me-2">
         <style>
             .btn-receipt {
@@ -172,18 +181,27 @@
             function confirmPayment() {
                 // Get the user ID from the hidden input field
                 var student_id = $("#user_id").val();
+                console.log(student_id);
                 // Ask for user confirmation
                 var confirmation = confirm("Are you sure you want to proceed?");
 
                 if (confirmation) {
+                    $("#verify-payment").prop('disabled', true).css({
+                        'filter': 'blur(2px)',
+                        'opacity': '0.5'
+                    });
+
+                    $("#loading-screen").fadeIn();
+
                     $.ajax({
 
                         url: '<?php echo base_url(); ?>/admin/temporary_admission/updateStatus/' + student_id,
                         type: 'POST',
 
                         success: function(data) {
-
-                            window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;
+                            var response = JSON.parse(data);
+                            alert(response.message);
+                           window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;
                         },
 
                     });
