@@ -114,6 +114,8 @@
                                         <th><?php echo "Y-coordinate" ?></th>
                                         <th><?php echo "Hierarchy "?>
                                         </th>
+                                        <th><?php echo "Role "?>
+                                        </th>
                                         <th><?php echo "Page No "?>
                                         </th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
@@ -139,6 +141,16 @@
                                                 <td class="mailbox-name"><?php echo $value['xcordinate']; ?> </td>
                                                 <td class="mailbox-name"> <?php echo $value['ycoordinate']; ?></td>
                                                 <td class="mailbox-name"> <?php echo $value['orders']; ?></td>
+                                                <td class="mailbox-name">
+                                                    <?php 
+                                                    foreach ($roles as $role) {
+                                                        if ($role['id'] == $value['role']) { 
+                                                            echo $role['name']; 
+                                                        }
+                                                    }
+                                                    ?>
+                                                </td>
+
                                                 <td class="mailbox-name"> <?php echo $value['pageno']; ?></td>
                                                 <td class="mailbox-date pull-right" "="">
                                                    
