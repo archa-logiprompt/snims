@@ -120,8 +120,8 @@ class Expense_model extends CI_Model {
 
     public function getTotalExpenseBwdate($date_from, $date_to) {
 		$admin=$this->session->userdata('admin');
-        $query = 'SELECT sum(amount) as `amount` FROM `expenses` where date between ' . $this->db->escape($date_from) . ' and ' . $this->db->escape($date_to).'and centre_id='.$admin['centre_id'];
-
+        $query = 'SELECT sum(amount) as `amount` FROM `expenses` where date between ' . $this->db->escape($date_from) . ' and ' . $this->db->escape($date_to).' and centre_id='.$admin['centre_id'];
+ 
         $query = $this->db->query($query);
         return $query->row();
     }

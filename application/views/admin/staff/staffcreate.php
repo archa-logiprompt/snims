@@ -42,6 +42,7 @@
                                                     class="text-danger"><?php echo form_error('employee_id'); ?></span>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-md-3">
 
                                             <div class="form-group">
@@ -268,7 +269,15 @@
                                             </div>
                                         </div>
 
-
+                                        <div class="col-md-3">                               
+                                        <div class="form-group">
+                                            <label for="exampleInputFile"><?php echo "Upload Sign" ?></label>
+                                            <div>
+                                                <input class="filestyle form-control" type='file' name='sign' id="sign" />
+                                            </div>
+                                            <span class="text-danger"><?php echo form_error('file'); ?></span>
+                                        </div>
+                                        </div>
 
 
                                     </div>

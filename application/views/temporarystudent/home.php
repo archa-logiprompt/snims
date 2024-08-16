@@ -5,18 +5,30 @@
         </div>
     </div>
   
-<?php if ($status['status'] == '1'): ?>
+    <?php if ($status['status'] == '1'): ?>
     <div class="progress">
-            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-                25%
-            </div>
+        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
+            25%
         </div>
-        <?php elseif ($status['status'] == '2'): ?> 
-            <div class="progress">
-            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-                40%
-            </div>
+    </div>
+<?php elseif ($status['status'] == '2'): ?> 
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+            50%
         </div>
+    </div>
+<?php elseif ($status['status'] == '3'): ?> 
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
+            75%
+        </div>
+    </div>
+<?php elseif ($status['status'] == '4'): ?> 
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+            100%
+        </div>
+    </div>
 <?php endif; ?>
 
 

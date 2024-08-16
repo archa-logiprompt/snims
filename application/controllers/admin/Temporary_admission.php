@@ -381,10 +381,11 @@ class Temporary_admission extends Admin_Controller
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
         $res = $this->Temporary_admission_model->getalldocuments();
         $data['res'] = $res;
+        $roles = $this->role_model->get();
+        $data["roles"] = $roles;
 
-
-        $this->form_validation->set_rules('staffname', 'staffname', 'required');
-        $this->form_validation->set_rules('mail', 'Mail', 'required');
+        $this->form_validation->set_rules('xcordinate', 'xcordinate', 'required');
+        $this->form_validation->set_rules('ycoordinate', 'ycoordinate', 'required');
 
 
         if ($this->form_validation->run() == FALSE) {
@@ -404,7 +405,11 @@ class Temporary_admission extends Admin_Controller
                 'xcordinate' => $this->input->post('xcordinate'),
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
+                'pageno'=> $this->input->post('page_no'),
+                'picked_by_id'=>$this->input->post('picked_by_id'),
+                'role'=>$this->input->post('role')
             );
+        
 
 
             $visitor_id = $this->Temporary_admission_model->upload_signature($data);
@@ -415,9 +420,20 @@ class Temporary_admission extends Admin_Controller
                 $img_name = $visitor_id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
 
+              
+
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
 
+                      $impath = FCPATH."uploads/upload_signature/" . $img_name;
+                $type = pathinfo($impath, PATHINFO_EXTENSION);
+                $data = file_get_contents($impath);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                // var_dump($data);exit;
+                
+
                     $data_img = array('file' => $upload_path);
+                    $data_img['base_64_path'] = $base64;
+
                     $this->Temporary_admission_model->update_signature($visitor_id, $data_img);
                 } else {
 
@@ -530,35 +546,61 @@ class Temporary_admission extends Admin_Controller
     public function updateStatus($id)
     {
         $this->db->where('id', $id);
-        $this->db->update('temporary_admission', ['status' => 2]);
+        $this->db->update('temporary_admission', ['status' => 3]);
+        // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
         
         $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
-     
-        if (count($result) > 0) {
+        
+       
+      
+       
 
-            $order_no = $result[0]['order_no'];
+            if (count($result) > 0) {
 
-        } else {
-            $order_no = 0;
+                $order_no = $result[0]['order_no'];
+    
+            } else {
+                $order_no = 0;
+    
+            }
+            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+          
+            // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+            if($signer_details['picked_by_id']==1)
+            {
+               
+                $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+          
+                $arr = [
+                 'temp_user_id'=>$id,
+                 'sign_id'=>$signer_details['id'],
+                 'signer_email'=>$staff_details['email'],
+                 'order_no'=>$signer_details['orders'],
+                 'status'=>0
+             ];
+            }     
+              else{
+             
+                  $arr = [
+                      'temp_user_id'=>$id,
+                      'sign_id'=>$signer_details['id'],
+                      'signer_email'=>$signer_details['mail'],
+                      'order_no'=>$signer_details['orders'],
+                      'status'=>0
+                  ];
 
-        }
-        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-        // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+              }  
+        
+        
+       
 
-        $arr = [
-            'temp_user_id'=>$id,
-            'sign_id'=>$signer_details['id'],
-            'signer_email'=>$signer_details['mail'],
-            'order_no'=>$signer_details['orders'],
-            'status'=>0
-        ];
-
+         
         $this->db->insert('temp_admission_approval',$arr);
-
         // $documentName = $this->createDocument($id);
-        $documentName = $this->sampledocument($id,$order_no);
+       
+        $documentName = $this->sampledocument($id,$order_no,$arr);
 
-        $this->sendmail($documentName,$signer_details['mail'],$id);
+        $this->sendmail($documentName,$arr['signer_email'],$id);
 
 
         $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
@@ -566,7 +608,7 @@ class Temporary_admission extends Admin_Controller
         echo json_encode(['message' => $response_message]);
     }
 
-    public function sampledocument($id,$order_no)
+    public function sampledocument($id,$order_no,$arr)
     {
         require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
         $options = new Options();
@@ -574,24 +616,42 @@ class Temporary_admission extends Admin_Controller
         $options->set('isRemoteEnabled', true);
         $dompdf = new Dompdf($options);
         $images=[];
-
+        $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+        
+        
+        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+        
         if($order_no>0){
-
-            $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
-            foreach ($uploadsignature as $key) {
-    
+           
+            if($signer_details['picked_by_id']==1)
+            {
                 $images[] = 
-                    [
-                        'src' => $key['file'],
-                        'pageno' =>  $key['pageno'],
-                        'x' => $key['xcordinate'],
-                        'y' => $key['ycoordinate'],
-                        'width' => 200,
-                        'height' => 100,
-                    ];
-     
-            } 
-        }
+                [
+                    'src' => $staff_details['sign'],
+                    'pageno' =>  $signer_details['pageno'],
+                    'x' => $signer_details['xcordinate'],
+                    'y' => $signer_details['ycoordinate'],
+                    'width' => 200,
+                    'height' => 100,
+                ];
+            }else{
+                $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
+                foreach ($uploadsignature as $key) {
+        
+                    $images[] = 
+                        [
+                            'src' => $key['file'],
+                            'pageno' =>  $key['pageno'],
+                            'x' => $key['xcordinate'],
+                            'y' => $key['ycoordinate'],
+                            'width' => 200,
+                            'height' => 100,
+                        ];
+         
+                } 
+
+            }
+        }  
         $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
         $pageIndexArray = [
             [
@@ -721,7 +781,7 @@ class Temporary_admission extends Admin_Controller
 
 
         $html .= "</body></html>";
- 
+         
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
 
@@ -780,6 +840,7 @@ class Temporary_admission extends Admin_Controller
 
     public function sendmail($documentName,$signermail,$tempid)
     { 
+      
         require 'PHPMailer/src/Exception.php';
         require 'PHPMailer/src/PHPMailer.php';
         require 'PHPMailer/src/SMTP.php';
@@ -791,15 +852,10 @@ class Temporary_admission extends Admin_Controller
         $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
         $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
         $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
-        $email_message .= '<tr><td>Name</td><td>' . htmlspecialchars($data['name']) . '</td></tr>';
-        $email_message .= '<tr><td>Email</td><td>' . htmlspecialchars($data['email']) . '</td></tr>';
-        $email_message .= '<tr><td>Phone</td><td>' . htmlspecialchars($data['phone']) . '</td></tr>';
-        $email_message .= '<tr><td>City</td><td>' . htmlspecialchars($data['city']) . '</td></tr>';
-        $email_message .= '<tr><td>State</td><td>' . htmlspecialchars($data['state']) . '</td></tr>';
-        $email_message .= '<tr><td>Course Level</td><td>' . htmlspecialchars($data['courselevel']) . '</td></tr>';
-        $email_message .= '<tr><td>Stream</td><td>' . htmlspecialchars($data['stream']) . '</td></tr>';
-        $email_message .= '<tr><td>Course</td><td>' . htmlspecialchars($data['course']) . '</td></tr>';
-        $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+       
+            $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+        // $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . ' target="_blank">Click here to sign the document</a></td></tr>';
+
         $email_message .= '</table>';
 
         $email_message .= '</body></html>';
