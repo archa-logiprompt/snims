@@ -4,7 +4,11 @@
             <h3>APPLICATION FORM FOR ADMISSION TO M.B.B.S. DEGREE COURSE</h3>
         </div>
     </div>
-  
+    <?php 
+    $readonly = ($existing_details->status >= '1') ? 'readonly' : ''; 
+
+?>
+
     <?php if ($status['status'] == '1'): ?>
     <div class="progress">
         <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
@@ -91,60 +95,66 @@
                     </div>
                 </div> -->
                 <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">
-                            <?php echo "Centre/Board Reg Number"; ?></label>
-                        <small class="text-danger"></small>
-                        <input id="kuhs_reg" name="kuhs_reg" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->kuhs_reg ?>" />
-                        <span class="text-danger"><?php echo form_error('centre or board registration'); ?></span>
-                    </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">
+                        <?php echo "Centre/Board Reg Number"; ?>
+                    </label>
+                    <small class="text-danger"></small>
+                    <input id="kuhs_reg" name="kuhs_reg" placeholder="" type="text" class="form-control"
+                        value="<?php echo $getdatafromstudentdetails->kuhs_reg ?>" <?php echo $readonly; ?> />
+                    <span class="text-danger"><?php echo form_error('kuhs_reg'); ?></span>
                 </div>
+                        </div>
+
 
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('roll_no'); ?></label>
                         <input id="roll_no" name="roll_no" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->roll_no ?>" />
+                            value="<?php echo $getdatafromstudentdetails->roll_no ?>"<?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('roll_no'); ?></span>
                     </div>
                 </div>
 
                 <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small
-                            class="text-danger"> *</small>
-                        <select id="class_id" name="class_id" class="form-control">
-                            <option value=""><?php echo $this->lang->line('select'); ?></option>
-                            <?php foreach ($classlist as $class) { ?>
-                                <option value="<?php echo $class['id'] ?>" <?php if ($getdatafromstudentdetails->class_id == $class['id'])
-                                       echo "selected=selected" ?>>
-                                    <?php echo $class['class'] ?>
-                                </option>
-                                <?php $count++;
-                            } ?>
-                        </select>
-                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small
-                            class="text-danger"> *</small>
-                        <select id="section_id" name="section_id" class="form-control">
-                            <option value=""><?php echo $this->lang->line('select'); ?></option>
-                            <?php foreach ($section as $sec) {
-                                ?>
-                                <option value="<?php echo $sec['id'] ?>" <?php if ($getdatafromstudentdetails->section_id == $sec['id'])
-                                       echo "selected=selected" ?>>
-                                    <?php echo $sec['section'] ?>
-                                </option>
-    
-                            <?php } ?>
-                        </select>
-                        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-                    </div>
-                </div>
+                                    <div class="form-group">
+                                        <label for="class_id"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                        <select id="class_id" name="class_id" class="form-control">
+                                            <option value="5" selected="selected"><?php echo "MBBS" ?></option>
+                                            <?php foreach ($classlist as $class) { ?>
+                                                <option value="<?php echo $class['id']; ?>" style="display: none;"><?php echo $class['class']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small
+                                            class="text-danger"> *</small>
+                                        <select id="section_id" name="section_id" class="form-control">
+                                            <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                            <?php foreach ($section as $sec) {
+                                                ?>
+                                                <option value="<?php echo $sec['id'] ?>" <?php if ($getdatafromstudentdetails->section_id == $sec['id'])
+                                                    echo "selected=selected" ?>>
+                                                    <?php echo $sec['section'] ?>
+                                                </option>
+                    
+                                            <?php } ?>
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <select name="section_id" class="form-control">
+                                                    <option value="35"><?php echo  "1st Year" ?></option>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                            </div>
+                                        </div>
             </div>
             <div class="row">
 
@@ -171,7 +181,8 @@
     <div class="form-group">
         <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="text-danger"> *</small>
         <input id="dob" name="dob" placeholder="" type="date" class="form-control"
-            value="<?php echo $getdatafromstudentdetails->dob ?>" oninput="calculateAge()" />
+            value="<?php echo $getdatafromstudentdetails->dob ?>" oninput="calculateAge()"  <?php echo $readonly; ?> />
+
         <span class="text-danger"><?php echo form_error('dob'); ?></span>
     </div>
 </div>
@@ -179,19 +190,20 @@
     <div class="form-group">
         <label for="exampleInputEmail1"><?php echo "Age"; ?></label><small class="text-danger"> *</small>
         <input id="age" name="age" placeholder="" type="text" class="form-control"
-            value="<?php echo $getdatafromstudentdetails->age ?>" readonly />
+            value="<?php echo $getdatafromstudentdetails->age ?>"<?php echo $readonly; ?> />
+
         <span class="text-danger"><?php echo form_error('age'); ?></span>
     </div>
 </div>
                 
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('admission_date'); ?></label>
                         <input id="admission_date" name="admission_date" placeholder="" type="date" class="form-control"
                             value="<?php echo $getdatafromstudentdetails->admission_date; ?>" />
                         <span class="text-danger"><?php echo form_error('admission_date'); ?></span>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="row">
 
@@ -225,7 +237,8 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('religion'); ?></label>
                         <input id="religion" name="religion" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->religion ?>" />
+                            value="<?php echo $getdatafromstudentdetails->religion ?>"  <?php echo $readonly; ?> />
+
                         <span class="text-danger"><?php echo form_error('religion'); ?></span>
                     </div>
                 </div>
@@ -233,7 +246,8 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('cast'); ?></label>
                         <input id="cast" name="cast" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->cast ?>" />
+                            value="<?php echo $getdatafromstudentdetails->cast ?>" <?php echo $readonly; ?> />
+
                         <span class="text-danger"><?php echo form_error('cast'); ?></span>
                     </div>
                 </div>
@@ -329,7 +343,8 @@
 
                         ?>
                         <input type="text" name="height" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->height ?>">
+                            value="<?php echo $getdatafromstudentdetails->height ?>" <?php echo $readonly; ?> />
+
                         <span class="text-danger"><?php echo form_error('height'); ?></span>
                     </div>
                 </div>
@@ -341,7 +356,7 @@
 
                         ?>
                         <input type="text" name="weight" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->weight ?>">
+                            value="<?php echo $getdatafromstudentdetails->weight ?>"<?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('weight'); ?></span>
                     </div>
                 </div>
@@ -372,7 +387,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nationality</label>
                         <input id="nationality" name="nationality" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->nationality ?>" />
+                            value="<?php echo $getdatafromstudentdetails->nationality ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php
                         echo form_error('nationality');
                         ?></span>
@@ -387,7 +402,7 @@
                             <?php echo "Adhar No"; ?>
                         </label>
                         <input id="adhar_no" name="adhar_no" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->adhar_no ?>" />
+                            value="<?php echo $getdatafromstudentdetails->adhar_no ?>"<?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('adhar_no'); ?></span>
                     </div>
                 </div>
@@ -411,7 +426,7 @@
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('father_name'); ?></label><small
                             class="text-danger"> *</small>
                         <input id="father_name" name="father_name" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->father_name ?>" />
+                            value="<?php echo $getdatafromstudentdetails->father_name ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('father_name'); ?></span>
                     </div>
                 </div>
@@ -420,7 +435,7 @@
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('father_phone'); ?></label><small
                             class="text-danger"> *</small>
                         <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->father_phone ?>" />
+                            value="<?php echo $getdatafromstudentdetails->father_phone ?>"<?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
                     </div>
                 </div>
@@ -428,7 +443,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('father_occupation'); ?></label>
                         <input id="father_occupation" name="father_occupation" placeholder="" type="text"
-                            class="form-control" value="<?php echo $getdatafromstudentdetails->father_occupation ?>" />
+                            class="form-control" value="<?php echo $getdatafromstudentdetails->father_occupation ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('father_occupation'); ?></span>
                     </div>
                 </div>
@@ -442,7 +457,7 @@
             <?php if (!empty($getdatafromstudentdetails->father_pic)) : ?>
                 <img src="<?php echo base_url($getdatafromstudentdetails->father_pic); ?>" alt="Father's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
             <?php endif; ?>
-            <input class="filestyle form-control" type='file' name='father_pic' id="file" size='20' />
+            <input class="filestyle form-control" type='file' name='father_pic' id="file" size='20' <?php echo $readonly; ?> />
         </div>
         <span class="text-danger"><?php echo form_error('father_pic'); ?></span>
     </div>
@@ -454,7 +469,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_name'); ?></label>
                         <input id="mother_name" name="mother_name" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->mother_name ?>" />
+                            value="<?php echo $getdatafromstudentdetails->mother_name ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('mother_name'); ?></span>
                     </div>
                 </div>
@@ -462,7 +477,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_phone'); ?></label>
                         <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->mother_phone ?>" />
+                            value="<?php echo $getdatafromstudentdetails->mother_phone ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
                     </div>
                 </div>
@@ -470,7 +485,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_occupation'); ?></label>
                         <input id="mother_occupation" name="mother_occupation" placeholder="" type="text"
-                            class="form-control" value="<?php echo $getdatafromstudentdetails->mother_occupation ?>" />
+                            class="form-control" value="<?php echo $getdatafromstudentdetails->mother_occupation ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('mother_occupation'); ?></span>
                     </div>
                 </div>
@@ -485,7 +500,7 @@
                             <?php if (!empty($getdatafromstudentdetails->mother_pic)) : ?>
                                 <img src="<?php echo base_url($getdatafromstudentdetails->mother_pic); ?>" alt="Mother's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
                             <?php endif; ?>
-                            <input class="filestyle form-control" type='file' name='mother_pic' id="file" size='20' />
+                            <input class="filestyle form-control" type='file' name='mother_pic' id="file" size='20' <?php echo $readonly; ?> />
                         </div>
                         <span class="text-danger"><?php echo form_error('mother_pic'); ?></span>
                     </div>
@@ -497,33 +512,36 @@
                             <?php echo $this->lang->line('annual_income'); ?>
                         </label><small class="text-danger"> </small>
                         <input id="annual_income" name="annual_income" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->annual_income ?>" />
+                            value="<?php echo $getdatafromstudentdetails->annual_income ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('annual_income'); ?></span>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-12">
-                    <label><?php echo $this->lang->line('if_guardian_is'); ?><small class="text-danger">
-                            *</small>&nbsp;&nbsp;&nbsp;</label>
-                    <label class="radio-inline">
-                        <input type="radio" name="guardian_is" <?php
-                        echo set_value('guardian_is') == "father" ? "checked" : "";
-                        ?> value="father"> <?php echo $this->lang->line('father'); ?>
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="guardian_is" <?php
-                        echo set_value('guardian_is') == "mother" ? "checked" : "";
-                        ?> value="mother"> <?php echo $this->lang->line('mother'); ?>
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="guardian_is" <?php
-                        echo set_value('guardian_is') == "other" ? "checked" : "";
-                        ?> value="other"> <?php echo $this->lang->line('other'); ?>
-                    </label>
-                    <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
-                </div>
-            </div>
+    <div class="form-group col-md-12">
+        <label><?php echo $this->lang->line('if_guardian_is'); ?><small class="text-danger"> *</small>&nbsp;&nbsp;&nbsp;</label>
+        <label class="radio-inline">
+            <input type="radio" name="guardian_is" 
+                <?php echo set_value('guardian_is', 'father') == "father" ? "checked" : ""; ?> 
+                value="father"> 
+            <?php echo $this->lang->line('father'); ?>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="guardian_is" 
+                <?php echo set_value('guardian_is', 'father') == "mother" ? "checked" : ""; ?> 
+                value="mother"> 
+            <?php echo $this->lang->line('mother'); ?>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="guardian_is" 
+                <?php echo set_value('guardian_is', 'father') == "other" ? "checked" : ""; ?> 
+                value="other"> 
+            <?php echo $this->lang->line('other'); ?>
+        </label>
+        <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
+    </div>
+</div>
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
@@ -534,7 +552,7 @@
                                     class="text-danger"> *</small>
                                 <input id="guardian_name" name="guardian_name" placeholder="" type="text"
                                     class="form-control"
-                                    value="<?php echo $getdatafromstudentdetails->guardian_name ?>" />
+                                    value="<?php echo $getdatafromstudentdetails->guardian_name ?>" <?php echo $readonly; ?> />
                                 <span class="text-danger"><?php echo form_error('guardian_name'); ?></span>
                             </div>
                         </div>
@@ -544,7 +562,7 @@
                                     for="exampleInputEmail1"><?php echo $this->lang->line('guardian_relation'); ?></label>
                                 <input id="guardian_relation" name="guardian_relation" placeholder="" type="text"
                                     class="form-control"
-                                    value="<?php echo $getdatafromstudentdetails->guardian_relation ?>" />
+                                    value="<?php echo $getdatafromstudentdetails->guardian_relation ?>" <?php echo $readonly; ?> />
                                 <span class="text-danger"><?php echo form_error('guardian_relation'); ?></span>
                             </div>
                         </div>
@@ -557,7 +575,7 @@
                                     class="text-danger"> *</small>
                                 <input id="guardian_phone" name="guardian_phone" placeholder="" type="text"
                                     class="form-control"
-                                    value="<?php echo $getdatafromstudentdetails->guardian_phone ?>" />
+                                    value="<?php echo $getdatafromstudentdetails->guardian_phone ?>" <?php echo $readonly; ?> />
                                 <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
                             </div>
                         </div>
@@ -567,7 +585,7 @@
                                     for="exampleInputEmail1"><?php echo $this->lang->line('guardian_occupation'); ?></label>
                                 <input id="guardian_occupation" name="guardian_occupation" placeholder="" type="text"
                                     class="form-control"
-                                    value="<?php echo $getdatafromstudentdetails->guardian_occupation ?>" />
+                                    value="<?php echo $getdatafromstudentdetails->guardian_occupation ?>" <?php echo $readonly; ?> />
                                 <span class="text-danger"><?php echo form_error('guardian_occupation'); ?></span>
                             </div>
                         </div>
@@ -577,7 +595,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_email'); ?></label>
                         <input id="guardian_email" name="guardian_email" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->guardian_email ?>" />
+                            value="<?php echo $getdatafromstudentdetails->guardian_email ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('guardian_email'); ?></span>
                     </div>
 
@@ -592,7 +610,7 @@
                                 <img src="<?php echo base_url($getdatafromstudentdetails->guardian_pic); ?>" alt="Mother's Photo" class="img-thumbnail" style="max-width: 100%; height: auto; margin-bottom: 10px;">
                             <?php endif; ?>
                             <input class="filestyle form-control" type='file' name='guardian_pic' id="file"
-                                size='20' />
+                                size='20' <?php echo $readonly; ?> />
                         </div>
                         <span class="text-danger"><?php echo form_error('file'); ?></span>
                     </div>
@@ -653,7 +671,7 @@
                         <label for="exampleInputEmail1"><?php echo "Last Institution Attended" ?></label><small
                             class="text-danger"> *</small>
                         <input id="previous_school" name="previous_school" placeholder="" type="text"
-                            class="form-control" value="<?php echo $getdatafromstudentdetails->previous_school ?>" />
+                            class="form-control" value="<?php echo $getdatafromstudentdetails->previous_school ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('previous_school'); ?></span>
                     </div>
                 </div>
@@ -662,7 +680,7 @@
                         <label for="exampleInputEmail1"><?php echo "Name of Qualifying Examination" ?></label><small
                             class="text-danger"> *</small>
                         <input id="qualifying_exam" name="qualifying_exam" placeholder="" type="text"
-                            class="form-control" value="<?php echo $getdatafromstudentdetails->qualifying_exam; ?>" />
+                            class="form-control" value="<?php echo $getdatafromstudentdetails->qualifying_exam; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('qualifying_exam'); ?></span>
                     </div>
                 </div>
@@ -671,7 +689,7 @@
                         <label for="exampleInputEmail1"><?php echo "Reg No" ?></label> <small class="text-danger">
                             *</small>
                         <input id="regno" name="regno" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->regno; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->regno; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('regno'); ?></span>
                     </div>
                 </div>
@@ -680,7 +698,7 @@
                         <label for="exampleInputEmail1"><?php echo "Month & Year" ?></label><small class="text-danger">
                             *</small>
                         <input id="monthyear" name="monthyear" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->monthyear; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->monthyear; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('monthyear'); ?></span>
                     </div>
                 </div>
@@ -691,7 +709,7 @@
                         <label for="exampleInputEmail1"><?php echo "Total mark Scored" ?></label><small
                             class="text-danger"> *</small>
                         <input id="total_mark" name="total_mark" placeholder="" type="number" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->total_mark; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->total_mark; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('total_mark1'); ?></span>
                     </div>
                 </div>
@@ -707,7 +725,7 @@
                         <label for="exampleInputEmail1"><?php echo "Neet Rank" ?></label><small class="text-danger">
                             *</small>
                         <input id="neetrank" name="neetrank" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->neetrank ?>" />
+                            value="<?php echo $getdatafromstudentdetails->neetrank ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('neetrank'); ?></span>
                     </div>
                 </div>
@@ -716,7 +734,7 @@
                         <label for="exampleInputEmail1"><?php echo "Total Mark" ?></label><small class="text-danger">
                             *</small>
                         <input id="totmark" name="totmark" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->totmark ?>" />
+                            value="<?php echo $getdatafromstudentdetails->totmark ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('totmark'); ?></span>
                     </div>
                 </div>
@@ -750,20 +768,20 @@
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="chem_markob" class="form-control" name="chem_markob"
-                                            value="<?php echo $getdatafromstudentdetails->chem_markob ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->chem_markob ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="chem_maxmark" class="form-control" name="chem_maxmark"
-                                            value="<?php echo $getdatafromstudentdetails->chem_maxmark ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->chem_maxmark ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="chem_per" class="form-control chem-percentage"
                                             name="chem_per"
-                                            value="<?php echo $getdatafromstudentdetails->chem_per ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->chem_per ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -776,19 +794,19 @@
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="phy_markob" class="form-control" name="phy_markob"
-                                            value="<?php echo $getdatafromstudentdetails->phy_markob ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->phy_markob ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="phy_maxmark" class="form-control" name="phy_maxmark"
-                                            value="<?php echo $getdatafromstudentdetails->phy_maxmark ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->phy_maxmark ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="phy_per" class="form-control" name="phy_per"
-                                            value="<?php echo $getdatafromstudentdetails->phy_per ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->phy_per ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -801,19 +819,19 @@
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="bio_markob" class="form-control" name="bio_markob"
-                                            value="<?php echo $getdatafromstudentdetails->bio_markob ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->bio_markob ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="bio_maxmark" class="form-control" name="bio_maxmark"
-                                            value="<?php echo $getdatafromstudentdetails->bio_maxmark ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->bio_maxmark ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="bio_per" class="form-control" name="bio_per"
-                                            value="<?php echo $getdatafromstudentdetails->bio_per ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->bio_per ?>"<?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -826,19 +844,19 @@
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="tot1" class="form-control" name="tot1"
-                                            value="<?php echo $getdatafromstudentdetails->tot1 ?>" readonly />
+                                            value="<?php echo $getdatafromstudentdetails->tot1 ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="tot2" class="form-control" name="tot2"
-                                            value="<?php echo $getdatafromstudentdetails->tot2; ?>" readonly />
+                                            value="<?php echo $getdatafromstudentdetails->tot2; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="tot3" class="form-control" name="tot3"
-                                            value="<?php echo $getdatafromstudentdetails->tot3; ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->tot3; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -851,19 +869,19 @@
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="eng_markob" class="form-control" name="eng_markob"
-                                            value="<?php echo $getdatafromstudentdetails->eng_markob; ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->eng_markob; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="eng_maxmark" class="form-control" name="eng_maxmark"
-                                            value="<?php echo $getdatafromstudentdetails->eng_maxmark; ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->eng_maxmark; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="eng_per" class="form-control eng-percentage"
-                                            name="eng_per" value="<?php echo $getdatafromstudentdetails->eng_per; ?>" />
+                                            name="eng_per" value="<?php echo $getdatafromstudentdetails->eng_per; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -878,19 +896,19 @@
                                         <input type="text" id="total_markobtained" class="form-control"
                                             name="total_markobtained"
                                             value="<?php echo $getdatafromstudentdetails->total_markobtained ?>"
-                                            readonly />
+                                            readonly <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="total_maxmark" class="form-control" name="total_maxmark"
-                                            value="<?php echo $getdatafromstudentdetails->total_maxmark ?>" readonly />
+                                            value="<?php echo $getdatafromstudentdetails->total_maxmark ?>" readonly <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" id="total_per" class="form-control" name="total_per"
-                                            value="<?php echo $getdatafromstudentdetails->total_per ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->total_per ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
                             </tr>
@@ -1180,7 +1198,7 @@
                         <label for="exampleInputEmail1"><?php echo "Neet Registration Number" ?></label><small
                             class="text-danger"> *</small>
                         <input id="neet_reg" name="neet_reg" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->neet_reg; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->neet_reg; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('neet_reg'); ?></span>
                     </div>
                 </div>
@@ -1189,7 +1207,7 @@
                         <label for="exampleInputEmail1"><?php echo "Neet Rank" ?></label><small class="text-danger">
                             *</small>
                         <input id="neet_rank" name="neet_rank" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->neet_rank; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->neet_rank; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('neet_rank'); ?></span>
                     </div>
                 </div>
@@ -1198,7 +1216,7 @@
                         <label for="exampleInputEmail1"><?php echo "Neet Marks" ?></label> <small class="text-danger">
                             *</small>
                         <input id="neet_marks" name="neet_marks" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->neet_marks; ?>" />
+                            value="<?php echo $getdatafromstudentdetails->neet_marks; ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('neet_marks'); ?></span>
                     </div>
                 </div>
@@ -1238,7 +1256,7 @@
                                     <div class="form-group">
                                         <input type="text" id="neet_phy_mark_obtained" class="form-control"
                                             name="neet_phy_mark_obtained"
-                                            value="<?php echo $getdatafromstudentdetails->neet_phy_mark_obtained; ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->neet_phy_mark_obtained; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
 
@@ -1255,7 +1273,7 @@
                                     <div class="form-group">
                                         <input type="text" id="neet_chem_mark_obtained" class="form-control"
                                             name="neet_chem_mark_obtained"
-                                            value="<?php echo $getdatafromstudentdetails->neet_chem_mark_obtained; ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->neet_chem_mark_obtained; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
 
@@ -1272,7 +1290,7 @@
                                     <div class="form-group">
                                         <input type="text" id="neet_bio_mark_biology" class="form-control"
                                             name="neet_bio_mark_biology"
-                                            value="<?php echo  $getdatafromstudentdetails->neet_bio_mark_biology; ?>" />
+                                            value="<?php echo  $getdatafromstudentdetails->neet_bio_mark_biology; ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
 
@@ -1288,7 +1306,7 @@
                                     <div class="form-group">
                                         <input type="text" id="neet_percentile" class="form-control"
                                             name="neet_percentile"
-                                            value="<?php echo $getdatafromstudentdetails->neet_percentile ?>" />
+                                            value="<?php echo $getdatafromstudentdetails->neet_percentile ?>" <?php echo $readonly; ?> />
                                     </div>
                                 </td>
 
@@ -1318,7 +1336,7 @@
                         <label for="exampleInputEmail1"><?php echo "Keam Roll Number" ?></label><small
                             class="text-danger"> *</small>
                         <input id="keam_roll_no" name="keam_roll_no" placeholder="" type="text" class="form-control"
-                            value="<?php echo $getdatafromstudentdetails->keam_roll_no ?>" />
+                            value="<?php echo $getdatafromstudentdetails->keam_roll_no ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('keam_roll_no'); ?></span>
                     </div>
                 </div>
@@ -1327,7 +1345,7 @@
                         <label for="exampleInputEmail1"><?php echo "Kerala Medical Rank" ?></label><small
                             class="text-danger"> *</small>
                         <input id="kerala_medical_rank" name="kerala_medical_rank" placeholder="" type="text"
-                            class="form-control" value="<?php echo $getdatafromstudentdetails->kerala_medical_rank ?>" />
+                            class="form-control" value="<?php echo $getdatafromstudentdetails->kerala_medical_rank ?>" <?php echo $readonly; ?> />
                         <span class="text-danger"><?php echo form_error('kerala_medical_rank'); ?></span>
                     </div>
                 </div>

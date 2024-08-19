@@ -59,7 +59,7 @@
                                     <div class="form-group">
                                         <label for="class_id"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
                                         <select id="class_id" name="class_id" class="form-control">
-                                            <option value="MBBS" selected="selected"><?php echo "MBBS" ?></option>
+                                            <option value="5" selected="selected"><?php echo "MBBS" ?></option>
                                             <?php foreach ($classlist as $class) { ?>
                                                 <option value="<?php echo $class['id']; ?>" style="display: none;"><?php echo $class['class']; ?></option>
                                             <?php } ?>
@@ -81,23 +81,23 @@
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
                                                 <select name="section_id" class="form-control">
-                                                    <option value="1st Year"><?php echo  "1st Year" ?></option>
+                                                    <option value="35"><?php echo  "1st Year" ?></option>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('section_id'); ?></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-    <div class="form-group">
-        <label for="session_list"><?php echo "Sessions" ?></label><small class="req"> *</small>
-        <select id="session_list" name="session_list" class="form-control">
-            <option value="2024-25" selected="selected"><?php echo "2024-25" ?></option>
-            <?php foreach ($sessionlist as $session) { ?>
-                <option value="<?php echo $session['id']; ?>" style="display: none;"><?php echo $session['session']; ?></option>
-            <?php } ?>
-        </select>
-        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-    </div>
-</div>
+                                        <div class="form-group">
+                                            <label for="session_list"><?php echo "Sessions" ?></label><small class="req"> *</small>
+                                            <select id="session_list" name="session_list" class="form-control">
+                                                <option value="" selected="selected">Select</option>
+                                                <?php foreach ($sessionlist as $session) { ?>
+                                                    <option value="<?php echo $session['id']; ?>"><?php echo $session['session']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                        </div>
+                                    </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">

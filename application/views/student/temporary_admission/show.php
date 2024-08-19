@@ -636,34 +636,24 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <div class="table-responsive around10 pt0">
                                     <table class="table table-hover table-striped tmb0">
                                         <tbody>
+                                            
                                             <tr>
-                                                <td class="col-md-4"><?php echo "10th Certificate"; ?></td>
                                                 <td class="col-md-5">
-                                                    <?php if (!empty($getstudentdetails['tenth_doc'])) : ?>
-                                                        <?php
-                                                        $file_path = base_url($getstudentdetails['tenth_doc']);
-                                                        ?>
-                                                        <a href="<?php echo $file_path; ?>" download>Download 10th Certificate</a>
-                                                    <?php else : ?>
-                                                        <?php echo "No document uploaded"; ?>
-                                                    <?php endif; ?>
-                                                </td>
+                                                    <?php if (!empty($getstudentdetails)): ?>
+                                                  
+                                                        <ul>
+                                                            <?php  foreach (explode(",",$getstudentdetails['documents']) as $document): ?>
+                                                            <li>
+                                                            <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" >View Uploaded Document
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php else: ?>
+                                                    <p>No documents uploaded.</p>
+                                                <?php endif; ?>                  
+                                            </td>
                                             </tr>
 
-
-                                            <tr>
-                                                <td class="col-md-4"><?php echo "12th Certificate"; ?></td>
-                                                <td class="col-md-5">
-                                                    <?php if (!empty($getstudentdetails['twelth_doc'])) : ?>
-                                                        <?php
-                                                        $file_path = base_url($getstudentdetails['twelth_doc']);
-                                                        ?>
-                                                        <a href="<?php echo $file_path; ?>" download>Download 12th Certificate</a>
-                                                    <?php else : ?>
-                                                        <?php echo "No document uploaded"; ?>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
 
                                         </tbody>
                                     </table>

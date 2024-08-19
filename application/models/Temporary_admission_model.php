@@ -208,7 +208,7 @@ class Temporary_admission_model extends CI_Model
     }
     public function getexistingdetails($id)
     {
-        $result = $this->db->select('firstname,lastname,email,phone')->where('id', $id)->from('temporary_admission')->get()->row();
+        $result = $this->db->select('firstname,lastname,email,phone,status')->where('id', $id)->from('temporary_admission')->get()->row();
         return $result;
     }
     public function getstudentdetails($id)
