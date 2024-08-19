@@ -1,7 +1,12 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
+
 
 class Site extends Public_Controller
 {
@@ -378,6 +383,454 @@ class Site extends Public_Controller
 
         $this->load->view('landingpage');
     }
+
+
+    // temporary admission mail approval fns
+    function approvemail($mail, $id)
+    {
+
+        $this->db->where(['signer_email' => $mail, 'temp_user_id' => $id])->update('temp_admission_approval', ['status' => 1]);
+        $this->updateStatus($id);
+        return 'Approved';
+    }
+
+    public function updateStatus($id)
+    {
+        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
+       
+        $student_details=$this->db->select('*')->where('id',$id)->get('temporary_admission')->row_array();
+
+        if (count($result) > 0) {
+            
+            $order_no = $result[0]['order_no'];
+            
+            $signer_details = $this->db->where('orders', $order_no+1)->get('upload_signature')->row_array(); 
+            
+            $documentName = $this->sampledocument($id, $order_no);
+
+        } else {
+
+            $order_no = 1;
+
+            $signer_details = $this->db->where('orders', $order_no)->get('upload_signature')->row_array(); 
+
+            $documentName = $this->sampledocument($id, $order_no);
+
+        }
+     
+ 
+        $max_order = $this->db->select_max('orders')->get('upload_signature')->row_array();
+
+        $arr = [
+            'temp_user_id' => $id,
+            'sign_id' => $signer_details['id'],
+            'signer_email' => $signer_details['mail'],
+            'order_no' => $signer_details['orders'], 
+            'status' => 0
+        ];
+
+
+
+    
+
+        // $documentName = $this->createDocument($id);
+        $welcomeDocument = '';
+        if($signer_details['role']=='42'){
+            $welcomeDocument = $this->welcomedocument($id, $order_no + 1);
+        }
+        
+    
+        if($result[0]['order_no']==$max_order['orders'])
+        {
+            $welcomeDocument = $this->welcomedocument($id, $order_no + 1,true);
+            $this->db->where('id', $id)->update('temporary_admission', ['status' => 4]);
+   
+            $this->sendmail($welcomeDocument, $student_details['email'], $id,true);
+        }
+        else
+        {
+            $this->db->insert('temp_admission_approval', $arr);
+                  
+            $this->sendmail($documentName, $signer_details['mail'], $id,false,$welcomeDocument);
+        }
+
+     
+
+        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+
+        echo json_encode(['message' => $response_message]);
+    }
+
+    public function sampledocument($id, $order_no)
+    {
+        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $images = [];
+        
+        if ($order_no > 0) {
+            
+            $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
+          
+          
+            foreach ($uploadsignature as $key) {
+             
+                if($key['picked_by_id']==1)
+                {
+                    $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+                    $images[] =
+                    [
+                        'src' => FCPATH.'uploads/upload_signature/'.$staff_details['sign'],
+                        'pageno' => $key['pageno'],
+                        'x' => $key['xcordinate'],
+                        'y' => $key['ycoordinate'],
+                        'width' => 200,
+                        'height' => 100,
+                    ];
+                }
+                else
+                {
+                    $images[] =
+                        [
+                            'src' => $key['file'],
+                            'pageno' => $key['pageno'],
+                            'x' => $key['xcordinate'],
+                            'y' => $key['ycoordinate'],
+                            'width' => 200,
+                            'height' => 100,
+                        ];
+
+                }
+
+            }
+        }  
+
+        $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
+        $pageIndexArray = [
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ],
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ]
+        ];
+        $html = "<html><head><style>
+        .page-break { page-break-before: always; }
+        .image-container { position: absolute; }
+        </style></head><body>";
+        $html .= "
+        <div style='position: relative;'>
+                <table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>
+                <tr><th colspan='2'>Student Details</th></tr>";
+
+
+        foreach ($pageIndexArray as $pageno => $pageData) {
+            $pagecontentcount = 0;
+            foreach ($pageData as $pageContentTitle => $pageContent) {
+
+                $html .= "<tr><td>" . $pageContentTitle . "</td><td>" . $pageContent . "</td></tr>";
+
+                $pagecontentcount++;
+
+                if ($pagecontentcount == count($pageData)) {
+                    $html .= "
+                </table><table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>";
+
+                    $signatureimage = array_filter($images, function ($im) use ($pageno) {
+                        return $im['pageno'] == $pageno + 1;
+                    });
+
+                    if (count($signatureimage) > 0) {
+                        foreach ($signatureimage as $signature) {
+                            $impath = $signature['src'];
+                            $type = pathinfo($impath, PATHINFO_EXTENSION);
+                            $data = file_get_contents($impath);
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+                            // Create the page content with the image and table
+                            if ($signature['x'] > 400) {
+                                $signaturex = $signature['x'] - 400;
+                                $html .= "
+                            <div class='image-container' style='right: {$signaturex}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+                            } else {
+                                $html .= "
+                            <div class='image-container' style='left: {$signature['x']}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+
+                            }
+
+                        }
+                    }
+
+                }
+
+
+            }
+            if ($pageno == 1) {
+
+                $html .= " 
+                <p style='margin-top: 20px;'><strong>Declaration:</strong> I hereby declare that the information provided above is true and accurate to the best of my knowledge and belief.</p>    
+                </div>";
+            }
+            if(count($pageIndexArray)!=$pageno){
+
+                $html .= " <div class='page-break'></div> ";
+            }
+        }
+
+
+
+
+        $html .= "</body></html>"; 
+
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+        // var_dump( $html);
+        // exit;
+        // Output the PDF to the browser or save it to a file
+        // $dompdf->stream("sample.pdf", ["Attachment" => false]); // Set to true to download the PDF
+        $file_name = $id . '_approval_' . time() . '.pdf';
+
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+
+        return $file_path;
+    }
+
+    public function welcomedocument($id, $order_no,$is_student=false)
+    {
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $images = [];
+
+        // Your logic for fetching images remains the same...
+        $principal_signature = $this->db->where('role',42)->get('upload_signature')->row();
+
+
+
+        if($is_student){ 
+            
+            $images[] = [
+            'src' => $principal_signature->file,
+            'pageno' => 1,
+            'x' => $key['xcordinate'],
+            'y' => $key['ycoordinate'],
+            'width' => 200,
+            'height' => 100,
+            ];
+
+        }
+
+       
+        // if ($order_no > 0) {
+        //     foreach ($uploadsignature as $key) {
+        //         if ($key['picked_by_id'] == 1) {
+        //             $staff_details = $this->db->select('staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+                   
+        //         } else {
+        //             $images[] = [
+        //                 'src' => $key['file'],
+        //                 'pageno' => $key['pageno'],
+        //                 'x' => $key['xcordinate'],
+        //                 'y' => $key['ycoordinate'],
+        //                 'width' => 200,
+        //                 'height' => 100,
+        //             ];
+        //         }
+        //     }
+        // }
+
+        // Updated HTML content
+        $html = "<html><head><style>
+        .page-break { page-break-before: always; }
+        .image-container { position: absolute; }
+        </style></head><body>";
+        $html .= "
+        <div style='position: relative;'>
+        <p>Dear Student,</p>
+        <p>It is my great pleasure to welcome you all to Sree Narayana Institute of Medical Sciences.</p>
+        <p>Today marks the beginning of a significant chapter in your lives, a journey that will shape
+        your future as medical professionals and compassionate caregivers.</p>
+        <p>At this prestigious institute, you are not just embarking on a journey of acquiring medical
+        knowledge; you are becoming part of a legacy—a legacy built on the principles of
+        excellence, integrity, and service to humanity. Sree Narayana Guru, the guiding light of our
+        institution, stood for the dignity of every individual and the pursuit of knowledge with
+        humility and compassion. As you step into this new phase, I urge you to embody these values
+        in every aspect of your education and practice.</p>
+        <p>Our institute is renowned not just for academic excellence but also for the high standards of
+        conduct and professionalism that we uphold. The dignity of our institution is something we
+        hold in the highest regard, and it is the collective responsibility of every member of our
+        community, including you, to maintain and enhance this dignity. As future doctors and
+        healthcare professionals, your actions, both within and outside the classroom, reflect on our
+        institution's reputation. Strive to uphold the ethical standards and professionalism that are
+        expected of you, not just for yourselves but for the generations of students who will follow in
+        your footsteps.</p>
+        <p>Welcome to Sree Narayana Institute of Medical Sciences. Together, let us strive to make your
+        journey here not just successful, but truly exceptional.</p>
+        <p>Thank you.</p>
+        <p><strong>Principal</strong><br>
+        Sree Narayana Institute of Medical Sciences</p>";
+
+
+       
+        // Logic to add images to the HTML document (if any)
+        foreach ($images as $signature) {
+            $impath = $signature['src'];
+            $type = pathinfo($impath, PATHINFO_EXTENSION);
+            $data = file_get_contents($impath);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            if ($signature['x'] > 400) {
+                $signaturex = $signature['x'] - 400;
+                $html .= "<div class='image-container' style='right: {$signaturex}px; bottom: {$signature['y']}px; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                        <img src='$base64' style='width: 100%; height: 100%;' />
+                      </div>";
+            } else {
+                $html .= "<div class='image-container' style='left: {$signature['x']}px; bottom: {$signature['y']}px; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                        <img src='$base64' style='width: 100%; height: 100%;' />
+                      </div>";
+            }
+        }
+        
+
+
+        $html .= "</div></body></html>";
+
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        // Save the PDF to a file
+        $file_name = $id . '_approval_welcome' . time() . '.pdf';
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+        return $file_path;
+    }
+    public function sendmail($documentName, $signermail, $tempid,$to_student=false,$welcomeDocument='')
+    {
+        require 'PHPMailer/src/Exception.php';
+        require 'PHPMailer/src/PHPMailer.php';
+        require 'PHPMailer/src/SMTP.php';
+
+        $this->load->library('form_validation');
+        $this->load->library('email');
+        $email_subject = 'Your Registration Details';
+        $email_message = '<html><body>';
+        $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
+        if(!$to_student){
+            
+        $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
+        $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
+      
+        $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+        $email_message .= '</table>';
+        }
+
+        $email_message .= '</body></html>';
+
+        // Send the email using PHPMailer
+        $file_path = $documentName;
+        $Body = "hai";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Host = "smtp.gmail.com";
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "medicalcollege@drmoopensmc.ac.in";
+        $mail->Password = "ayxuwqtlvgmxwnbi";
+        $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
+        $mail->addAddress($signermail);
+        $mail->Subject = $email_subject;
+        $mail->Body = $email_message;
+        $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
+        $mail->msgHTML($email_message);
+        $mail->addAttachment($file_path, 'document.pdf');
+
+        if($welcomeDocument!=''){
+
+            $welcome_file_path = $welcomeDocument;
+            $mail->addAttachment($welcome_file_path, 'welcomedocument.pdf');
+        }
+        // $mail->AltBody = 'HTML messaging not supported';
+        $mail->send();
+    }
+
+
     function userlogin()
     {
         //redirect('site/userlogin');
@@ -498,6 +951,7 @@ class Site extends Public_Controller
         }
     }
 
+
     public function temporarystudentlogin()
     {
 
@@ -599,7 +1053,7 @@ class Site extends Public_Controller
     //     }
     //     return $makepass;
     // }
-   private function generateOTP($length)
+    private function generateOTP($length)
     {
         $salt = "0";
         $len = strlen($salt);
@@ -610,25 +1064,22 @@ class Site extends Public_Controller
         }
         return $makepass;
     }
-    
+
     public function successadmissionpayment()
     {
         $postData = explode('|', $this->input->post('msg'));
-        
-        if( $postData[0]=='0399')
-        {
+
+        if ($postData[0] == '0399') {
             $details = $this->Temporary_admission_model->getdetails($postData[3]);
-            $res=json_decode($details['details'],true);
-          
-             $this->db->insert('payment_suceess', $res);
-             $this->Temporary_admission_model->update_status( $res['temporary_student_id']);
-             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Payment Successfull</div>');
-             redirect('temporary_user/TemporaryUser');
-        }
-        else{
-            $this->session->set_flashdata('msg1', '<div class="alert alert-danger">Payment Failed</div>');
+            $res = json_decode($details['details'], true);
+
+            $this->db->insert('payment_suceess', $res);
+            $this->Temporary_admission_model->update_status($res['temporary_student_id']);
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">Payment Successfull</div>');
+            redirect('temporary_user/TemporaryUser');
+        } else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger">Payment Failed</div>');
             redirect('temporary_user/TemporaryUser');
         }
     }
-
 }

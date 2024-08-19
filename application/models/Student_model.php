@@ -231,7 +231,7 @@ public function get($id = null)
 
     public function searchtemporarystudentadmission($class_id, $section_id, $session_id)
 {
-    $result = $this->db->select('temporary_admission.picked_by,temporary_admission.id as current_student_id,temporary_admission.*,classes.class,sections.section,payment_suceess.temporary_student_id,payment_suceess.transaction_id,payment_suceess.temporary_student_id')
+    $result = $this->db->select('temporary_admission.status,temporary_admission.picked_by,temporary_admission.id as current_student_id,temporary_admission.*,classes.class,sections.section,payment_suceess.temporary_student_id,payment_suceess.transaction_id,payment_suceess.temporary_student_id')
         ->from('temporary_admission')
         ->where('class_id', $class_id)
         ->where('section_id', $section_id)
@@ -242,7 +242,6 @@ public function get($id = null)
         ->get()
         ->result_array(); // Assuming you want to retrieve the result as an array of objects. Adjust as necessary.
        
-
     return $result;
 }
 

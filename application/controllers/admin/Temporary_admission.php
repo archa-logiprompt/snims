@@ -1,5 +1,10 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -80,7 +85,7 @@ class Temporary_admission extends Admin_Controller
 
     // public function search()
     // {
-       
+
     //     $this->session->set_userdata('top_menu', 'Student Information');
     //     $this->session->set_userdata('sub_menu', 'temporary_admission/search');
     //     $data['sessionlist'] = $this->session_model->getsessionlist();
@@ -104,7 +109,7 @@ class Temporary_admission extends Admin_Controller
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
         $userdata = $this->session->userdata();
-        $data['userdata']=$userdata['admin'];
+        $data['userdata'] = $userdata['admin'];
         // var_dump($data['userdata']);exit;
         $userdata = $this->customlib->getUserData();
         $carray = array();
@@ -119,28 +124,27 @@ class Temporary_admission extends Admin_Controller
         $button = $this->input->post('search');
         if ($this->input->server('REQUEST_METHOD') == "GET") {
             $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
-        $this->load->view('layout/footer');
+            $this->load->view('student/temporary_admission/search', $data);
+            $this->load->view('layout/footer');
         } else {
             $class = $this->input->post('class_id');
             $section = $this->input->post('section_id');
             $session_id = $this->input->post('session_list');
             $search = $this->input->post('search');
-        
+
             $search_text = $this->input->post('search_text');
             if (isset($search)) {
                 if ($search == 'search_filter') {
                     $this->form_validation->set_rules('class_id', 'Class', 'trim|required|xss_clean');
                     $this->form_validation->set_rules('section_id', 'Section', 'trim|required|xss_clean');
                     if ($this->form_validation->run() == FALSE) {
-
                     } else {
                         $data['searchby'] = "filter";
                         $data['class_id'] = $this->input->post('class_id');
                         $data['section_id'] = $this->input->post('section_id');
-                        $data['session_id']=$this->input->post('session_id');
+                        $data['session_id'] = $this->input->post('session_id');
                         $data['search_text'] = $this->input->post('search_text');
-                        $resultlist = $this->student_model->searchtemporarystudentadmission($class, $section,$session_id);
+                        $resultlist = $this->student_model->searchtemporarystudentadmission($class, $section, $session_id);
                         $data['resultlist'] = $resultlist;
                         $title = $this->classsection_model->getDetailbyClassSection($data['class_id'], $data['section_id']);
                         $data['title'] = 'Student Details for ' . $title['class'] . "(" . $title['section'] . ")";
@@ -160,8 +164,8 @@ class Temporary_admission extends Admin_Controller
                 //var_dump($resultlist);
             }
             $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
-        $this->load->view('layout/footer');
+            $this->load->view('student/temporary_admission/search', $data);
+            $this->load->view('layout/footer');
         }
     }
     // function show($id)
@@ -242,7 +246,7 @@ class Temporary_admission extends Admin_Controller
     //     $data['fee_excess'] = $fee_excess;
     //     $fee_advance = $this->studentfeemaster_model->getFeeadvance($id);
     //     $data['fee_advance'] = $fee_advance;
- 
+
     //     $data['excess_balance'] = $this->db->select('amount')->where('student_id', $id)->get('excess_balance')->row()->amount;
     //     $data['advance_balance'] = $this->db->select('amount')->where('student_id', $id)->get('advance_balance')->row()->amount;
     //     $data["studentlistbysection"] = $studentlistbysection;
@@ -251,18 +255,18 @@ class Temporary_admission extends Admin_Controller
     //     $this->load->view('layout/footer', $data);
     // }
 
-    public function show($id){
+    public function show($id)
+    {
 
-      
+
         $userdata = $this->session->userdata();
-        $data['userdata']=$userdata['temporary_student'];
-        $curuserdata=$userdata['admin'];
-        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
-      
+        $data['userdata'] = $userdata['temporary_student'];
+        $curuserdata = $userdata['admin'];
+        $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
 
-        $data['commentdetails']=$this->Temporary_admission_model->commentdetails($id);
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $userdata = $this->session->userdata();
         $this->load->view('layout/header', $data);
         $this->load->view('student/temporary_admission/show', $data);
@@ -272,64 +276,64 @@ class Temporary_admission extends Admin_Controller
     public function pickup($id)
     {
         $userdata = $this->session->userdata();
-        $curuserdata=$userdata['admin'];
+        $curuserdata = $userdata['admin'];
         $data['sessionlist'] = $this->session_model->getsessionlist();
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
         $userdata = $this->session->userdata();
-        $pickup=$this->temporary_admission_model->pickupupdate($id,$curuserdata['id']);
-       
-        
+        $pickup = $this->temporary_admission_model->pickupupdate($id, $curuserdata['id']);
+
+
         $this->load->view('layout/header');
-        $this->load->view('student/temporary_admission/search',$data);
+        $this->load->view('student/temporary_admission/search', $data);
         $this->load->view('layout/footer');
     }
     public function approve($id)
     {
-        
+
         $userdata = $this->session->userdata();
-        $curuserdata=$userdata['admin'];
-        $data['getstudentdetails']=$this->temporary_admission_model->getstudentdetails($id );
+        $curuserdata = $userdata['admin'];
+        $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
-        $status=$this->Temporary_admission_model->status($id);
-        
+        $status = $this->Temporary_admission_model->status($id);
+
         $userdata = $this->session->userdata();
-        redirect('admin/temporary_admission/show/'.$id);
-
+        redirect('admin/temporary_admission/show/' . $id);
     }
-    public function comment($id) {
-    
+    public function comment($id)
+    {
 
-       
+
+
         $comment = $this->input->post('comment');
         $userdata = $this->session->userdata('admin');
-        
-        
+
+
         $data = array(
             'comment' => $comment,
-            'commented_by'=>$userdata['username'],
+            'commented_by' => $userdata['username'],
             'created_at' => date('Y-m-d H:i:s'),
-            'stud_id'=>$id
+            'stud_id' => $id
         );
-        
-        
+
+
         $insert_id = $this->Temporary_admission_model->addcomment($data);
         // var_dump($data);exit;
-       
 
-        redirect('admin/temporary_admission/show/'.$id);
-      
+
+        redirect('admin/temporary_admission/show/' . $id);
+
         // $this->db->where('id', $id);
         // $update = $this->db->update('temporary_admission', $data);
 
-        
+
     }
     public function leave()
     {
-    $id=$this->input->post('id');
-    $this->Temporary_admission_model->pickedbyupdate($id);
-    echo ( 'success');
+        $id = $this->input->post('id');
+        $this->Temporary_admission_model->pickedbyupdate($id);
+        echo ('success');
     }
     private function MakeUserId($length)
     {
@@ -366,32 +370,33 @@ class Temporary_admission extends Admin_Controller
     }
     public function upload_signature()
     {
-     
+
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_add')) {
             access_denied();
         }
-    
-      
+
+
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
-        $res=$this->Temporary_admission_model->getalldocuments();
-        $data['res']=$res;
-  
-       
-        $this->form_validation->set_rules('staffname', 'staffname', 'required');
-        $this->form_validation->set_rules('mail', 'Mail', 'required');
-    
-      
+        $res = $this->Temporary_admission_model->getalldocuments();
+        $data['res'] = $res;
+        $roles = $this->role_model->get();
+        $data["roles"] = $roles;
+
+        $this->form_validation->set_rules('xcordinate', 'xcordinate', 'required');
+        $this->form_validation->set_rules('ycoordinate', 'ycoordinate', 'required');
+
+
         if ($this->form_validation->run() == FALSE) {
-           
+
             $this->load->view('layout/header');
-            $this->load->view('student/temporary_admission/upload_signature',$data);
+            $this->load->view('student/temporary_admission/upload_signature', $data);
             $this->load->view('layout/footer');
         } else {
-          
+
             $admin = $this->session->userdata('admin');
             $centre_id = $admin['centre_id'];
-    
+
             $data = array(
                 'staffname' => $this->input->post('staffname'),
                 'centre_id' => $centre_id,
@@ -399,29 +404,44 @@ class Temporary_admission extends Admin_Controller
                 'xcordinate' => $this->input->post('xcordinate'),
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
+                'pageno'=> $this->input->post('page_no'),
+                'picked_by_id'=>$this->input->post('picked_by_id'),
+                'role'=>$this->input->post('role')
             );
-    
-          
+        
+
+
             $visitor_id = $this->Temporary_admission_model->upload_signature($data);
-    
-          
+
+
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $visitor_id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
-    
+
+              
+
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
-                   
+
+                      $impath = FCPATH."uploads/upload_signature/" . $img_name;
+                $type = pathinfo($impath, PATHINFO_EXTENSION);
+                $data = file_get_contents($impath);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                // var_dump($data);exit;
+                
+
                     $data_img = array('file' => $upload_path);
+                    $data_img['base_64_path'] = $base64;
+
                     $this->Temporary_admission_model->update_signature($visitor_id, $data_img);
                 } else {
-                    
+
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
                     redirect('admin/temporary_admission/upload_signature');
                 }
             }
-    
-            
+
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature added successfully</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
@@ -429,41 +449,41 @@ class Temporary_admission extends Admin_Controller
 
     public function signedit($id)
     {
-        
+
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_edit')) {
             access_denied();
         }
-    
-       
+
+
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
-        $res=$this->Temporary_admission_model->getalldocuments();
-        $data['res']=$res;
-   
+        $res = $this->Temporary_admission_model->getalldocuments();
+        $data['res'] = $res;
+
         $document = $this->Temporary_admission_model->getDocumentById($id);
         if (!$document) {
-           
+
             $this->session->set_flashdata('msg', '<div class="alert alert-danger">Document not found</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
         $data['document'] = $document;
-    
-        
+
+
         $this->form_validation->set_rules('staffname', 'Staff Name', 'required');
         $this->form_validation->set_rules('mail', 'Mail', 'required');
-    
-       
+
+
         if ($this->form_validation->run() == FALSE) {
-           
+
             $this->load->view('layout/header');
             $this->load->view('student/temporary_admission/edit_signature', $data);
             $this->load->view('layout/footer');
         } else {
-           
+
             $admin = $this->session->userdata('admin');
             $centre_id = $admin['centre_id'];
-    
-            
+
+
             $data = array(
                 'staffname' => $this->input->post('staffname'),
                 'centre_id' => $centre_id,
@@ -472,32 +492,32 @@ class Temporary_admission extends Admin_Controller
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
             );
-    
-           
+
+
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
-    
+
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
-                  
+
                     $data['file'] = $upload_path;
-    
-                   
+
+
                     if (!empty($document['file']) && file_exists($document['file'])) {
                         unlink($document['file']);
                     }
                 } else {
-                   
+
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger">File upload failed</div>');
                     redirect('admin/temporary_admission/edit_signature/' . $id);
                 }
             }
-    
-     
+
+
             $this->Temporary_admission_model->update_signature($id, $data);
-    
-          
+
+
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Signature updated successfully</div>');
             redirect('admin/temporary_admission/upload_signature');
         }
@@ -507,11 +527,362 @@ class Temporary_admission extends Admin_Controller
         if (!$this->rbac->hasPrivilege('upload_signature', 'can_delete')) {
             access_denied();
         }
-       
+
         $this->Temporary_admission_model->signdelete($id);
     }
 
+    public function admindownloadreceipt($id)
+    {
+
+        $data['student_id'] = $id;
+
+        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($id);
+        // $this->load->view('temporarystudent/header', $data);
+        $this->load->view('temporarystudent/admindownloadreceipt', $data);
+    }
+
+
+    public function updateStatus($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', ['status' => 3]);
+        // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
+        
+        $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
+        
+       
+      
+       
+
+            if (count($result) > 0) {
+
+                $order_no = $result[0]['order_no'];
     
+            } else {
+                $order_no = 0;
+    
+            }
+            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+          
+            // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+            if($signer_details['picked_by_id']==1)
+            {
+               
+                $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+          
+                $arr = [
+                 'temp_user_id'=>$id,
+                 'sign_id'=>$signer_details['id'],
+                 'signer_email'=>$staff_details['email'],
+                 'order_no'=>$signer_details['orders'],
+                 'status'=>0
+             ];
+            }     
+              else{
+             
+                  $arr = [
+                      'temp_user_id'=>$id,
+                      'sign_id'=>$signer_details['id'],
+                      'signer_email'=>$signer_details['mail'],
+                      'order_no'=>$signer_details['orders'],
+                      'status'=>0
+                  ];
+
+              }  
+        
+        
+       
+
+         
+        $this->db->insert('temp_admission_approval',$arr);
+        // $documentName = $this->createDocument($id);
+       
+        $documentName = $this->sampledocument($id,$order_no,$arr);
+
+        $this->sendmail($documentName,$arr['signer_email'],$id);
+
+
+        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+
+        echo json_encode(['message' => $response_message]);
+    }
+
+    public function sampledocument($id,$order_no,$arr)
+    {
+        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $images=[];
+        $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+        
+        
+        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+        
+        if($order_no>0){
+           
+            if($signer_details['picked_by_id']==1)
+            {
+                $images[] = 
+                [
+                    'src' => $staff_details['sign'],
+                    'pageno' =>  $signer_details['pageno'],
+                    'x' => $signer_details['xcordinate'],
+                    'y' => $signer_details['ycoordinate'],
+                    'width' => 200,
+                    'height' => 100,
+                ];
+            }else{
+                $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
+                foreach ($uploadsignature as $key) {
+        
+                    $images[] = 
+                        [
+                            'src' => $key['file'],
+                            'pageno' =>  $key['pageno'],
+                            'x' => $key['xcordinate'],
+                            'y' => $key['ycoordinate'],
+                            'width' => 200,
+                            'height' => 100,
+                        ];
+         
+                } 
+
+            }
+        }  
+        $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
+        $pageIndexArray = [
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ],
+            [
+                'Name' => $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname'],
+                'Admission Date' => $getstudentdetails['admission_date'],
+                'Course' => $getstudentdetails['class'],
+                'Section' => $getstudentdetails['section'],
+                'Date of ' => $getstudentdetails['dob'],
+                'Phone No' => $getstudentdetails['phone'],
+                'Caste' => $getstudentdetails['cast'],
+                'Religion' => $getstudentdetails['religion'],
+                'Email' => $getstudentdetails['email'],
+                'Current Address' => $getstudentdetails['current_address'],
+                'Permanent Address' => $getstudentdetails['permanent_address'],
+                'Father Name' => $getstudentdetails['father_name'],
+                'Father Phone' => $getstudentdetails['father_phone'],
+                'Father Occupation' => $getstudentdetails['father_occupation'],
+                'Mother Name' => $getstudentdetails['mother_name'],
+                'Mother Phone' => $getstudentdetails['mother_phone'],
+                'Mother Occupation' => $getstudentdetails['mother_occupation'],
+                'Guardian Name' => $getstudentdetails['guardian_name'],
+                'Guardian Email' => $getstudentdetails['guardian_email'],
+                'Guardian Relation' => $getstudentdetails['guardian_relation'],
+                'Guardian Phone' => $getstudentdetails['guardian_phone'],
+                'Guardian Occupation' => $getstudentdetails['guardian_occupation'],
+                'Guardian Address' => $getstudentdetails['guardian_address'],
+                'Nationality' => $getstudentdetails['nationality'],
+                'Blood Group' => $getstudentdetails['blood_group'],
+                'Previous School' => $getstudentdetails['previous_school'],
+                'Adhar No' => $getstudentdetails['adhar_no'],
+            ]
+        ];
+        $html = "<html><head><style>
+        .page-break { page-break-before: always; }
+        .image-container { position: absolute; }
+        </style></head><body>";
+        $html .= "
+        <div style='position: relative;'>
+                <table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>
+                <tr><th colspan='2'>Student Details</th></tr>";
+
+
+        foreach ($pageIndexArray as $pageno => $pageData) {
+            $pagecontentcount = 0;
+            foreach ($pageData as $pageContentTitle => $pageContent) {
+
+                $html .= "<tr><td>" . $pageContentTitle . "</td><td>" . $pageContent . "</td></tr>";
+
+                $pagecontentcount++;
+
+                if ($pagecontentcount == count($pageData)) {
+                    $html .= "
+                </table><table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>";
+                
+                $signatureimage = array_filter($images,function($im)use($pageno){
+                    return $im['pageno']==$pageno+1;
+                });
+
+                if(count($signatureimage)>0){
+                    foreach($signatureimage as $signature){
+                        $impath = $signature['src'];
+                        $type = pathinfo($impath, PATHINFO_EXTENSION);
+                        $data = file_get_contents($impath);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            
+                        // Create the page content with the image and table
+                        if($signature['x']>400){
+                            $signaturex = $signature['x']-400;
+                            $html .= "
+                            <div class='image-container' style='right: {$signaturex}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+                        }else{
+                            $html .= "
+                            <div class='image-container' style='left: {$signature['x']}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
+                            <img src='$base64' style='width: 100%; height: 100%;' />  
+                            </div>";
+
+                        }
+
+                    }
+                }
+                
+                }
+
+
+            }
+            if ($pageno == 1) {
+
+                $html .= " 
+                <p style='margin-top: 20px;'><strong>Declaration:</strong> I hereby declare that the information provided above is true and accurate to the best of my knowledge and belief.</p>    
+                </div>";
+            }
+            $html .= " <div class='page-break'></div> ";
+        } 
+ 
+
+
+
+        $html .= "</body></html>";
+         
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+        // var_dump( $html);
+        // exit;
+        // Output the PDF to the browser or save it to a file
+        // $dompdf->stream("sample.pdf", ["Attachment" => false]); // Set to true to download the PDF
+        $file_name = $id . '_approval_' . time() . '.pdf';
+
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+
+        return $file_path;
+    }
+
+    public function createDocument($id)
+    {
+        $data['test'] = "test";
+        $studentdetails = $this->Temporary_admission_model->getstudentdetails($id);
+        $data['studentdetails'] = $studentdetails;
+        $html = $this->load->view('student/temporary_admission/test', $data, true);
+
+        // Include Dompdf library
+        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+
+        // Use the correct namespace for Dompdf and Options
+
+
+        // Initialize Dompdf
+        $options = new Options();
+        $options->set('isRemoteEnabled', true); // Enable loading of remote content like images
+        $dompdf = new Dompdf($options);
+
+        // Load HTML content
+        $dompdf->loadHtml($html);
+
+        // (Optional) Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the PDF
+        $dompdf->render();
+
+        $output = $dompdf->output();
+        $file_name = $id . '_approval_' . time() . '.pdf';
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $output);
+        return $file_name;
+    }
+
+
+    public function sendmail($documentName,$signermail,$tempid)
+    { 
+      
+        require 'PHPMailer/src/Exception.php';
+        require 'PHPMailer/src/PHPMailer.php';
+        require 'PHPMailer/src/SMTP.php';
+
+        $this->load->library('form_validation');
+        $this->load->library('email');
+        $email_subject = 'Your Registration Details';
+        $email_message = '<html><body>';
+        $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
+        $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
+        $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
+       
+            $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+        // $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . ' target="_blank">Click here to sign the document</a></td></tr>';
+
+        $email_message .= '</table>';
+
+        $email_message .= '</body></html>';
+
+        // Send the email using PHPMailer
+        $file_path = $documentName;
+        $Body = "hai";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Host = "smtp.gmail.com";
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "medicalcollege@drmoopensmc.ac.in";
+        $mail->Password = "ayxuwqtlvgmxwnbi";
+        $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
+        $mail->addAddress($signermail);
+        $mail->Subject = $email_subject;
+        $mail->Body = $email_message;
+        $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
+        $mail->msgHTML($email_message);
+        $mail->addAttachment($file_path, 'document.pdf');
+        // $mail->AltBody = 'HTML messaging not supported';
+        $mail->send();
+    }
+
+
     // public function download($documents) {
     //     $this->load->helper('download');
     //     $filepath = "./uploads/upload_signature/". $documents;
@@ -519,5 +890,5 @@ class Temporary_admission extends Admin_Controller
     //     $name = $documents;
     //     force_download($name, $data);
     // }
-    
+
 }

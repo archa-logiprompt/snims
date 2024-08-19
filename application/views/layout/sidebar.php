@@ -144,6 +144,7 @@ $centre_id = $admin['centre_id'];
                     $this->rbac->hasPrivilege('student_houses', 'can_view') ||
                     $this->rbac->hasPrivilege('disable_student', 'can_view') ||
                     $this->rbac->hasPrivilege('student_report', 'can_add') ||
+                    $this->rbac->hasPrivilege('upload_signature', 'can_add') ||
                     $this->rbac->hasPrivilege('guardian_report', 'can_view'))) {
                 ?>
 

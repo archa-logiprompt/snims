@@ -78,6 +78,7 @@ $roles = explode(',',$staff['role_id']);
                                                 <span class="text-danger"><?php echo form_error('designation'); ?></span>
                                             </div>
                                         </div>
+                                        
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('department'); ?></label>
@@ -227,7 +228,15 @@ $roles = explode(',',$staff['role_id']);
                                                 <span class="text-danger"><?php echo form_error('file'); ?></span></div>
                                         </div>                          
 
-
+                                        <div class="col-md-3">                               
+                                        <div class="form-group">
+                                            <label for="exampleInputFile"><?php echo "Upload Sign" ?></label>
+                                            <div>
+                                                <input class="filestyle form-control" type='file' name='sign' id="sign" />
+                                            </div>
+                                            <span class="text-danger"><?php echo form_error('file'); ?></span>
+                                        </div>
+                                        </div>
                                     </div>
                                     <div class="row">
 

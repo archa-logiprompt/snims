@@ -1,5 +1,7 @@
 <?php
 
+
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -13,6 +15,8 @@ class TemporaryUser extends Temporary_Student_Controller
         $this->load->model("live_class_model");
         $this->load->model("Temporary_admission_model");
         $this->load->library('form_validation');
+        $this->load->library('mailer');
+        $this->mailer;
     }
 
     public function index()
@@ -36,14 +40,14 @@ class TemporaryUser extends Temporary_Student_Controller
         $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
 
         $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
-       
+
         $data['existing_details'] = $existing_details;
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
 
         $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
-        
+
         $quota = $this->Temporary_admission_model->getquota();
         $data['quota'] = $quota;
         $this->load->view('temporarystudent/header', $data);
@@ -65,7 +69,6 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['categoryamount'] = $categoryamount;
         //    var_dump( $data['categoryamount']);exit;
         $this->load->view('parent/nttdata', $data);
-
     }
 
 
@@ -76,7 +79,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $val = $_POST;
 
-       
+
         $userdata = $this->session->userdata('temporary_student');
         $student_id = $userdata['id'];
         $student_details = $this->db->select('firstname,lastname')->where('id', $student_id)->get('temporary_admission')->row();
@@ -85,6 +88,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $details = array(
             'amount' => $val['amount'],
             'date' => date('Y-m-d'),
+            'fee_details' => $val['fee_details'],
             'transaction_id' => $val['txn_id'],
             'description' => "Online fees deposit through WorldLine TXN ID: " . $val['txn_id'],
             'payment_mode' => 'WorldLine',
@@ -92,7 +96,7 @@ class TemporaryUser extends Temporary_Student_Controller
         );
 
 
-        
+
 
         $send = array(
             'details' => json_encode($details),
@@ -112,7 +116,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // 9089678839PDEWYP live
         $hashed = hash('sha512', $datastring);
 
-        $data = array("hash" => $hashed, "data" => array($val['mrctCode'], $val['txn_id'], $val['amount'], "", "", "", "", "", $val['custID'], "", "", "", base_url("site/successadmissionpayment"),"", $val['scheme'], $val['currency'], "", "", ""));
+        $data = array("hash" => $hashed, "data" => array($val['mrctCode'], $val['txn_id'], $val['amount'], "", "", "", "", "", $val['custID'], "", "", "", base_url("site/successadmissionpayment"), "", $val['scheme'], $val['currency'], "", "", ""));
 
 
         echo json_encode($data);
@@ -128,28 +132,9 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
         // $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/downloadreceipt', $data);
-
     }
-    public function admindownloadreceipt()
-    {
 
-        $userdata = $this->session->userdata('temporary_student');
-        $data['userdata'] = $userdata;
 
-        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
-        // $this->load->view('temporarystudent/header', $data);
-        $this->load->view('temporarystudent/admindownloadreceipt', $data);
-
-    }
-    public function updateStatus($id)
-    {
-    
-        $this->db->where('id', $id);
-        $this->db->update('temporary_admission', ['status' =>3]);
-        
-    
-        echo json_encode(['success' => true]);
-    }
     public function create()
     {
 
@@ -172,6 +157,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
 
         $section = $this->Temporary_admission_model->getsections();
@@ -186,7 +172,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
         $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
-
+        
         // $this->form_validation->set_rules('section_id', 'Section Id', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|xss_clean');
@@ -501,20 +487,33 @@ class TemporaryUser extends Temporary_Student_Controller
                 $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
                 $this->Temporary_admission_model->add($data_img);
             }
+            $image_arr = array();
+            if (!empty($_FILES['images']['name'][0])) {
+                foreach ($_FILES['images']['name'] as $key => $name) {
+                    if ($_FILES['images']['error'][$key] == 0) {
+                        $file_name = $insert_id . '_' . time() . '_' . $key;
+                        $file_path = './uploads/temporary_admission/' . $file_name;
+                        $image_arr[] = $file_name;
 
-            if (isset($_FILES["tenth_doc"]) && !empty($_FILES['tenth_doc']['name'])) {
-                $fileInfo = pathinfo($_FILES["tenth_doc"]["name"]);
-                $img_name = time() . "10th" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["tenth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'tenth_doc' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
-            }
-            if (isset($_FILES["twelth_doc"]) && !empty($_FILES['twelth_doc']['name'])) {
-                $fileInfo = pathinfo($_FILES["twelth_doc"]["name"]);
-                $img_name = time() . "12th" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["twelth_doc"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'twelth_doc' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
+
+                        move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
+
+
+                    }
+                }
+                $image_arr = implode(',', $image_arr);
+                $this->db->where('id', $insert_id);
+                $query = $this->db->get('temp_user')->row();
+                if ($query) {
+                    $this->db->where('id', $insert_id);
+                    $this->db->update('temp_user', ['documents' => $image_arr]);
+                } else {
+
+                    $this->db->insert('temp_user', [
+                        'id' => $insert_id,
+                        'documents' => $image_arr
+                    ]);
+                }
             }
             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
             redirect('temporary_user/TemporaryUser');

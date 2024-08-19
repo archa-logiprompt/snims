@@ -429,7 +429,7 @@ class Staff extends Admin_Controller {
             $mother_name = $this->input->post("mother_name");
             $note = $this->input->post("note");
             $epf_no = $this->input->post("epf_no");
-
+            $sign=$this->input->post('sign');
             $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
             $data_insert = array(
                 'centre_id'=>$centre_id,
@@ -445,7 +445,7 @@ class Staff extends Admin_Controller {
                 'email' => $email,
                 'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
                 'marital_status' => $marital_status,
-
+                'sign'=>$sign,
                 'date_of_leaving' => '',
                 'local_address' => $address,
                 'permanent_address' => $permanent_address,
@@ -566,6 +566,19 @@ class Staff extends Admin_Controller {
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/staff_images/" . $img_name);
                 $data_img = array('id' => $staff_id, 'image' => 'uploads/staff_images/' .$img_name);
+                $this->staff_model->add($data_img);
+            }
+            if (isset($_FILES["sign"]) && !empty($_FILES['sign']['name'])) {
+                $fileInfo = pathinfo($_FILES["sign"]["name"]);
+                $img_name = $insert_id . "signature" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/upload_signature/" . $img_name);
+
+                $impath = FCPATH."uploads/upload_signature/" . $img_name;
+                $type = pathinfo($impath, PATHINFO_EXTENSION);
+                $data = file_get_contents($impath);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data); 
+
+                $data_img = array('id' => $staff_id, 'sign' => $img_name,'base_64_sign'=>$base64);
                 $this->staff_model->add($data_img);
             }
 
@@ -790,7 +803,7 @@ class Staff extends Admin_Controller {
             $mother_name = $this->input->post("mother_name");
             $note = $this->input->post("note");
             $epf_no = $this->input->post("epf_no");
-
+            $sign=$this->input->post('sign');   
 
             $data1 = array('id' => $id,
                 'employee_id' => $employee_id,
@@ -804,7 +817,7 @@ class Staff extends Admin_Controller {
                 'email' => $email,
                 'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
                 'marital_status' => $marital_status,
-          
+                 'sign'=>  $sign,
            
                 'local_address' => $address,
                 'permanent_address' => $permanent_address,
@@ -957,7 +970,15 @@ $data1['date_of_leaving'] = "";
                 $data_img = array('id' => $id, 'image' => $img_name);
                 $this->staff_model->add($data_img);
             }
+            if (isset($_FILES["sign"]) && !empty($_FILES['sign']['name'])) {
+                $fileInfo = pathinfo($_FILES["sign"]["name"]);
+                $img_name = $id . "signature" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/upload_signature/" . $img_name);
+                $data_img = array('id' => $id, 'sign' => $img_name);
+                $this->staff_model->add($data_img);
+            }
 
+          
 
             if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
                 $uploaddir = './uploads/staff_documents/' . $id . '/';

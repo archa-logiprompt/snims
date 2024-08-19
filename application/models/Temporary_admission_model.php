@@ -29,6 +29,12 @@ class Temporary_admission_model extends CI_Model
         $this->db->insert('upload_signature', $data);
         return $this->db->insert_id(); // Return the inserted ID
     }
+    public function getsignatureorder()
+    {
+    $result=$this->this->select('*')->from('upload_signature')->get()->result_array();
+    return $result;
+
+    }
     public function signdelete($id)
     {
         $this->db->where('id',$id);
@@ -48,7 +54,11 @@ class Temporary_admission_model extends CI_Model
        return $res;
 
     }
-
+    public function getsignaturedetails($order_no)
+    {
+        $res=$this->db->select('*')->where('orders<=',$order_no)->get('upload_signature')->result_array();
+        return $res;
+    }
     public function getDocumentById($id)
 {
     $query = $this->db->get_where('upload_signature', array('id' => $id));
@@ -198,7 +208,7 @@ class Temporary_admission_model extends CI_Model
     }
     public function getexistingdetails($id)
     {
-        $result = $this->db->select('firstname,lastname,email,phone')->where('id', $id)->from('temporary_admission')->get()->row();
+        $result = $this->db->select('firstname,lastname,email,phone,status')->where('id', $id)->from('temporary_admission')->get()->row();
         return $result;
     }
     public function getstudentdetails($id)
@@ -217,16 +227,24 @@ class Temporary_admission_model extends CI_Model
     }
     public function getdatafromstudentdetails($id)
     {
-        $result = $this->db->select('temp_user.*, temporary_admission.*')
+        $result = $this->db->select('temp_user.*, temporary_admission.*, temp_user.documents as user_documents')
             ->from('temporary_admission')
             ->join('temp_user', 'temp_user.user_id = temporary_admission.id', 'left')
             ->where('temporary_admission.id', $id)
             ->get()
             ->row();
-        // echo $this->db->last_query();exit;
+    
+        if ($result && !empty($result->documents)) {
+            
+            $result->documents = explode(',', $result->documents);
+        } else {
+          
+            $result->documents = [];
+        }
+  
         return $result;
-
     }
+    
     public function paymentsucceess($id)
     {
         $payment = $this->db->select('payment_suceess.*,temporary_admission.*')
@@ -267,7 +285,7 @@ class Temporary_admission_model extends CI_Model
                 $this->db->where('user_id', $data['user_id']);
                 $this->db->update('temp_user', $data);
 
-                return $data['user_id'];
+                return $query->id;
             } else {
                 $this->db->insert('temp_user', $data);
                 return $this->db->insert_id();

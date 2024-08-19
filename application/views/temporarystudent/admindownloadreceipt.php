@@ -65,6 +65,15 @@
 </head>
 
 <body>
+    <!-- Loading Screen Overlay -->
+<div id="loading-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(255, 255, 255, 0.8); z-index:9999; text-align:center;">
+    <div style="position:relative; top:50%; transform:translateY(-50%);">
+    <img src="<?php echo base_url(); ?>uploads/loader.gif" alt="Loading..." style="width:50px; height:50px;">
+
+        <p>Please wait while we verify your payment...</p>
+    </div>
+</div>
+
     <div class="row d-flex justify-content-evenly me-2">
         <style>
             .btn-receipt {
@@ -76,11 +85,10 @@
                 float: right;
             }
         </style>
-
         <div class="col-lg-12">
             <div class="receipt" id="receipt">
 
-                <input type="hidden" id="user_id" value="<?php echo $userdata['id']; ?>" />
+                <input type="hidden" id="user_id" value="<?php echo $student_id; ?>" />
 
                 <div class="header">
                     <h1>Payment Receipt</h1>
@@ -100,7 +108,11 @@
                             <th>Date:</th>
                             <td><?php echo date('d-m-Y', strtotime($paymentsucceess['date'])); ?></td>
                         </tr>
-                        <tr> 
+                        <tr>
+                            <th>Fee Type:</th>
+                            <td><?php echo $paymentsucceess['fee_details']; ?></td>
+                        </tr>
+                        <tr>
                             <th>Description:</th>
                             <td><?php echo $paymentsucceess['description']; ?></td>
                         </tr>
@@ -113,7 +125,7 @@
                             <td><?php echo $paymentsucceess['payment_mode']; ?></td>
                         </tr>
                     </table>
-                </div> 
+                </div>
                 <div class="footer">
                     <p>Thank you for your payment!</p>
 
@@ -130,12 +142,11 @@
                 </svg>
                 Download Receipt
             </button>
-        </div>
-        <div class="btn-container">
-            <button class="btn-receipt" onclick="confirmPayment()" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+            <button class="btn-receipt" id="verify-payment" onclick="confirmPayment()" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
                 </svg>Verify Payment</button>
         </div>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
             function downloadReceipt() {
@@ -170,21 +181,29 @@
             function confirmPayment() {
                 // Get the user ID from the hidden input field
                 var student_id = $("#user_id").val();
-                console.log($("#user_id").val());
+                console.log(student_id);
                 // Ask for user confirmation
                 var confirmation = confirm("Are you sure you want to proceed?");
 
                 if (confirmation) {
+                    $("#verify-payment").prop('disabled', true).css({
+                        'filter': 'blur(2px)',
+                        'opacity': '0.5'
+                    });
+
+                    $("#loading-screen").fadeIn();
+
                     $.ajax({
-                        
-                        url: '<?php echo base_url(); ?>temporary_user/TemporaryUser/updateStatus/' +student_id,
+
+                        url: '<?php echo base_url(); ?>/admin/temporary_admission/updateStatus/' + student_id,
                         type: 'POST',
-                       
+
                         success: function(data) {
-                           
-                            window.location.href = "<?php echo base_url(); ?>/admin/temporary_admission/search/"+student_id;
+                            var response = JSON.parse(data);
+                            alert(response.message);
+                           window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;
                         },
-                        
+
                     });
                 } else {
                     alert("Operation canceled.");

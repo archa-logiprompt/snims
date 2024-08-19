@@ -18,8 +18,7 @@
             <div class="paddtop20">
                 <div class="col-md-8 col-md-offset-2 text-center">
 
-                    <img src="<?php echo base_url('uploads/school_content/logo/' . $setting[0]['image']); ?>"
-                        style="width: 15%;">
+                    <img src="<?php echo base_url('uploads/school_content/logo/' . $setting[0]['image']); ?>" style="width: 15%;">
 
                 </div>
 
@@ -33,14 +32,17 @@
                                     <th class="text-right">Amount</th>
                                 </tr>
                                 <?php $total = 0;
+                                $fee_details_array = array();
                                 foreach ($categoryamount as $row) {
-                                    ?>
+                                    $fee_details = $row['name'] . "-" . $row['type'];
+                                    $fee_details_array[] = $fee_details;
+                                ?>
                                     <tr>
                                         <td><?php echo $row['name'] . "-" . $row['type'] ?></td>
                                         <td class="text-right"><?php echo $row['amount'];
-                                        $total += $row['amount'] ?></td>
+                                                                $total += $row['amount'] ?></td>
                                     </tr>
-                                    <?php
+                                <?php
                                 } ?>
                                 <tr>
                                     <td>
@@ -56,8 +58,8 @@
 
                             </table>
                             <div class="divider"></div>
-
-                            <form class="paddtlrb"  method="POST" id="form">
+                            <?php $fee_details = implode(',', $fee_details_array) ?>
+                            <form class="paddtlrb" method="POST" id="form">
                                 <button type="button" onclick="window.history.go(-1); return false;" name="search" value="" class="btn btn-info"><i class="fa fa fa-chevron-left"></i> Back</button>
                                 <button type="button" id="btnSubmit" class="btn btn-info pull-right"><i class="fa fa fa-money"></i> Pay</button>
                                 <!-- <input type="hidden" name="student_fees_master_id" value="<?php echo $categoryamount['student_fees_master_id']; ?>"> -->
@@ -72,6 +74,7 @@
                                 <input type="hidden" name="amount" value="<?php echo $total; ?>">
                                 <!-- <input type="hidden" name="scheme" value="FIRST"> -->
                                 <input type="hidden" name="scheme" value="test">
+                                <input type="hidden" name="fee_details" value="<?php echo $fee_details ?>">
                                 <input type="hidden" name="custID" value="c345802">
                                 <input type="hidden" name="currency" value="INR">
                                 <!-- <input type="hidden" name="fine" value="<?php echo $params['fine']; ?>">  -->
@@ -190,7 +193,7 @@
                 }
             });
         });
-    });
+    });
 </script>
 
 </html>
