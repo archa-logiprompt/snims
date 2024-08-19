@@ -100,7 +100,7 @@
                             <th>Date:</th>
                             <td><?php echo date('d-m-Y', strtotime($paymentsucceess['date'])); ?></td>
                         </tr>
-                        <tr>
+                        <tr> 
                             <th>Description:</th>
                             <td><?php echo $paymentsucceess['description']; ?></td>
                         </tr>
@@ -113,7 +113,7 @@
                             <td><?php echo $paymentsucceess['payment_mode']; ?></td>
                         </tr>
                     </table>
-                </div>
+                </div> 
                 <div class="footer">
                     <p>Thank you for your payment!</p>
 
