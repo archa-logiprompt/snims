@@ -39,9 +39,21 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
         $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
 
-        $data['paymentsucceess'] = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $data['paymentsucceess'] = $paymentsucceess;
 
-        $data['existing_details'] = $existing_details;
+        $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
+        $totalAmount = 0;
+        $paidAmount = 0;
+        foreach ($categoryamount as $amount) {
+            $totalAmount += (int)$amount['amount'];
+        }
+
+        foreach ($paymentsucceess as $amount) {
+            $paidAmount += (int)$amount['amount'];
+        }
+
+        $data['feeBalance'] = $totalAmount - $paidAmount;
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
@@ -66,7 +78,14 @@ class TemporaryUser extends Temporary_Student_Controller
 
 
         $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
+        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $paidAmount = 0;
+        foreach ($paymentsucceess as $amount) {
+            $paidAmount += (int)$amount['amount'];
+        }
+
         $data['categoryamount'] = $categoryamount;
+        $data['paidAmount'] = $paidAmount;
         //    var_dump( $data['categoryamount']);exit;
         $this->load->view('parent/nttdata', $data);
     }
@@ -78,6 +97,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $mer_array = json_decode($admin_data, true);
 
         $val = $_POST;
+
 
 
         $userdata = $this->session->userdata('temporary_student');
@@ -172,7 +192,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
         $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
-        
+
         // $this->form_validation->set_rules('section_id', 'Section Id', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('email', 'Email', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|xss_clean');
@@ -497,8 +517,6 @@ class TemporaryUser extends Temporary_Student_Controller
 
 
                         move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
-
-
                     }
                 }
                 $image_arr = implode(',', $image_arr);
