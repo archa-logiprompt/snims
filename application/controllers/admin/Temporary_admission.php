@@ -404,11 +404,11 @@ class Temporary_admission extends Admin_Controller
                 'xcordinate' => $this->input->post('xcordinate'),
                 'ycoordinate' => $this->input->post('ycoordinate'),
                 'orders' => $this->input->post('orders'),
-                'pageno'=> $this->input->post('page_no'),
-                'picked_by_id'=>$this->input->post('picked_by_id'),
-                'role'=>$this->input->post('role')
+                'pageno' => $this->input->post('page_no'),
+                'picked_by_id' => $this->input->post('picked_by_id'),
+                'role' => $this->input->post('role')
             );
-        
+
 
 
             $visitor_id = $this->Temporary_admission_model->upload_signature($data);
@@ -419,16 +419,16 @@ class Temporary_admission extends Admin_Controller
                 $img_name = $visitor_id . "signature" . '.' . $fileInfo['extension'];
                 $upload_path = "./uploads/upload_signature/" . $img_name;
 
-              
+
 
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $upload_path)) {
 
-                      $impath = FCPATH."uploads/upload_signature/" . $img_name;
-                $type = pathinfo($impath, PATHINFO_EXTENSION);
-                $data = file_get_contents($impath);
-                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                // var_dump($data);exit;
-                
+                    $impath = FCPATH . "uploads/upload_signature/" . $img_name;
+                    $type = pathinfo($impath, PATHINFO_EXTENSION);
+                    $data = file_get_contents($impath);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                    // var_dump($data);exit;
+
 
                     $data_img = array('file' => $upload_path);
                     $data_img['base_64_path'] = $base64;
@@ -542,115 +542,163 @@ class Temporary_admission extends Admin_Controller
     }
 
 
+    // public function updateStatus($id)
+    // {
+    //     $this->db->where('id', $id);
+    //     $this->db->update('temporary_admission', ['status' => 3]);
+    //     // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
+
+    //     $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
+
+
+
+
+
+    //         if (count($result) > 0) {
+
+    //             $order_no = $result[0]['order_no'];
+
+    //         } else {
+    //             $order_no = 0;
+
+    //         }
+    //         $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+
+    //         // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+    //         if($signer_details['picked_by_id']==1)
+    //         {
+
+    //             $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+
+    //             $arr = [
+    //              'temp_user_id'=>$id,
+    //              'sign_id'=>$signer_details['id'],
+    //              'signer_email'=>$staff_details['email'],
+    //              'order_no'=>$signer_details['orders'],
+    //              'status'=>0
+    //          ];
+    //         }     
+    //           else{
+
+    //               $arr = [
+    //                   'temp_user_id'=>$id,
+    //                   'sign_id'=>$signer_details['id'],
+    //                   'signer_email'=>$signer_details['mail'],
+    //                   'order_no'=>$signer_details['orders'],
+    //                   'status'=>0
+    //               ];
+
+    //           }  
+
+
+
+
+
+    //     $this->db->insert('temp_admission_approval',$arr);
+    //     // $documentName = $this->createDocument($id);
+
+    //     $documentName = $this->sampledocument($id,$order_no,$arr);
+
+    //     $this->sendmail($documentName,$arr['signer_email'],$id);
+
+
+    //     $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+
+    //     echo json_encode(['message' => $response_message]);
+    // }
+
+
     public function updateStatus($id)
     {
+
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 3]);
-        // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
-        
-        $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
-        
-       
-      
-       
-
-            if (count($result) > 0) {
-
-                $order_no = $result[0]['order_no'];
-    
-            } else {
-                $order_no = 0;
-    
-            }
-            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-          
-            // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
-            if($signer_details['picked_by_id']==1)
-            {
-               
-                $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-          
-                $arr = [
-                 'temp_user_id'=>$id,
-                 'sign_id'=>$signer_details['id'],
-                 'signer_email'=>$staff_details['email'],
-                 'order_no'=>$signer_details['orders'],
-                 'status'=>0
-             ];
-            }     
-              else{
-             
-                  $arr = [
-                      'temp_user_id'=>$id,
-                      'sign_id'=>$signer_details['id'],
-                      'signer_email'=>$signer_details['mail'],
-                      'order_no'=>$signer_details['orders'],
-                      'status'=>0
-                  ];
-
-              }  
-        
-        
-       
-
-         
-        $this->db->insert('temp_admission_approval',$arr);
-        // $documentName = $this->createDocument($id);
-       
-        $documentName = $this->sampledocument($id,$order_no,$arr);
-
-        $this->sendmail($documentName,$arr['signer_email'],$id);
 
 
-        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])
+            ->order_by('order_no', 'desc')
+            ->get('temp_admission_approval')
+            ->result_array();
+
+        $order_no = count($result) > 0 ? $result[0]['order_no'] : 0;
+
+        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+
+        if ($signer_details['picked_by_id'] == 1) {
+            $staff_details = $this->db->select('temporary_admission.*, staff.*')
+                ->where('temporary_admission.id', $id)
+                ->join('staff', 'temporary_admission.picked_by = staff.id')
+                ->get('temporary_admission')
+                ->row_array();
+
+            $arr = [
+                'temp_user_id' => $id,
+                'sign_id' => $signer_details['id'],
+                'signer_email' => $staff_details['email'],
+                'order_no' => $signer_details['orders'],
+                'status' => 0
+            ];
+        }
+
+        $this->db->insert('temp_admission_approval', $arr);
+
+
+        $documentName = $this->sampledocument($id, $order_no, $arr);
+        $this->initialapprove($documentName, $arr['signer_email'], $id);
+
+        $folderPath = './uploads/approved_documents/';
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0755, true);
+        }
+
+        $filePath = $documentName;
+
+
+        $response_message = "Document has been saved to " . $filePath;
 
         echo json_encode(['message' => $response_message]);
     }
-
-    public function sampledocument($id,$order_no,$arr)
+    public function initialapprove($documentName, $signermail, $id)
     {
-        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+
+        $this->db->where(['signer_email' => $signermail, 'temp_user_id' => $id])->update('temp_admission_approval', ['status' => 1]);
+        // $this->updateStatus($id);
+
+    }
+    public function sampledocument($id, $order_no, $arr)
+    {
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
         $dompdf = new Dompdf($options);
-        $images=[];
-        $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-        
-        
-        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-        
-        if($order_no>0){
-           
-            if($signer_details['picked_by_id']==1)
-            {
-                $images[] = 
-                [
-                    'src' => $staff_details['sign'],
-                    'pageno' =>  $signer_details['pageno'],
-                    'x' => $signer_details['xcordinate'],
-                    'y' => $signer_details['ycoordinate'],
-                    'width' => 200,
-                    'height' => 100,
-                ];
-            }else{
-                $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
-                foreach ($uploadsignature as $key) {
-        
-                    $images[] = 
-                        [
-                            'src' => $key['file'],
-                            'pageno' =>  $key['pageno'],
-                            'x' => $key['xcordinate'],
-                            'y' => $key['ycoordinate'],
-                            'width' => 200,
-                            'height' => 100,
-                        ];
-         
-                } 
+        $images = [];
+        // $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
 
-            }
-        }  
+
+
+        $signer_details = $this->db->where('orders', 1)->get('upload_signature')->row_array();
+
+
+
+
+        if ($signer_details['picked_by_id'] == 1) {
+
+            $staff_details = $this->db->select('staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+
+            $images[] =
+            [
+                'src' => FCPATH . 'uploads/upload_signature/' . $staff_details['sign'],
+                'pageno' => $signer_details['pageno'],
+                'x' => $signer_details['xcordinate'],
+                'y' => $signer_details['ycoordinate'],
+                'width' => 200,
+                'height' => 100,
+            ];
+        }
+
+
+
         $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
         $pageIndexArray = [
             [
@@ -721,7 +769,6 @@ class Temporary_admission extends Admin_Controller
                 <table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>
                 <tr><th colspan='2'>Student Details</th></tr>";
 
-
         foreach ($pageIndexArray as $pageno => $pageData) {
             $pagecontentcount = 0;
             foreach ($pageData as $pageContentTitle => $pageContent) {
@@ -731,38 +778,42 @@ class Temporary_admission extends Admin_Controller
                 $pagecontentcount++;
 
                 if ($pagecontentcount == count($pageData)) {
+
                     $html .= "
                 </table><table border='1' cellpadding='5' cellspacing='0' style='width: 100%;'>";
-                
-                $signatureimage = array_filter($images,function($im)use($pageno){
-                    return $im['pageno']==$pageno+1;
-                });
 
-                if(count($signatureimage)>0){
-                    foreach($signatureimage as $signature){
-                        $impath = $signature['src'];
-                        $type = pathinfo($impath, PATHINFO_EXTENSION);
-                        $data = file_get_contents($impath);
-                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-            
-                        // Create the page content with the image and table
-                        if($signature['x']>400){
-                            $signaturex = $signature['x']-400;
-                            $html .= "
+                    $signatureimage = array_filter($images, function ($im) use ($pageno) {
+                        return $im['pageno'] == $pageno + 1;
+                    });
+
+
+                    if (count($signatureimage) > 0) {
+
+                        foreach ($signatureimage as $signature) {
+
+                            $impath = $signature['src'];
+                            $type = pathinfo($impath, PATHINFO_EXTENSION);
+                            $data = file_get_contents($impath);
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+                            // Create the page content with the image and table
+                            if ($signature['x'] > 400) {
+                                $signaturex = $signature['x'] - 400;
+                                $html .= "
                             <div class='image-container' style='right: {$signaturex}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
                             <img src='$base64' style='width: 100%; height: 100%;' />  
                             </div>";
-                        }else{
-                            $html .= "
+                            } else {
+                                $html .= "
                             <div class='image-container' style='left: {$signature['x']}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
                             <img src='$base64' style='width: 100%; height: 100%;' />  
                             </div>";
 
-                        }
+                            }
 
+                        }
                     }
-                }
-                
+
                 }
 
 
@@ -774,13 +825,15 @@ class Temporary_admission extends Admin_Controller
                 </div>";
             }
             $html .= " <div class='page-break'></div> ";
-        } 
- 
+        }
+
 
 
 
         $html .= "</body></html>";
-         
+        // var_dump($html);
+        // exit;
+
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
 
@@ -788,17 +841,19 @@ class Temporary_admission extends Admin_Controller
         $dompdf->setPaper('A4', 'portrait');
 
         // Render the PDF
-        $dompdf->render();
-        // var_dump( $html);
-        // exit;
-        // Output the PDF to the browser or save it to a file
-        // $dompdf->stream("sample.pdf", ["Attachment" => false]); // Set to true to download the PDF
+        $dompdf->render(); 
         $file_name = $id . '_approval_' . time() . '.pdf';
 
         $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
         file_put_contents($file_path, $dompdf->output());
-
-
+        $data = [
+            'student_id' => $id,
+            'filename' => $file_name,
+            'staff_id' => $signer_details['picked_by_id'] == 1 ? $staff_details['id'] : NULL,
+            'created_at' => date('Y-m-d H:i:s') // optional: to track when the record was created
+        ];
+        $this->db->insert('document_records', $data); // 'document_records' is the new table where data will be stored
+    
         return $file_path;
     }
 
@@ -810,7 +865,7 @@ class Temporary_admission extends Admin_Controller
         $html = $this->load->view('student/temporary_admission/test', $data, true);
 
         // Include Dompdf library
-        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
 
         // Use the correct namespace for Dompdf and Options
 
@@ -837,9 +892,9 @@ class Temporary_admission extends Admin_Controller
     }
 
 
-    public function sendmail($documentName,$signermail,$tempid)
-    { 
-      
+    public function sendmail($documentName, $signermail, $tempid)
+    {
+
         require 'PHPMailer/src/Exception.php';
         require 'PHPMailer/src/PHPMailer.php';
         require 'PHPMailer/src/SMTP.php';
@@ -851,8 +906,8 @@ class Temporary_admission extends Admin_Controller
         $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
         $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
         $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
-       
-            $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+
+        $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
         // $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . ' target="_blank">Click here to sign the document</a></td></tr>';
 
         $email_message .= '</table>';
