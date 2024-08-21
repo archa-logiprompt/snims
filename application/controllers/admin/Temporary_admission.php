@@ -574,70 +574,70 @@ class Temporary_admission extends Admin_Controller
     }
 
 
-    // public function updateStatus($id)
-    // {
-    //     $this->db->where('id', $id);
-    //     $this->db->update('temporary_admission', ['status' => 3]);
-    //     // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
+    public function updateStatusinmail($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('temporary_admission', ['status' => 3]);
+        // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
 
-    //     $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
-
-
-
-
-
-    //         if (count($result) > 0) {
-
-    //             $order_no = $result[0]['order_no'];
-
-    //         } else {
-    //             $order_no = 0;
-
-    //         }
-    //         $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-
-    //         // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
-    //         if($signer_details['picked_by_id']==1)
-    //         {
-
-    //             $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-
-    //             $arr = [
-    //              'temp_user_id'=>$id,
-    //              'sign_id'=>$signer_details['id'],
-    //              'signer_email'=>$staff_details['email'],
-    //              'order_no'=>$signer_details['orders'],
-    //              'status'=>0
-    //          ];
-    //         }     
-    //           else{
-
-    //               $arr = [
-    //                   'temp_user_id'=>$id,
-    //                   'sign_id'=>$signer_details['id'],
-    //                   'signer_email'=>$signer_details['mail'],
-    //                   'order_no'=>$signer_details['orders'],
-    //                   'status'=>0
-    //               ];
-
-    //           }  
+        $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
 
 
 
 
 
-    //     $this->db->insert('temp_admission_approval',$arr);
-    //     // $documentName = $this->createDocument($id);
+            if (count($result) > 0) {
 
-    //     $documentName = $this->sampledocument($id,$order_no,$arr);
+                $order_no = $result[0]['order_no'];
 
-    //     $this->sendmail($documentName,$arr['signer_email'],$id);
+            } else {
+                $order_no = 0;
+
+            }
+            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+
+            // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+            if($signer_details['picked_by_id']==1)
+            {
+
+                $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+
+                $arr = [
+                 'temp_user_id'=>$id,
+                 'sign_id'=>$signer_details['id'],
+                 'signer_email'=>$staff_details['email'],
+                 'order_no'=>$signer_details['orders'],
+                 'status'=>0
+             ];
+            }     
+              else{
+
+                  $arr = [
+                      'temp_user_id'=>$id,
+                      'sign_id'=>$signer_details['id'],
+                      'signer_email'=>$signer_details['mail'],
+                      'order_no'=>$signer_details['orders'],
+                      'status'=>0
+                  ];
+
+              }  
 
 
-    //     $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
 
-    //     echo json_encode(['message' => $response_message]);
-    // }
+
+
+        $this->db->insert('temp_admission_approval',$arr);
+        // $documentName = $this->createDocument($id);
+
+        $documentName = $this->sampledocument($id,$order_no,$arr);
+
+        $this->sendmail($documentName,$arr['signer_email'],$id);
+
+
+        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+
+        echo json_encode(['message' => $response_message]);
+    }
 
 
     public function updateStatus($id)
@@ -684,10 +684,9 @@ class Temporary_admission extends Admin_Controller
         }
 
         $filePath = $documentName;
-
+        $this->updateStatusinmail($id);
 
         $response_message = "Document has been saved to " . $filePath;
-
         echo json_encode(['message' => $response_message]);
     }
     public function initialapprove($documentName, $signermail, $id)
