@@ -71,7 +71,8 @@
                                             Amount To Pay
                                         </td>
                                         <td class="text-right">
-                                            <input class="form-control" type="number" name="amount" id="amount" value="<?php echo $total - ($paidAmount > 0 ? $paidAmount : 0); ?>">
+                                            <input class="form-control" type="number" name="amount" id="amount" value="<?php echo $total - ($paidAmount > 0 ? $paidAmount : 0); ?>" data-max="<?php echo $total - ($paidAmount > 0 ? $paidAmount : 0); ?>">
+                                            <span id="amount_validation" class="text-center text-danger"></span>
                                         </td>
                                     </tr>
 
@@ -121,99 +122,108 @@
             e.preventDefault();
 
             var str = $("#form").serialize();
-            console.log(str)
-            $.ajax({
-                type: 'POST',
-                cache: false,
-                data: str,
-                url: "<?php echo base_url('temporary_user/TemporaryUser/worldline') ?>",
-                success: function(response) {
+            var max = $('#amount').data('max');
+            var amount = $('#amount').val();
+            if (max >= amount) {
+                $('#amount_validation').html("");
 
-                    var obj = JSON.parse(response);
-                    console.log(obj['data'][13])
 
-                    function handleResponse(res) {
-                        if (res && res.paymentMethod && res.paymentMethod.paymentTransaction) {
-                            if (res.paymentMethod.paymentTransaction.statusCode === '0300') {
-                                // success block
-                            } else if (res.paymentMethod.paymentTransaction.statusCode === '0398') {
-                                // initiated block
+                $.ajax({
+                    type: 'POST',
+                    cache: false,
+                    data: str,
+                    url: "<?php echo base_url('temporary_user/TemporaryUser/worldline') ?>",
+                    success: function(response) {
+
+                        var obj = JSON.parse(response);
+                        console.log(obj['data'][13])
+
+                        function handleResponse(res) {
+                            if (res && res.paymentMethod && res.paymentMethod.paymentTransaction) {
+                                if (res.paymentMethod.paymentTransaction.statusCode === '0300') {
+                                    // success block
+                                } else if (res.paymentMethod.paymentTransaction.statusCode === '0398') {
+                                    // initiated block
+                                } else {
+                                    // error block
+                                }
                             } else {
                                 // error block
                             }
-                        } else {
-                            // error block
                         }
-                    }
-                    console.log('hashh', obj)
-                    var configJson = {
-                        'tarCall': false,
-                        'features': {
-                            'showPGResponseMsg': true,
-                            'enableNewWindowFlow': <?php echo ($mer_array['enableNewWindowFlow'] == 1) ? 'true' : 'false'; ?>,
-                            'enableAbortResponse': true,
-                            'enableExpressPay': <?php echo ($mer_array['enableExpressPay'] == 1) ? 'true' : 'false'; ?>,
-                            'enableInstrumentDeRegistration': <?php echo ($mer_array['enableInstrumentDeRegistration'] == 1) ? 'true' : 'false'; ?>,
-                            'enableMerTxnDetails': true,
-                            'siDetailsAtMerchantEnd': <?php echo ($mer_array['enableSIDetailsAtMerchantEnd'] == 1) ? 'true' : 'false'; ?>,
-                            'enableSI': <?php echo ($mer_array['enableEmandate'] == 1) ? 'true' : 'false'; ?>,
-                            'hideSIDetails': <?php echo ($mer_array['hideSIConfirmation'] == 1) ? 'true' : 'false'; ?>,
-                            'enableDebitDay': <?php echo ($mer_array['enableDebitDay'] == 1) ? 'true' : 'false'; ?>,
-                            'expandSIDetails': <?php echo ($mer_array['expandSIDetails'] == 1) ? 'true' : 'false'; ?>,
-                            'enableTxnForNonSICards': <?php echo ($mer_array['enableTxnForNonSICards'] == 1) ? 'true' : 'false'; ?>,
-                            'showSIConfirmation': <?php echo ($mer_array['showSIConfirmation'] == 1) ? 'true' : 'false'; ?>,
-                            'showSIResponseMsg': <?php echo ($mer_array['showSIResponseMsg'] == 1) ? 'true' : 'false'; ?>,
-                        },
-                        'consumerData': {
-                            'deviceId': 'WEBSH2',
-                            'token': obj['hash'],
-                            'returnUrl': obj['data'][12],
-                            'responseHandler': handleResponse,
-                            'paymentMode': 'all',
-                            'checkoutElement': '<?php echo ($mer_array['embedPaymentGatewayOnPage'] == "1") ? "#worldline_embeded_popup" : ""; ?>',
-                            'merchantLogoUrl': '<?php echo isset($mer_array['logoURL']) ? $mer_array['logoURL'] : ''; ?>',
-                            'merchantId': obj['data'][0],
-                            'currency': obj['data'][15],
-                            'consumerId': obj['data'][8],
-                            'consumerMobileNo': obj['data'][9],
-                            'consumerEmailId': obj['data'][10],
-                            'txnId': obj['data'][1],
-                            'items': [{
-                                'itemId': obj['data'][14],
-                                'amount': obj['data'][2],
-                                'comAmt': '0'
-                            }],
-                            'cartDescription': '}{custname:' + obj['data'][13],
-                            'merRefDetails': [{
-                                "name": "Txn. Ref. ID",
-                                "value": obj['data'][1]
-                            }],
-                            'customStyle': {
-                                'PRIMARY_COLOR_CODE': '<?php echo isset($mer_array['primaryColor']) ? $mer_array['primaryColor'] : ''; ?>',
-                                'SECONDARY_COLOR_CODE': '<?php echo isset($mer_array['secondaryColor']) ? $mer_array['secondaryColor'] : ''; ?>',
-                                'BUTTON_COLOR_CODE_1': '<?php echo isset($mer_array['buttonColor1']) ? $mer_array['buttonColor1'] : ''; ?>',
-                                'BUTTON_COLOR_CODE_2': '<?php echo isset($mer_array['buttonColor2']) ? $mer_array['buttonColor2'] : ''; ?>'
+                        console.log('hashh', obj)
+                        var configJson = {
+                            'tarCall': false,
+                            'features': {
+                                'showPGResponseMsg': true,
+                                'enableNewWindowFlow': <?php echo ($mer_array['enableNewWindowFlow'] == 1) ? 'true' : 'false'; ?>,
+                                'enableAbortResponse': true,
+                                'enableExpressPay': <?php echo ($mer_array['enableExpressPay'] == 1) ? 'true' : 'false'; ?>,
+                                'enableInstrumentDeRegistration': <?php echo ($mer_array['enableInstrumentDeRegistration'] == 1) ? 'true' : 'false'; ?>,
+                                'enableMerTxnDetails': true,
+                                'siDetailsAtMerchantEnd': <?php echo ($mer_array['enableSIDetailsAtMerchantEnd'] == 1) ? 'true' : 'false'; ?>,
+                                'enableSI': <?php echo ($mer_array['enableEmandate'] == 1) ? 'true' : 'false'; ?>,
+                                'hideSIDetails': <?php echo ($mer_array['hideSIConfirmation'] == 1) ? 'true' : 'false'; ?>,
+                                'enableDebitDay': <?php echo ($mer_array['enableDebitDay'] == 1) ? 'true' : 'false'; ?>,
+                                'expandSIDetails': <?php echo ($mer_array['expandSIDetails'] == 1) ? 'true' : 'false'; ?>,
+                                'enableTxnForNonSICards': <?php echo ($mer_array['enableTxnForNonSICards'] == 1) ? 'true' : 'false'; ?>,
+                                'showSIConfirmation': <?php echo ($mer_array['showSIConfirmation'] == 1) ? 'true' : 'false'; ?>,
+                                'showSIResponseMsg': <?php echo ($mer_array['showSIResponseMsg'] == 1) ? 'true' : 'false'; ?>,
                             },
-                            'accountNo': obj['data'][11],
-                            'accountHolderName': obj['data'][16],
-                            'ifscCode': obj['data'][17],
-                            'accountType': obj['data'][18],
-                            'debitStartDate': obj['data'][3],
-                            'debitEndDate': obj['data'][4],
-                            'maxAmount': obj['data'][5],
-                            'amountType': obj['data'][6],
-                            'frequency': obj['data'][7]
+                            'consumerData': {
+                                'deviceId': 'WEBSH2',
+                                'token': obj['hash'],
+                                'returnUrl': obj['data'][12],
+                                'responseHandler': handleResponse,
+                                'paymentMode': 'all',
+                                'checkoutElement': '<?php echo ($mer_array['embedPaymentGatewayOnPage'] == "1") ? "#worldline_embeded_popup" : ""; ?>',
+                                'merchantLogoUrl': '<?php echo isset($mer_array['logoURL']) ? $mer_array['logoURL'] : ''; ?>',
+                                'merchantId': obj['data'][0],
+                                'currency': obj['data'][15],
+                                'consumerId': obj['data'][8],
+                                'consumerMobileNo': obj['data'][9],
+                                'consumerEmailId': obj['data'][10],
+                                'txnId': obj['data'][1],
+                                'items': [{
+                                    'itemId': obj['data'][14],
+                                    'amount': obj['data'][2],
+                                    'comAmt': '0'
+                                }],
+                                'cartDescription': '}{custname:' + obj['data'][13],
+                                'merRefDetails': [{
+                                    "name": "Txn. Ref. ID",
+                                    "value": obj['data'][1]
+                                }],
+                                'customStyle': {
+                                    'PRIMARY_COLOR_CODE': '<?php echo isset($mer_array['primaryColor']) ? $mer_array['primaryColor'] : ''; ?>',
+                                    'SECONDARY_COLOR_CODE': '<?php echo isset($mer_array['secondaryColor']) ? $mer_array['secondaryColor'] : ''; ?>',
+                                    'BUTTON_COLOR_CODE_1': '<?php echo isset($mer_array['buttonColor1']) ? $mer_array['buttonColor1'] : ''; ?>',
+                                    'BUTTON_COLOR_CODE_2': '<?php echo isset($mer_array['buttonColor2']) ? $mer_array['buttonColor2'] : ''; ?>'
+                                },
+                                'accountNo': obj['data'][11],
+                                'accountHolderName': obj['data'][16],
+                                'ifscCode': obj['data'][17],
+                                'accountType': obj['data'][18],
+                                'debitStartDate': obj['data'][3],
+                                'debitEndDate': obj['data'][4],
+                                'maxAmount': obj['data'][5],
+                                'amountType': obj['data'][6],
+                                'frequency': obj['data'][7]
+                            }
+                        };
+
+                        console.log(configJson);
+
+                        $.pnCheckout(configJson);
+                        if (configJson.features.enableNewWindowFlow) {
+                            pnCheckoutShared.openNewWindow();
                         }
-                    };
-
-                    console.log(configJson);
-
-                    $.pnCheckout(configJson);
-                    if (configJson.features.enableNewWindowFlow) {
-                        pnCheckoutShared.openNewWindow();
                     }
-                }
-            });
+                });
+            } else {
+                $('#amount_validation').html("Please check the entered amount");
+            }
+
         });
     });
 </script>
