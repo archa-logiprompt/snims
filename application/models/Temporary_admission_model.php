@@ -13,10 +13,9 @@ class Temporary_admission_model extends CI_Model
     }
     public function update_status($id)
     {
-     
+
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', array('status' => 2));
-        
     }
 
     public function getstaff()
@@ -42,18 +41,17 @@ class Temporary_admission_model extends CI_Model
     }
     public function getsignatureorder()
     {
-    $result=$this->this->select('*')->from('upload_signature')->get()->result_array();
-    return $result;
-
+        $result = $this->this->select('*')->from('upload_signature')->get()->result_array();
+        return $result;
     }
     public function signdelete($id)
     {
-        $this->db->where('id',$id);
+        $this->db->where('id', $id);
         $this->db->delete('upload_signature');
         $this->session->set_flashdata('msg', '<div class="alert alert-success"> Signature deleted successfully</div>');
         redirect('admin/temporary_admission/upload_signature');
     }
-    
+
     public function update_signature($id, $data)
     {
         $this->db->where('id', $id);
@@ -61,21 +59,20 @@ class Temporary_admission_model extends CI_Model
     }
     public function getalldocuments()
     {
-       $res= $this->db->select('*')->get('upload_signature')->result_array();
-       return $res;
-
+        $res = $this->db->select('*')->get('upload_signature')->result_array();
+        return $res;
     }
     public function getsignaturedetails($order_no)
     {
-        $res=$this->db->select('*')->where('orders<=',$order_no)->get('upload_signature')->result_array();
+        $res = $this->db->select('*')->where('orders<=', $order_no)->get('upload_signature')->result_array();
         return $res;
     }
     public function getDocumentById($id)
-{
-    $query = $this->db->get_where('upload_signature', array('id' => $id));
-    return $query->row_array();
-}
-        public function checkUser($username, $otp)
+    {
+        $query = $this->db->get_where('upload_signature', array('id' => $id));
+        return $query->row_array();
+    }
+    public function checkUser($username, $otp)
     {
 
         $user_id = $this->db->select('id,phone')->where('user_id', $username)->get('temporary_admission')->row();
@@ -108,14 +105,12 @@ class Temporary_admission_model extends CI_Model
         $res = $this->db->select('admision_quota.*')->from('admision_quota')->get()->result_array();
 
         return $res;
-
     }
     public function getdetails($txn_id)
     {
-        $res=$this->db->select('details')->where('transaction_id', $txn_id)->get('admission_payment_session')->row_array();
-  
-        return $res;
+        $res = $this->db->select('details')->where('transaction_id', $txn_id)->get('admission_payment_session')->row_array();
 
+        return $res;
     }
     public function pickupupdate($id, $curuserdata)
     {
@@ -244,18 +239,18 @@ class Temporary_admission_model extends CI_Model
             ->where('temporary_admission.id', $id)
             ->get()
             ->row();
-    
+
         if ($result && !empty($result->documents)) {
-            
+
             $result->documents = explode(',', $result->documents);
         } else {
-          
+
             $result->documents = [];
         }
-  
+
         return $result;
     }
-    
+
     public function paymentsucceess($id)
     {
         $payment = $this->db->select('payment_suceess.*,temporary_admission.*')
@@ -264,8 +259,8 @@ class Temporary_admission_model extends CI_Model
             ->join('temporary_admission', 'temporary_admission.id =payment_suceess.temporary_student_id')
             ->where('payment_suceess.temporary_student_id', $id)
             ->get()
-            ->row_array();
-            //   echo $this->db->last_query();exit;
+            ->result_array();
+        //   echo $this->db->last_query();exit;
         return $payment;
     }
     public function addcomment($data)
@@ -303,8 +298,4 @@ class Temporary_admission_model extends CI_Model
             }
         }
     }
-
-
-
-
 }

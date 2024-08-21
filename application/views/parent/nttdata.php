@@ -26,40 +26,62 @@
                     <div class="paymentbg">
                         <div class="invtext">Fees Payment Details</div>
                         <div class="padd2 paddtzero">
-                            <table class="table2" width="100%">
-                                <tr>
-                                    <th>Decription</th>
-                                    <th class="text-right">Amount</th>
-                                </tr>
-                                <?php $total = 0;
-                                $fee_details_array = array();
-                                foreach ($categoryamount as $row) {
-                                    $fee_details = $row['name'] . "-" . $row['type'];
-                                    $fee_details_array[] = $fee_details;
-                                ?>
-                                    <tr>
-                                        <td><?php echo $row['name'] . "-" . $row['type'] ?></td>
-                                        <td class="text-right"><?php echo $row['amount'];
-                                                                $total += $row['amount'] ?></td>
-                                    </tr>
-                                <?php
-                                } ?>
-                                <tr>
-                                    <td>
-                                        Total
-                                    </td>
-                                    <td class="text-right">
-                                        <?php echo $total; ?>
-                                    </td>
-                                </tr>
-
-
-
-
-                            </table>
-                            <div class="divider"></div>
-                            <?php $fee_details = implode(',', $fee_details_array) ?>
                             <form class="paddtlrb" method="POST" id="form">
+                                <table class="table2" width="100%">
+                                    <tr>
+                                        <th>Decription</th>
+                                        <th class="text-right">Amount</th>
+                                    </tr>
+                                    <?php $total = 0;
+                                    $fee_details_array = array();
+                                    foreach ($categoryamount as $row) {
+                                        $fee_details = $row['name'] . "-" . $row['type'];
+                                        $fee_details_array[] = $fee_details;
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $row['name'] . "-" . $row['type'] ?></td>
+                                            <td class="text-right"><?php echo $row['amount'];
+                                                                    $total += $row['amount'] ?></td>
+                                        </tr>
+                                    <?php
+                                    } ?>
+                                    <tr>
+                                        <td>
+                                            Total
+                                        </td>
+                                        <td class="text-right ">
+                                            <b><?php echo $total; ?></b>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    if ($paidAmount > 0) {
+                                    ?>
+                                        <tr>
+                                            <td>
+                                                Amount Paid
+                                            </td>
+                                            <td class="text-right">
+                                                <?php echo $paidAmount; ?>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    } ?>
+                                    <tr>
+                                        <td>
+                                            Amount To Pay
+                                        </td>
+                                        <td class="text-right">
+                                            <input class="form-control" type="number" name="amount" id="amount" value="<?php echo $total - ($paidAmount > 0 ? $paidAmount : 0); ?>">
+                                        </td>
+                                    </tr>
+
+
+
+
+                                </table>
+                                <div class="divider"></div>
+                                <?php $fee_details = implode(',', $fee_details_array) ?>
+
                                 <button type="button" onclick="window.history.go(-1); return false;" name="search" value="" class="btn btn-info"><i class="fa fa fa-chevron-left"></i> Back</button>
                                 <button type="button" id="btnSubmit" class="btn btn-info pull-right"><i class="fa fa fa-money"></i> Pay</button>
                                 <!-- <input type="hidden" name="student_fees_master_id" value="<?php echo $categoryamount['student_fees_master_id']; ?>"> -->
@@ -71,7 +93,7 @@
                                 <!-- <input type="hidden" name="mrctCode" value="L1020487"> -->
                                 <!-- <input type="hidden" name="incomename" value="<?php echo $params['payment_detail']->fee_group_name ?>"> -->
                                 <!-- <input type="hidden" name="incometype" value="<?php echo $params['payment_detail']->code ?>"> -->
-                                <input type="hidden" name="amount" value="<?php echo $total; ?>">
+                                <!-- <input type="hidden" name="amount" value="<?php echo $total; ?>"> -->
                                 <!-- <input type="hidden" name="scheme" value="FIRST"> -->
                                 <input type="hidden" name="scheme" value="test">
                                 <input type="hidden" name="fee_details" value="<?php echo $fee_details ?>">

@@ -43,19 +43,19 @@
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <?php echo $commentCount ?>
                     </span></button>
-                  
-                    <!-- <?php if ($status['status'] == '1'): ?>
-                            <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/'.$userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
+
+                <!-- <?php if ($status['status'] == '1'): ?>
+                            <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
                     <?php endif; ?> -->
 
-                
-                        <?php if (!empty($paymentsucceess) && $paymentsucceess['temporary_student_id'] == $userdata['id']): ?>
-                        <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2"> Receipt</a>
-                        <?php elseif ($status['status'] == '1'): ?>
-                        <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
-                    <?php endif; ?>
+                <?php if ($paymentsucceess): ?>
+                    <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2"> Receipt</a>
+                <?php endif; ?>
+                <?php if ($feeBalance != 0): ?>
+                    <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
+                <?php endif; ?>
 
-             
+
                 <a href="<?php echo base_url('site/logout') ?>" type="button"
                     class="btn btn-outline-primary me-2">Logout</a>
             </div>
@@ -77,7 +77,7 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <?php foreach ($commentdetails as $comment) {
-                                    ?>
+                                ?>
                                     <tr>
                                         <td>
                                             <h3><?php echo $comment['comment']; ?></h3>
