@@ -29,10 +29,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     <p class="classtap"><?php echo $student["class"]; ?> <a href="#" data-toggle="control-sidebar" class="studentsideclose"><i class="fa fa-times"></i></a></p>
     <ul class="nav nav-justified studenttaps">
         <?php foreach ($class_section as $skey => $svalue) {
-        ?>
+            ?>
         <li <?php if ($student["section_id"] == $svalue["section_id"]) {
-                echo "class='active'";
-            } ?> ><a href="#section<?php echo $svalue["section_id"] ?>" data-toggle="tab"><?php print_r($svalue["section"]); ?></a></li>
+            echo "class='active'";
+        } ?> ><a href="#section<?php echo $svalue["section_id"] ?>" data-toggle="tab"><?php print_r($svalue["section"]); ?></a></li>
    <?php } ?>
     </ul>
 </div>
@@ -41,26 +41,26 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
       <?php
 
-        foreach ($class_section as $skey => $snvalue) {
-        ?>
+      foreach ($class_section as $skey => $snvalue) {
+          ?>
           <div class="tab-pane <?php if ($student["section_id"] == $snvalue["section_id"]) {
-                                    echo "active";
-                                } ?>" id="section<?php echo $snvalue["section_id"]; ?>">
+              echo "active";
+          } ?>" id="section<?php echo $snvalue["section_id"]; ?>">
             <?php foreach ($studentlistbysection as $stkey => $stvalue) {
                 if ($stvalue['section_id'] == $snvalue["section_id"]) {
-            ?>
+                    ?>
                     <div class="studentname">
                         <a class="" href="<?php echo base_url() . "student/view/" . $stvalue["id"] ?>">
                     <div class="icon"><img src="<?php if (!empty($stvalue["image"])) {
-                                                    echo base_url() . $stvalue["image"];
-                                                } else {
-                                                    echo base_url() . "uploads/student_images/no_image.png";
-                                                } ?>" alt="User Image"></div>
+                        echo base_url() . $stvalue["image"];
+                    } else {
+                        echo base_url() . "uploads/student_images/no_image.png";
+                    } ?>" alt="User Image"></div>
                       <div class="student-tittle"><?php echo $stvalue["firstname"] . " " . $stvalue["lastname"] . "($stvalue[admission_no])" ?></div></a>
                     </div>
                         <?php
-                    }
-                } ?>
+                }
+            } ?>
        </div>
    <?php } ?>
       <div class="tab-pane" id="sectionB">
@@ -85,45 +85,51 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         <div class="row">
             <div class="col-md-3">
                 <div class="box box-primary" <?php if ($getstudentdetails["is_active"] == "no") {
-                                                    // echo "style='background-color:#f0dddd;'";
-                                                } ?>>
+                // echo "style='background-color:#f0dddd;'";
+            } ?>>
                     <div class="box-body box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails['file'])) {
-                                                                                            echo base_url() . $getstudentdetails['file'];
-                                                                                        } else {
-                                                                                            echo base_url() . "uploads/student_images/no_image.png";
-                                                                                        } ?>" alt="User profile picture">
+                            echo base_url() . $getstudentdetails['file'];
+                        } else {
+                            echo base_url() . "uploads/student_images/no_image.png";
+                        } ?>" alt="User profile picture">
                         <h3 class="profile-username text-center">
                             <?php echo $getstudentdetails['firstname'] . " " . $getstudentdetails['lastname']; ?>
                         </h3>
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item listnoback">
-                                <b><?php echo $this->lang->line('admission_no'); ?></b> <a class="pull-right text-aqua"><?php echo $getstudentdetails['admission_no']; ?></a>
+                                <b><?php echo $this->lang->line('admission_no'); ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $getstudentdetails['admission_no']; ?></a>
                             </li>
                             <li class="list-group-item listnoback">
-                                <b><?php echo $this->lang->line('roll_no'); ?></b> <a class="pull-right text-aqua"><?php echo $getstudentdetails['roll_no']; ?></a>
-                            </li>
-
-                            <li class="list-group-item listnoback">
-                                <b><?php echo $this->lang->line('kuhs_reg'); ?></b> <a class="pull-right text-aqua"><?php echo $getstudentdetails['kuhs_reg']; ?></a>
-                            </li>
-                            <li class="list-group-item listnoback">
-                                <b><?php echo "Course" ?></b> <a class="pull-right text-aqua"><?php echo $getstudentdetails['class']; ?></a>
-                            </li>
-                            <li class="list-group-item listnoback">
-                                <b><?php echo "Section" ?></b> <a class="pull-right text-aqua"><?php echo $getstudentdetails['section']; ?></a>
+                                <b><?php echo $this->lang->line('roll_no'); ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $getstudentdetails['roll_no']; ?></a>
                             </li>
 
+                            <li class="list-group-item listnoback">
+                                <b><?php echo $this->lang->line('kuhs_reg'); ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $getstudentdetails['kuhs_reg']; ?></a>
+                            </li>
+                            <li class="list-group-item listnoback">
+                                <b><?php echo "Course" ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $getstudentdetails['class']; ?></a>
+                            </li>
+                            <li class="list-group-item listnoback">
+                                <b><?php echo "Section" ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $getstudentdetails['section']; ?></a>
+                            </li>
+
 
                             <li class="list-group-item listnoback">
-                                <b><?php echo $this->lang->line('gender'); ?></b> <a class="pull-right text-aqua"><?php echo $this->lang->line(strtolower($getstudentdetails['gender'])); ?></a>
+                                <b><?php echo $this->lang->line('gender'); ?></b> <a
+                                    class="pull-right text-aqua"><?php echo $this->lang->line(strtolower($getstudentdetails['gender'])); ?></a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <?php
                 if (!empty($siblings)) {
-                ?>
+                    ?>
                     <!-- <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><?php echo $this->lang->line('sibling'); ?></h3>
@@ -134,7 +140,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <?php
 
                             foreach ($siblings as $sibling_key => $sibling_value) {
-                            ?>
+                                ?>
                                         <div class="box box-widget widget-user-2">
                                            
                                             <div class="siblingview">
@@ -161,9 +167,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         </div>
                                         <?php
-                                    }
+                            }
 
-                                        ?>
+                            ?>
 
 
                         </div>
@@ -171,7 +177,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                     </div> -->
 
-                <?php
+                    <?php
 
                 }
 
@@ -179,114 +185,42 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
             </div>
             <div class="col-md-9">
-
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('profile'); ?></a></li>
-
-
-
-                        <?php
-
-                        if ($this->module_lib->hasActive('fees_collection')) {
-                            if (
-                                ($this->rbac->hasPrivilege('collect_fees', 'can_view') ||
-                                    $this->rbac->hasPrivilege('search_fees_payment', 'can_view') ||
-                                    $this->rbac->hasPrivilege('search_due_fees', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_statement', 'can_view') ||
-                                    $this->rbac->hasPrivilege('balance_fees_report', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_carry_forward', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_master', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_group', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_type', 'can_view') ||
-                                    $this->rbac->hasPrivilege('fees_discount', 'can_view') ||
-                                    $this->rbac->hasPrivilege('accountants', 'can_view'))
-                            ) {
-
-                        ?>
-                                <!-- <li class=""><a href="#fee" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('fees'); ?></a></li> -->
-                            <?php }
-                        }
-
-
-                        if ($this->module_lib->hasActive('examination')) {
-                            if (
-                                ($this->rbac->hasPrivilege('exam', 'can_view') ||
-                                    $this->rbac->hasPrivilege('exam_schedule', 'can_view') ||
-                                    $this->rbac->hasPrivilege('marks_register', 'can_view') ||
-                                    $this->rbac->hasPrivilege('marks_grade', 'can_view'))
-                            ) {
-                            ?>
-                                <!-- <li class=""><a href="#exam" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('exam'); ?></a></li> -->
-                        <?php }
-                        } ?>
-                        <!-- <li class=""><a href="#documents" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('documents'); ?></a></li> -->
-                        <?php
-                        if ($this->rbac->hasPrivilege('student_timeline', 'can_add')) {
-                        ?>
-                            <!-- <li class=""><a href="#timelineh" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('timeline') ?></a></li>  <?php } ?> -->
-
-                            <!-- <li class=""><a href="#scholarship" data-toggle="tab" aria-expanded="true"><?php echo $this->lang->line('scholarship') ?></a></li> -->
+                        <li class="active"><a href="#activity" data-toggle="tab"
+                                aria-expanded="true"><?php echo $this->lang->line('profile'); ?></a></li>
 
 
 
 
 
 
-                            <?php if ($student["is_active"] == "yes") { ?>
-                                <?php
-
-                                if ($this->rbac->hasPrivilege('disable_student', 'can_view')) {
-                                ?>
-                                    <li class="pull-right">
-                                        <a href="<?php echo base_url() . "student/disablestudent/" . $student["id"] ?>" onclick="disable('<?php echo $student["id"] ?>')" class="text-red" data-toggle="tooltip" title="<?php echo "Disable"; ?>">
-                                            <i class="fa fa-thumbs-o-down"></i><?php //echo "Disable Student"; 
-                                                                                ?>
-                                        </a>
-                                    </li>
-                                <?php }
-
-                                if ($this->rbac->hasPrivilege('student_login_credential', 'can_view')) {
-                                ?>
-
-
-                                    <li class="pull-right">
-                                        <a href="#" class="schedule_modal text-green" data-toggle="tooltip" title="<?php echo $this->lang->line('login_details'); ?>"><i class="fa fa-key"></i>
-                                            <?php //echo $this->lang->line('login_details'); 
-                                            ?>
-                                        </a>
-                                    </li>
-                                <?php }
-                                if ($this->rbac->hasPrivilege('student', 'can_edit')) {
-                                ?>
-
-                                    <li class="pull-right">
-                                        <a href="<?php echo base_url() . "student/edit/" . $student["id"] ?>" class="" data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i>
-                                            <?php //echo $this->lang->line('login_details'); 
-                                            ?>
-                                        </a>
-                                    </li>
-                                <?php }
-                            } else { ?>
 
 
 
-                            <?php } ?>
-                            <?php if ($getstudentdetails['status'] == 0) { ?>
-                                <a href="<?php echo base_url(); ?>admin/temporary_admission/approve/<?php echo $getstudentdetails['uid'] ?>" class="btn btn-success pull-right" style="margin-top: 4px; margin-right: 4px">Approve</a>
-                            <?php } ?>
+                        <?php if ($getstudentdetails['status'] == 0) { ?>
+                            <a href="<?php echo base_url(); ?>admin/temporary_admission/approve/<?php echo $getstudentdetails['uid'] ?>"
+                                class="btn btn-success pull-right" style="margin-top: 4px; margin-right: 4px">Approve</a>
+                        <?php } ?>
 
-                            <?php if ($getstudentdetails['status'] == 2) { ?>
-                                <a href="<?php echo base_url('admin/temporary_admission/admindownloadreceipt/' . $getstudentdetails['uid']) ?>" type="button" class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
-                            <?php } ?>
+                        <?php if ($getstudentdetails['status'] == 2 && (array_key_exists("Cashier", $role))) { ?>
+                            <a href="<?php echo base_url('admin/temporary_admission/admindownloadreceipt/' . $getstudentdetails['uid']) ?>"
+                                type="button" class="btn btn-primary pull-right"
+                                style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
+                        <?php } ?>
 
-                            <button class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px" data-toggle="modal" data-target="#previouscommentsModal">Previous Comments</button>
 
 
-                            <button class="btn btn-info pull-right" style="margin-top: 4px; margin-right: 4px" data-toggle="modal" data-target="#commentModal">Comment</button>
+                        <button class="btn btn-primary pull-right" style="margin-top: 4px; margin-right: 4px"
+                            data-toggle="modal" data-target="#previouscommentsModal">Previous Comments</button>
+
+
+                        <button class="btn btn-info pull-right" style="margin-top: 4px; margin-right: 4px"
+                            data-toggle="modal" data-target="#commentModal">Comment</button>
                     </ul>
 
-                    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog"
+                        aria-labelledby="commentModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -296,10 +230,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="commentForm" action="<?php echo site_url('admin/temporary_admission/comment/' . $getstudentdetails['uid']); ?>" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+                                    <form id="commentForm"
+                                        action="<?php echo site_url('admin/temporary_admission/comment/' . $getstudentdetails['uid']); ?>"
+                                        method="post" accept-charset="utf-8" enctype="multipart/form-data">
                                         <div class="form-group">
                                             <label for="commentText">Comment</label>
-                                            <textarea class="form-control" id="commentText" name="comment" rows="3"></textarea>
+                                            <textarea class="form-control" id="commentText" name="comment"
+                                                rows="3"></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </form>
@@ -308,7 +245,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="previouscommentsModal" tabindex="-1" role="dialog" aria-labelledby="commentsModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="previouscommentsModal" tabindex="-1" role="dialog"
+                        aria-labelledby="commentsModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -322,11 +260,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <table class="table table-bordered">
                                             <tbody>
                                                 <?php foreach ($commentdetails as $comment) {
-                                                ?>
+                                                    ?>
                                                     <tr>
                                                         <td>
                                                             <h3><?php echo $comment['comment']; ?></h3>
-                                                            <span><?php echo $comment['commented_by']; ?></span><span class="pull-right"><?php echo date('d/m/Y', strtotime($comment['created_at'])); ?></span>
+                                                            <span><?php echo $comment['commented_by']; ?></span><span
+                                                                class="pull-right"><?php echo date('d/m/Y', strtotime($comment['created_at'])); ?></span>
                                                         </td>
                                                     </tr>
                                                 <?php } ?>
@@ -335,7 +274,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </tbody>
                                         </table>
                                     </div>
-                                    <button type="submit" class="btn btn-primary " data-dismiss="modal" aria-label="Close">Close</button>
+                                    <button type="submit" class="btn btn-primary " data-dismiss="modal"
+                                        aria-label="Close">Close</button>
 
                                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -364,8 +304,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <tr>
                                                 <td><?php echo $this->lang->line('date_of_birth'); ?></td>
                                                 <td><?php if (!empty($getstudentdetails['admission_date'])) {
-                                                        echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($getstudentdetails['dob']));
-                                                    } ?></td>
+                                                    echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($getstudentdetails['dob']));
+                                                } ?></td>
                                             </tr>
                                             <tr>
                                                 <td><?php echo $this->lang->line('category'); ?></td>
@@ -428,10 +368,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <td class="col-md-4"><?php echo $this->lang->line('father_name'); ?></td>
                                             <td class="col-md-5"><?php echo $getstudentdetails['father_name']; ?></td>
                                             <td rowspan="3"><img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails["father_pic"])) {
-                                                                                                                                echo base_url() . $getstudentdetails["father_pic"];
-                                                                                                                            } else {
-                                                                                                                                echo base_url() . "uploads/student_images/no_image.png";
-                                                                                                                            } ?>"></td>
+                                                echo base_url() . $getstudentdetails["father_pic"];
+                                            } else {
+                                                echo base_url() . "uploads/student_images/no_image.png";
+                                            } ?>"></td>
                                         </tr>
                                         <tr>
                                             <td><?php echo $this->lang->line('father_phone'); ?></td>
@@ -445,10 +385,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <td><?php echo $this->lang->line('mother_name'); ?></td>
                                             <td><?php echo $getstudentdetails['mother_name']; ?></td>
                                             <td rowspan="3"><img class="profile-user-img img-responsive img-circle" src="<?php if (!empty($getstudentdetails["mother_pic"])) {
-                                                                                                                                echo base_url() . $getstudentdetails["mother_pic"];
-                                                                                                                            } else {
-                                                                                                                                echo base_url() . "uploads/student_images/no_image.png";
-                                                                                                                            } ?>"></td>
+                                                echo base_url() . $getstudentdetails["mother_pic"];
+                                            } else {
+                                                echo base_url() . "uploads/student_images/no_image.png";
+                                            } ?>"></td>
                                         </tr>
                                         <tr>
                                             <td><?php echo $this->lang->line('mother_phone'); ?></td>
@@ -494,7 +434,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             if ($this->module_lib->hasActive('transport')) {
 
                                 if ($student['vehroute_id'] != 0) {
-                            ?>
+                                    ?>
                                     <!-- <div class="tshadow mb25  bozero">    
                                             <h3 class="pagetitleh2"><?php echo $this->lang->line('route') . " " . $this->lang->line('details') ?></h3>
 
@@ -524,7 +464,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         </div>  -->
 
-                            <?php
+                                    <?php
                                 }
                             }
                             ?>
@@ -533,7 +473,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             if ($this->module_lib->hasActive('hostel')) {
 
                                 if ($student['hostel_room_id'] != 0) {
-                            ?>
+                                    ?>
                                     <!-- <div class="tshadow mb25  bozero">    
                                             <h3 class="pagetitleh2"><?php echo $this->lang->line('hostel') . " " . $this->lang->line('details') ?></h3>
 
@@ -560,7 +500,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         </div>  -->
 
-                            <?php
+                                    <?php
                                 }
                             }
                             ?>
@@ -636,22 +576,24 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <div class="table-responsive around10 pt0">
                                     <table class="table table-hover table-striped tmb0">
                                         <tbody>
-                                            
+
                                             <tr>
                                                 <td class="col-md-5">
                                                     <?php if (!empty($getstudentdetails)): ?>
-                                                  
+
                                                         <ul>
-                                                            <?php  foreach (explode(",",$getstudentdetails['documents']) as $document): ?>
-                                                            <li>
-                                                            <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" >View Uploaded Document
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    </ul>
-                                                <?php else: ?>
-                                                    <p>No documents uploaded.</p>
-                                                <?php endif; ?>                  
-                                            </td>
+                                                            <?php foreach (explode(",", $getstudentdetails['documents']) as $document): ?>
+                                                                <li>
+                                                                    <a
+                                                                        href="<?= base_url('/uploads/temporary_admission/' . $document) ?>">View
+                                                                        Uploaded Document
+                                                                </li>
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    <?php else: ?>
+                                                        <p>No documents uploaded.</p>
+                                                    <?php endif; ?>
+                                                </td>
                                             </tr>
 
 
@@ -668,18 +610,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
 
-                            ?>
+                                ?>
                                 <div class="alert alert-danger">
                                     <?php echo $this->lang->line('no_record_found'); ?>
                                 </div>
-                            <?php
+                                <?php
                             } else {
-                            ?>
+                                ?>
                                 <div class="table-responsive">
                                     <div class="download_label">
                                         <?php echo $this->lang->line('student_fees') . ": " . $student['firstname'] . " " . $student['lastname'] ?>
                                     </div>
-                                    <table class="table table-striped table-bordered table-hover example table-fixed-header">
+                                    <table
+                                        class="table table-striped table-bordered table-hover example table-fixed-header">
                                         <thead class="header">
                                             <tr>
 
@@ -852,26 +795,26 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         array_push($stud_id, $fee_value->id);
                                                         array_push($fine_array, $fixed_fine);
                                                     }
-                                            ?>
+                                                    ?>
 
 
 
 
                                                     <?php
                                                     if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
-                                                    ?>
+                                                        ?>
                                                         <tr class="danger font12">
-                                                        <?php
+                                                            <?php
                                                     } else {
                                                         ?>
                                                         <tr class="dark-gray">
-                                                        <?php
+                                                            <?php
                                                     }
-                                                        ?>
+                                                    ?>
 
                                                         <td align="left"><?php
-                                                                            echo $fee_value->name;
-                                                                            ?></td>
+                                                        echo $fee_value->name;
+                                                        ?></td>
 
 
                                                         <td align="left"><?php echo $fee_value->code; ?></td>
@@ -888,14 +831,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <td align="left" class="text text-left width85">
                                                             <?php
                                                             if ($feetype_balance == 0) {
+                                                                ?>
+                                                                <span
+                                                                    class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
+                                                            } else if (!empty($fee_value->amount_detail)) {
+                                                                ?><span
+                                                                        class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
+                                                            } else {
+                                                                ?><span
+                                                                        class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
+                                                            }
                                                             ?>
-                                                                <span class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
-                                                                                                                                                } else if (!empty($fee_value->amount_detail)) {
-                                                                                                                                                    ?><span class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
-                                                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                                                            ?><span class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                            ?>
 
                                                         </td>
 
@@ -909,174 +855,177 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <td class="text text-left"></td>
                                                         <td class="text text-left"></td>
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($fee_discount, 0, '.', ''));
-                                                                                    ?></td>
+                                                        echo (number_format($fee_discount, 0, '.', ''));
+                                                        ?></td>
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($amountfine, 0, '.', ''));
-                                                                                    ?></td>
+                                                        echo (number_format($amountfine, 0, '.', ''));
+                                                        ?></td>
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($fee_paid, 0, '.', ''));
-                                                                                    ?></td>
+                                                        echo (number_format($fee_paid, 0, '.', ''));
+                                                        ?></td>
                                                         <td class="text text-right"><?php
-                                                                                    $display_none = "ss-none";
-                                                                                    if ($feetype_balance > 0) {
-                                                                                        $display_none = "";
+                                                        $display_none = "ss-none";
+                                                        if ($feetype_balance > 0) {
+                                                            $display_none = "";
 
 
-                                                                                        echo (number_format($feetype_balance, 0, '.', ''));
-                                                                                    }
-                                                                                    ?>
-                                                            <input type="hidden" name="balance" class="hidbalance" value="<?php echo (number_format($feetype_balance, 0, '.', '')) ?>" />
+                                                            echo (number_format($feetype_balance, 0, '.', ''));
+                                                        }
+                                                        ?>
+                                                            <input type="hidden" name="balance" class="hidbalance"
+                                                                value="<?php echo (number_format($feetype_balance, 0, '.', '')) ?>" />
                                                         </td>
 
 
-                                                        </tr>
+                                                    </tr>
 
-                                                        <?php
-                                                        if (!empty($fee_value->amount_detail)) {
-
-
-                                                            $fee_deposits = json_decode(($fee_value->amount_detail));
-                                                            $total_refund = 0;
+                                                    <?php
+                                                    if (!empty($fee_value->amount_detail)) {
 
 
-
-                                                            foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
+                                                        $fee_deposits = json_decode(($fee_value->amount_detail));
+                                                        $total_refund = 0;
 
 
 
-
-                                                                $total_fee_paid = $fee_deposits_value->amount_fine + $fee_deposits_value->amount;
-
-
-
-                                                                $fine = $fee_deposits_value->amount_fine;
+                                                        foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
 
 
 
 
-
-                                                        ?>
-
-
-                                                                <tr class="white-td">
-
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-                                                                    <td class="text-right"><img src="<?php echo base_url(); ?>backend/images/table-arrow.png" alt="" />
-                                                                    </td>
-                                                                    <td class="text text-left">
-
-
-                                                                        <a href="#" data-toggle="popover" class="detail_popover">
-                                                                            <?php echo $fee_deposits_value->inv_no; ?></a>
-                                                                        <div class="fee_detail_popover" style="display: none">
-                                                                            <?php
-                                                                            if ($fee_deposits_value->description == "") {
-                                                                            ?>
-                                                                                <p class="text text-danger">
-                                                                                    <?php echo $this->lang->line('no_description'); ?>
-                                                                                </p>
-                                                                            <?php
-                                                                            } else {
-                                                                            ?>
-                                                                                <p class="text text-info">
-                                                                                    <?php echo $fee_deposits_value->description; ?>
-                                                                                </p>
-                                                                            <?php
-                                                                            }
-                                                                            ?>
-                                                                        </div>
-
-
-                                                                    </td>
-                                                                    <td class="text text-left"><?php echo $fee_deposits_value->payment_mode; ?>
-                                                                        <?php echo $fee_deposits_value->description; ?>
-                                                                    </td>
-                                                                    <td class="text text-left">
-
-                                                                        <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
-                                                                    </td>
-                                                                    <td class="text text-right">
-                                                                        <?php echo (number_format($fee_deposits_value->amount_discount, 0, '.', '')); ?>
-                                                                    </td>
-                                                                    <td class="text text-right">
-                                                                        <?php echo (number_format($fee_deposits_value->amount_fine, 0, '.', '')); ?>
-                                                                    </td>
-                                                                    <td class="text text-right">
-                                                                        <?php //echo ( number_format($fee_deposits_value->amount, 0, '.', '')); 
-
-
-                                                                        echo (number_format($total_fee_paid, 0, '.', '')); ?>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php
-
-
-                                                            }
+                                                            $total_fee_paid = $fee_deposits_value->amount_fine + $fee_deposits_value->amount;
 
 
 
-                                                            $refund_details = json_decode($fee_value->refund_detail);
-
-                                                            foreach ($refund_details as $refund_detail) {
+                                                            $fine = $fee_deposits_value->amount_fine;
 
 
-                                                                // 
+
+
+
                                                             ?>
 
 
-                                                                <tr class="white-td">
+                                                            <tr class="white-td">
+
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+                                                                <td class="text-right"><img
+                                                                        src="<?php echo base_url(); ?>backend/images/table-arrow.png"
+                                                                        alt="" />
+                                                                </td>
+                                                                <td class="text text-left">
 
 
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-
-                                                                    <td align="left"></td>
-
-                                                                    <td align="left"></td>
-                                                                    <?php if (!empty($fee_value->refund_detail)) {
-
-                                                                        //  $refund_detail = json_decode($fee_value->refund_detail)
-                                                                    ?>
-                                                                        <td align="left" colspan="2">
-
+                                                                    <a href="#" data-toggle="popover" class="detail_popover">
+                                                                        <?php echo $fee_deposits_value->inv_no; ?></a>
+                                                                    <div class="fee_detail_popover" style="display: none">
+                                                                        <?php
+                                                                        if ($fee_deposits_value->description == "") {
+                                                                            ?>
                                                                             <p class="text text-danger">
-                                                                                Amount Refunded
-                                                                                <?php echo $currency_symbol . $refund_detail->amount ?>
-                                                                            <p>
-                                                                        </td>
+                                                                                <?php echo $this->lang->line('no_description'); ?>
+                                                                            </p>
+                                                                            <?php
+                                                                        } else {
+                                                                            ?>
+                                                                            <p class="text text-info">
+                                                                                <?php echo $fee_deposits_value->description; ?>
+                                                                            </p>
+                                                                            <?php
+                                                                        }
+                                                                        ?>
+                                                                    </div>
 
 
-                                                                        <td align="left"> <?php echo $refund_detail->payment_mode ?> </td>
-                                                                        <td align="left"><?php echo $refund_detail->date ?></td>
+                                                                </td>
+                                                                <td class="text text-left"><?php echo $fee_deposits_value->payment_mode; ?>
+                                                                    <?php echo $fee_deposits_value->description; ?>
+                                                                </td>
+                                                                <td class="text text-left">
 
-                                                                    <?php } else { ?>
+                                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
+                                                                </td>
+                                                                <td class="text text-right">
+                                                                    <?php echo (number_format($fee_deposits_value->amount_discount, 0, '.', '')); ?>
+                                                                </td>
+                                                                <td class="text text-right">
+                                                                    <?php echo (number_format($fee_deposits_value->amount_fine, 0, '.', '')); ?>
+                                                                </td>
+                                                                <td class="text text-right">
+                                                                    <?php //echo ( number_format($fee_deposits_value->amount, 0, '.', '')); 
+                                                                    
 
-                                                                        <td align="left"></td>
-                                                                        <td align="left"></td>
-                                                                        <td align="left"></td>
-                                                                        <td align="left"></td>
-
-                                                                    <?php } ?>
+                                                                                        echo (number_format($total_fee_paid, 0, '.', '')); ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
 
 
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-                                                                    <td align="left"></td>
-
-
-                                                                </tr>
-
-
-                                                        <?php
-                                                            }
                                                         }
-                                                        ?>
-                                                <?php
+
+
+
+                                                        $refund_details = json_decode($fee_value->refund_detail);
+
+                                                        foreach ($refund_details as $refund_detail) {
+
+
+                                                            // 
+                                                            ?>
+
+
+                                                            <tr class="white-td">
+
+
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+
+                                                                <td align="left"></td>
+
+                                                                <td align="left"></td>
+                                                                <?php if (!empty($fee_value->refund_detail)) {
+
+                                                                    //  $refund_detail = json_decode($fee_value->refund_detail)
+                                                                    ?>
+                                                                    <td align="left" colspan="2">
+
+                                                                        <p class="text text-danger">
+                                                                            Amount Refunded
+                                                                            <?php echo $currency_symbol . $refund_detail->amount ?>
+                                                                        <p>
+                                                                    </td>
+
+
+                                                                    <td align="left"> <?php echo $refund_detail->payment_mode ?> </td>
+                                                                    <td align="left"><?php echo $refund_detail->date ?></td>
+
+                                                                <?php } else { ?>
+
+                                                                    <td align="left"></td>
+                                                                    <td align="left"></td>
+                                                                    <td align="left"></td>
+                                                                    <td align="left"></td>
+
+                                                                <?php } ?>
+
+
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+                                                                <td align="left"></td>
+
+
+                                                            </tr>
+
+
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <?php
 
                                                 }
                                                 $feetype = implode(',', $ar);
@@ -1086,9 +1035,99 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                             $stud_feemaster = implode(',', $stud_id);
 
-                                                ?>
+                                            ?>
 
 
+                                            <tr class="box box-solid total-bg">
+
+                                                <td align="left"></td>
+                                                <td align="left"></td>
+                                                <td align="left"></td>
+                                                <td align="left" class="text text-left">
+                                                    <?php echo $this->lang->line('grand_total'); ?>
+                                                </td>
+                                                <td class="text text-right" id="grandtotal"><?php
+                                                echo ($currency_symbol . number_format($total_amount, 0, '.', ''));
+                                                ?></td>
+                                                <td class="text text-left"></td>
+                                                <td class="text text-left"></td>
+                                                <td class="text text-left"></td>
+
+                                                <td class="text text-right"><?php
+                                                echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 0, '.', ''));
+                                                ?></td>
+                                                <td class="text text-right"><?php
+                                                echo ($currency_symbol . number_format($total_fine_amount, 0, '.', ''));
+                                                ?></td>
+                                                <td class="text text-right"><?php
+                                                echo ($currency_symbol . number_format($total_deposite_amount, 0, '.', ''));
+                                                ?></td>
+                                                <td class="text text-right"><?php
+                                                $display_none = "ss-none";
+                                                if ($total_balance_amount > 0) {
+                                                    $display_none = "";
+                                                    echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 0, '.', ''));
+                                                }
+                                                ?></td>
+
+
+
+
+                                            </tr>
+                                            <?php if (!empty($fee_excess))
+                                                $excesstotal = 0;
+                                            foreach ($fee_excess as $ex_fee) {
+
+                                                $ex_amount = json_decode($ex_fee->amount_detail);
+                                                foreach ($ex_amount as $examount) {
+                                                    $excesstotal += $examount->amount;
+
+                                                    ?>
+
+
+
+                                                    <tr class="white-td">
+
+                                                        <td align="left"></td>
+                                                        <td align="left"><?php echo $ex_fee->type ?></td>
+                                                        <td align="left"></td>
+                                                        <td align="left"><span
+                                                                class="label label-success"><?php echo $this->lang->line('paid'); ?></span>
+                                                        </td>
+                                                        <td align="left"></td>
+                                                        <td class="text text-left">
+
+
+                                                            <a href="#" data-toggle="popover" class="detail_popover">
+                                                                <?php echo $examount->invo; ?></a>
+
+
+
+                                                        </td>
+                                                        <td class="text text-left">
+                                                            <?php echo $examount->payment_mode . ' ' . $examount->description ?>
+                                                        </td>
+                                                        <td class="text text-left">
+
+                                                            <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($examount->date)); ?>
+                                                        </td>
+                                                        <td class="text text-right"></td>
+                                                        <td class="text text-right"></td>
+                                                        <td class="text text-right">
+                                                            <?php echo (number_format($examount->amount, 0, '.', '')); ?>
+                                                        </td>
+
+                                                    </tr>
+
+
+
+
+
+                                                <?php }
+                                            } ?>
+
+
+                                            <?php if (!empty($fee_excess)) { ?>
                                                 <tr class="box box-solid total-bg">
 
                                                     <td align="left"></td>
@@ -1097,209 +1136,121 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td align="left" class="text text-left">
                                                         <?php echo $this->lang->line('grand_total'); ?>
                                                     </td>
-                                                    <td class="text text-right" id="grandtotal"><?php
-                                                                                                echo ($currency_symbol . number_format($total_amount, 0, '.', ''));
-                                                                                                ?></td>
+                                                    <td class="text text-right"></td>
                                                     <td class="text text-left"></td>
                                                     <td class="text text-left"></td>
                                                     <td class="text text-left"></td>
 
+                                                    <td class="text text-right"></td>
+                                                    <td class="text text-right"></td>
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 0, '.', ''));
-                                                                                ?></td>
-                                                    <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_fine_amount, 0, '.', ''));
-                                                                                ?></td>
-                                                    <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_deposite_amount, 0, '.', ''));
-                                                                                ?></td>
-                                                    <td class="text text-right"><?php
-                                                                                $display_none = "ss-none";
-                                                                                if ($total_balance_amount > 0) {
-                                                                                    $display_none = "";
-                                                                                    echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 0, '.', ''));
-                                                                                }
-                                                                                ?></td>
+                                                    $display_none = "ss-none";
+                                                    if ($total_balance_amount > 0) {
+                                                        $display_none = "";
+                                                        echo ($currency_symbol . number_format($excesstotal, 0, '.', ''));
+                                                    }
+                                                    ?></td>
+                                                    <td class="text text-right">
+                                                        <?php
+
+                                                        echo ($currency_symbol . number_format($excess_balance, 0, '.', '')); ?>
+                                                    </td>
+
 
 
 
 
                                                 </tr>
-                                                <?php if (!empty($fee_excess))
-                                                    $excesstotal = 0;
-                                                foreach ($fee_excess as $ex_fee) {
-
-                                                    $ex_amount = json_decode($ex_fee->amount_detail);
-                                                    foreach ($ex_amount as $examount) {
-                                                        $excesstotal += $examount->amount;
-
-                                                ?>
+                                            <?php } ?>
 
 
 
-                                                        <tr class="white-td">
+                                            <?php if (!empty($fee_advance))
 
-                                                            <td align="left"></td>
-                                                            <td align="left"><?php echo $ex_fee->type ?></td>
-                                                            <td align="left"></td>
-                                                            <td align="left"><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span>
-                                                            </td>
-                                                            <td align="left"></td>
-                                                            <td class="text text-left">
+                                                $advancetotal = 0;
+                                            foreach ($fee_advance as $fee_ad) {
 
+                                                $ad_amount = json_decode($fee_ad->amount_detail);
 
-                                                                <a href="#" data-toggle="popover" class="detail_popover">
-                                                                    <?php echo $examount->invo; ?></a>
+                                                foreach ($ad_amount as $admount) {
+                                                    $advancetotal += $admount->amount;
 
+                                                    ?>
 
-
-                                                            </td>
-                                                            <td class="text text-left">
-                                                                <?php echo $examount->payment_mode . ' ' . $examount->description ?>
-                                                            </td>
-                                                            <td class="text text-left">
-
-                                                                <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($examount->date)); ?>
-                                                            </td>
-                                                            <td class="text text-right"></td>
-                                                            <td class="text text-right"></td>
-                                                            <td class="text text-right">
-                                                                <?php echo (number_format($examount->amount, 0, '.', '')); ?>
-                                                            </td>
-
-                                                        </tr>
-
-
-
-
-
-                                                <?php }
-                                                } ?>
-
-
-                                                <?php if (!empty($fee_excess)) { ?>
-                                                    <tr class="box box-solid total-bg">
+                                                    <tr class="white-td">
 
                                                         <td align="left"></td>
+                                                        <td align="left"><?php echo $fee_ad->type ?></td>
                                                         <td align="left"></td>
+                                                        <td align="left"><span
+                                                                class="label label-success"><?php echo $this->lang->line('paid'); ?></span>
+                                                        </td>
                                                         <td align="left"></td>
-                                                        <td align="left" class="text text-left">
-                                                            <?php echo $this->lang->line('grand_total'); ?>
+                                                        <td class="text text-left">
+
+
+                                                            <a href="#" data-toggle="popover" class="detail_popover">
+                                                                <?php echo $admount->invo; ?></a>
+
+
+
+                                                        </td>
+                                                        <td class="text text-left">
+                                                            <?php echo $admount->payment_mode . ' ' . $admount->description ?>
+                                                        </td>
+                                                        <td class="text text-left">
+
+                                                            <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($admount->date)); ?>
                                                         </td>
                                                         <td class="text text-right"></td>
-                                                        <td class="text text-left"></td>
-                                                        <td class="text text-left"></td>
-                                                        <td class="text text-left"></td>
-
                                                         <td class="text text-right"></td>
-                                                        <td class="text text-right"></td>
-                                                        <td class="text text-right"><?php
-                                                                                    $display_none = "ss-none";
-                                                                                    if ($total_balance_amount > 0) {
-                                                                                        $display_none = "";
-                                                                                        echo ($currency_symbol . number_format($excesstotal, 0, '.', ''));
-                                                                                    }
-                                                                                    ?></td>
                                                         <td class="text text-right">
-                                                            <?php
-
-                                                            echo ($currency_symbol . number_format($excess_balance, 0, '.', '')); ?>
+                                                            <?php echo (number_format($admount->amount, 0, '.', '')); ?>
                                                         </td>
 
-
-
-
-
                                                     </tr>
-                                                <?php } ?>
-
-
-
-                                                <?php if (!empty($fee_advance))
-
-                                                    $advancetotal = 0;
-                                                foreach ($fee_advance as $fee_ad) {
-
-                                                    $ad_amount = json_decode($fee_ad->amount_detail);
-
-                                                    foreach ($ad_amount as $admount) {
-                                                        $advancetotal += $admount->amount;
-
-                                                ?>
-
-                                                        <tr class="white-td">
-
-                                                            <td align="left"></td>
-                                                            <td align="left"><?php echo $fee_ad->type ?></td>
-                                                            <td align="left"></td>
-                                                            <td align="left"><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span>
-                                                            </td>
-                                                            <td align="left"></td>
-                                                            <td class="text text-left">
-
-
-                                                                <a href="#" data-toggle="popover" class="detail_popover">
-                                                                    <?php echo $admount->invo; ?></a>
-
-
-
-                                                            </td>
-                                                            <td class="text text-left">
-                                                                <?php echo $admount->payment_mode . ' ' . $admount->description ?>
-                                                            </td>
-                                                            <td class="text text-left">
-
-                                                                <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($admount->date)); ?>
-                                                            </td>
-                                                            <td class="text text-right"></td>
-                                                            <td class="text text-right"></td>
-                                                            <td class="text text-right">
-                                                                <?php echo (number_format($admount->amount, 0, '.', '')); ?>
-                                                            </td>
-
-                                                        </tr>
 
 
 
 
                                                 <?php }
-                                                } ?>
+                                            } ?>
 
 
-                                                <?php if (!empty($fee_advance)) { ?>
-                                                    <tr class="box box-solid total-bg">
+                                            <?php if (!empty($fee_advance)) { ?>
+                                                <tr class="box box-solid total-bg">
 
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td align="left" class="text text-left">
-                                                            <?php echo $this->lang->line('grand_total'); ?>
-                                                        </td>
-                                                        <td class="text text-right"></td>
-                                                        <td class="text text-left"></td>
-                                                        <td class="text text-left"></td>
-                                                        <td class="text text-left"></td>
+                                                    <td align="left"></td>
+                                                    <td align="left"></td>
+                                                    <td align="left"></td>
+                                                    <td align="left" class="text text-left">
+                                                        <?php echo $this->lang->line('grand_total'); ?>
+                                                    </td>
+                                                    <td class="text text-right"></td>
+                                                    <td class="text text-left"></td>
+                                                    <td class="text text-left"></td>
+                                                    <td class="text text-left"></td>
 
-                                                        <td class="text text-right"></td>
-                                                        <td class="text text-right"></td>
-                                                        <td class="text text-right"><?php
-                                                                                    $display_none = "ss-none";
-                                                                                    if ($total_balance_amount > 0) {
-                                                                                        $display_none = "";
-                                                                                        echo ($currency_symbol . number_format($advancetotal, 0, '.', ''));
-                                                                                    }
-                                                                                    ?></td>
-                                                        <td class="text text-right"><?php
+                                                    <td class="text text-right"></td>
+                                                    <td class="text text-right"></td>
+                                                    <td class="text text-right"><?php
+                                                    $display_none = "ss-none";
+                                                    if ($total_balance_amount > 0) {
+                                                        $display_none = "";
+                                                        echo ($currency_symbol . number_format($advancetotal, 0, '.', ''));
+                                                    }
+                                                    ?></td>
+                                                    <td class="text text-right"><?php
 
-                                                                                    echo ($currency_symbol . number_format($advance_balance, 0, '.', ''));
-                                                                                    ?></td>
-
-
+                                                    echo ($currency_symbol . number_format($advance_balance, 0, '.', ''));
+                                                    ?></td>
 
 
 
-                                                    </tr>
-                                                <?php } ?>
+
+
+                                                </tr>
+                                            <?php } ?>
 
 
 
@@ -1314,7 +1265,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         </tbody>
                                     </table>
                                 </div>
-                            <?php
+                                <?php
                             }
                             ?>
 
@@ -1325,13 +1276,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <div class="timeline-header no-border">
 
 
-                                <button type="button" data-student-session-id="<?php echo $student['student_session_id'] ?>" class="btn btn-xs btn-primary pull-right myTransportFeeBtn"> <i class="fa fa-upload"></i>
+                                <button type="button"
+                                    data-student-session-id="<?php echo $student['student_session_id'] ?>"
+                                    class="btn btn-xs btn-primary pull-right myTransportFeeBtn"> <i
+                                        class="fa fa-upload"></i>
                                     <?php echo $this->lang->line('upload_documents'); ?></button>
 
-                                <button type="button" data-student-session-id="<?php echo $student['student_session_id'] ?>" class="btn btn-xs btn-primary pull-right returndoc"><?php echo $this->lang->line('return_documents'); ?></button>
+                                <button type="button"
+                                    data-student-session-id="<?php echo $student['student_session_id'] ?>"
+                                    class="btn btn-xs btn-primary pull-right returndoc"><?php echo $this->lang->line('return_documents'); ?></button>
                                 <!-- <h2 class="page-header"><?php //echo $this->lang->line('documents');        
-                                                                ?> <?php //echo $this->lang->line('list');        
-                                                                    ?></h2> -->
+                                ?> <?php //echo $this->lang->line('list');        
+                                 ?></h2> -->
                                 <div class="table-responsive" style="clear: both;">
                                     <table class="table table-striped table-bordered table-hover">
                                         <thead>
@@ -1352,7 +1308,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <tbody>
                                                 <?php
                                                 if (empty($student_doc)) {
-                                                ?>
+                                                    ?>
                                                     <tr>
                                                         <td colspan="5" class="text-danger text-center">
                                                             <?php echo $this->lang->line('no_record_found'); ?>
@@ -1361,33 +1317,41 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php
                                                 } else {
                                                     foreach ($student_doc as $value) {
-                                                    ?>
+                                                        ?>
                                                         <tr>
                                                             <td><?php echo $value['title']; ?></td>
-                                                            <td><?php echo $value['doc']; ?> <?php $redoc = getreturndoc($value['id'], $value['student_id']);
-                                                                                                if (!empty($redoc)) {
-                                                                                                    echo '  (Return date:' . $redoc->return_date . ') (Return submit date:' . $redoc->returnsubmitdate . ')';
-                                                                                                } ?> </td>
+                                                            <td><?php echo $value['doc']; ?>         <?php $redoc = getreturndoc($value['id'], $value['student_id']);
+                                                                        if (!empty($redoc)) {
+                                                                            echo '  (Return date:' . $redoc->return_date . ') (Return submit date:' . $redoc->returnsubmitdate . ')';
+                                                                        } ?> </td>
                                                             <td class="mailbox-date pull-right">
 
                                                                 <?php if (!empty($redoc)) { ?>
 
-                                                                    <a href="<?php echo base_url(); ?>student/returnsubmit/<?php echo $value['student_id'] . "/" . $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('return'); ?> <?php echo $this->lang->line('submit'); ?>" onclick="return confirm('<?php echo $this->lang->line('confirm') ?>');">
+                                                                    <a href="<?php echo base_url(); ?>student/returnsubmit/<?php echo $value['student_id'] . "/" . $value['id']; ?>"
+                                                                        class="btn btn-default btn-xs" data-toggle="tooltip"
+                                                                        title="<?php echo $this->lang->line('return'); ?> <?php echo $this->lang->line('submit'); ?>"
+                                                                        onclick="return confirm('<?php echo $this->lang->line('confirm') ?>');">
                                                                         <i class="fa fa-upload">
                                                                             <?php echo $this->lang->line('return'); ?>
                                                                             <?php echo $this->lang->line('submit'); ?></i>
                                                                     </a>
 
                                                                 <?php } ?>
-                                                                <a href="<?php echo base_url(); ?>student/download/<?php echo $value['student_id'] . "/" . $value['doc']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('download'); ?>">
+                                                                <a href="<?php echo base_url(); ?>student/download/<?php echo $value['student_id'] . "/" . $value['doc']; ?>"
+                                                                    class="btn btn-default btn-xs" data-toggle="tooltip"
+                                                                    title="<?php echo $this->lang->line('download'); ?>">
                                                                     <i class="fa fa-download"></i>
                                                                 </a>
-                                                                <a href="<?php echo base_url(); ?>student/doc_delete/<?php echo $value['id'] . "/" . $value['student_id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                                <a href="<?php echo base_url(); ?>student/doc_delete/<?php echo $value['id'] . "/" . $value['student_id']; ?>"
+                                                                    class="btn btn-default btn-xs" data-toggle="tooltip"
+                                                                    title="<?php echo $this->lang->line('delete'); ?>"
+                                                                    onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                                     <i class="fa fa-remove"></i>
                                                                 </a>
                                                             </td>
                                                         </tr>
-                                                <?php
+                                                        <?php
                                                     }
                                                 }
                                                 ?>
@@ -1400,7 +1364,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         <div class="tab-pane" id="timelineh">
                             <div> <?php if ($this->rbac->hasPrivilege('student_timeline', 'can_add')) { ?>
-                                    <input type="button" id="myTimelineButton" class="btn btn-sm btn-primary pull-right " value="<?php echo $this->lang->line('add') ?>" />
+                                    <input type="button" id="myTimelineButton" class="btn btn-sm btn-primary pull-right "
+                                        value="<?php echo $this->lang->line('add') ?>" />
 
                                 <?php } ?>
                             </div>
@@ -1411,14 +1376,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <div id="timeline_list">
                                     <?php
                                     if (empty($timeline_list)) {
-                                    ?>
+                                        ?>
                                         <br />
                                         <div class="alert alert-info"><?php echo $this->lang->line("no_record_found") ?>
                                         </div>
 
 
 
-                                    <?php
+                                        <?php
                                     } else { ?>
 
                                         <ul class="timeline timeline-inverse">
@@ -1426,20 +1391,28 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             foreach ($timeline_list as $key => $value) {
 
 
-                                            ?>
+                                                ?>
                                                 <li class="time-label">
                                                     <span class="bg-blue"> <?php
-                                                                            echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['timeline_date']));
-                                                                            ?></span>
+                                                    echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['timeline_date']));
+                                                    ?></span>
                                                 </li>
                                                 <li>
                                                     <i class="fa fa-list-alt bg-blue"></i>
                                                     <div class="timeline-item">
                                                         <?php if ($this->rbac->hasPrivilege('student_timeline', 'can_delete')) { ?>
-                                                            <span class="time"><a class="defaults-c text-right" data-toggle="tooltip" title="" onclick="delete_timeline('<?php echo $value['id']; ?>')" data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
+                                                            <span class="time"><a class="defaults-c text-right"
+                                                                    data-toggle="tooltip" title=""
+                                                                    onclick="delete_timeline('<?php echo $value['id']; ?>')"
+                                                                    data-original-title="Delete"><i
+                                                                        class="fa fa-trash"></i></a></span>
                                                         <?php } ?>
                                                         <?php if (!empty($value["document"])) { ?>
-                                                            <span class="time"><a class="defaults-c text-right" style="color:#0084B4" data-toggle="tooltip" title="" href="<?php echo base_url() . "admin/timeline/download/" . $value["id"] . "/" . $value["document"] ?>" data-original-title="Download"><i class="fa fa-download"></i></a></span>
+                                                            <span class="time"><a class="defaults-c text-right"
+                                                                    style="color:#0084B4" data-toggle="tooltip" title=""
+                                                                    href="<?php echo base_url() . "admin/timeline/download/" . $value["id"] . "/" . $value["document"] ?>"
+                                                                    data-original-title="Download"><i
+                                                                        class="fa fa-download"></i></a></span>
                                                         <?php } ?>
                                                         <h3 class="timeline-header text-aqua"> <?php echo $value['title']; ?>
                                                         </h3>
@@ -1454,13 +1427,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <?php } ?>
                                             <li><i class="fa fa-clock-o bg-gray"></i></li>
                                         <?php } ?>
-                                        </ul>
+                                    </ul>
                                 </div>
 
 
                                 <!-- <h2 class="page-header"><?php //echo $this->lang->line('documents');        
-                                                                ?> <?php //echo $this->lang->line('list');        
-                                                                    ?></h2> -->
+                                ?> <?php //echo $this->lang->line('list');        
+                                 ?></h2> -->
 
                             </div>
 
@@ -1479,8 +1452,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                 <!-- <h2 class="page-header"><?php //echo $this->lang->line('documents');        
-                                                                ?> <?php //echo $this->lang->line('list');        
-                                                                    ?></h2> -->
+                                ?> <?php //echo $this->lang->line('list');        
+                                 ?></h2> -->
                                 <div class="table-responsive" style="clear: both;">
                                     <table class="table table-striped table-bordered table-hover">
                                         <thead>
@@ -1498,22 +1471,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <tbody>
                                                 <?php
                                                 if (empty($student)) {
-                                                ?>
+                                                    ?>
                                                     <tr>
                                                         <td colspan="5" class="text-danger text-center">
                                                             <?php echo $this->lang->line('no_record_found'); ?>
                                                         </td>
                                                     </tr>
-                                                <?php
+                                                    <?php
                                                 } else {
 
-                                                ?>
+                                                    ?>
                                                     <tr>
                                                         <td><?php echo $student['name']; ?></td>
                                                         <td><?php echo $student['description']; ?></td>
 
                                                     </tr>
-                                                <?php
+                                                    <?php
 
                                                 }
                                                 ?>
@@ -1538,23 +1511,23 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <div class="">
                                 <?php
                                 if (empty($examSchedule)) {
-                                ?>
+                                    ?>
                                     <div class="alert alert-danger">
                                         No Exam Found.
                                     </div>
                                     <?php
                                 } else {
                                     foreach ($examSchedule as $key => $value) {
-                                    ?>
+                                        ?>
                                         <h4 class="pagetitleh"><?php echo $value['exam_name']; ?></h4>
                                         <?php
                                         if (empty($value['exam_result'])) {
-                                        ?>
+                                            ?>
                                             <div class="alert alert-info"><?php echo $this->lang->line('no_result_prepare'); ?>
                                             </div>
-                                        <?php
+                                            <?php
                                         } else {
-                                        ?>
+                                            ?>
                                             <div class="table-responsive borgray around10">
                                                 <div class="download_label"><?php echo $this->lang->line('exam_marks_report'); ?>
                                                 </div>
@@ -1588,11 +1561,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         $s = 0;
                                                         foreach ($exam_results_array as $result_k => $result_v) {
                                                             $total_marks = $total_marks + $result_v['full_marks'];
-                                                        ?>
+                                                            ?>
                                                             <tr>
                                                                 <td> <?php
-                                                                        echo $result_v['exam_name'] . " (" . substr($result_v['exam_type'], 0, 2) . ".) ";
-                                                                        ?></td>
+                                                                echo $result_v['exam_name'] . " (" . substr($result_v['exam_type'], 0, 2) . ".) ";
+                                                                ?></td>
                                                                 <td><?php echo $result_v['full_marks']; ?></td>
                                                                 <td><?php echo $result_v['passing_marks']; ?></td>
                                                                 <td>
@@ -1629,7 +1602,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     ?>
                                                                 </td>
                                                             </tr>
-                                                        <?php
+                                                            <?php
                                                             if ($s == count($exam_results_array)) {
                                                                 $obtain_marks = 0;
                                                             }
@@ -1643,35 +1616,38 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <td>
                                                                 <?php
                                                                 if ($result == "Pass") {
-                                                                ?>
-                                                                    <b class='text text-success'><?php echo $this->lang->line('result') . ": " . $result; ?></b>
-                                                                <?php
+                                                                    ?>
+                                                                    <b
+                                                                        class='text text-success'><?php echo $this->lang->line('result') . ": " . $result; ?></b>
+                                                                    <?php
                                                                 } else {
-                                                                ?>
-                                                                    <b class='text text-danger'><?php echo $this->lang->line('result') . ": " . $result; ?></b>
-                                                                <?php
+                                                                    ?>
+                                                                    <b
+                                                                        class='text text-danger'><?php echo $this->lang->line('result') . ": " . $result; ?></b>
+                                                                    <?php
                                                                 }
                                                                 ?>
                                                             </td>
                                                             <td><?php
-                                                                echo $this->lang->line('grand_total') . ": " . $obtain_marks . "/" . $total_marks;;
-                                                                ?></td>
+                                                            echo $this->lang->line('grand_total') . ": " . $obtain_marks . "/" . $total_marks;
+                                                            ;
+                                                            ?></td>
                                                             <td><?php
-                                                                $foo = ($obtain_marks * 100) / $total_marks;
-                                                                echo $this->lang->line('percentage') . ": " . number_format((float) $foo, 0, '.', '') . "%";
-                                                                ?></td>
+                                                            $foo = ($obtain_marks * 100) / $total_marks;
+                                                            echo $this->lang->line('percentage') . ": " . number_format((float) $foo, 0, '.', '') . "%";
+                                                            ?></td>
                                                             <td><?php
-                                                                if (!empty($gradeList)) {
-                                                                    foreach ($gradeList as $key => $value) {
-                                                                        if ($foo >= $value['mark_from'] && $foo <= $value['mark_upto']) {
-                                                                ?>
+                                                            if (!empty($gradeList)) {
+                                                                foreach ($gradeList as $key => $value) {
+                                                                    if ($foo >= $value['mark_from'] && $foo <= $value['mark_upto']) {
+                                                                        ?>
                                                                             <?php echo $this->lang->line('grade') . " : " . $value['name']; ?>
-                                                                <?php
+                                                                            <?php
                                                                             break;
-                                                                        }
                                                                     }
                                                                 }
-                                                                ?>
+                                                            }
+                                                            ?>
                                                             </td>
 
                                                         </tr>
@@ -1704,13 +1680,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     <span class="description-text">
                                                                         <?php
                                                                         if ($result == "Pass") {
-                                                                        ?>
+                                                                            ?>
                                                                             <b class='text text-success'><?php echo $result; ?></b>
-                                                                        <?php
+                                                                            <?php
                                                                         } else {
-                                                                        ?>
+                                                                            ?>
                                                                             <b class='text text-danger'><?php echo $result; ?></b>
-                                                                        <?php
+                                                                            <?php
                                                                         }
                                                                         ?>
                                                                     </span>
@@ -1721,7 +1697,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <div class="description-block">
                                                                 <h5 class="description-header">
                                                                     <?php echo $this->lang->line('grand_total'); ?>:
-                                                                    <span class="description-text"><?php echo $obtain_marks . "/" . $total_marks; ?></span>
+                                                                    <span
+                                                                        class="description-text"><?php echo $obtain_marks . "/" . $total_marks; ?></span>
 
                                                                 </h5>
                                                             </div>
@@ -1731,9 +1708,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <h5 class="description-header">
                                                                     <?php echo $this->lang->line('percentage'); ?>:
                                                                     <span class="description-text"><?php
-                                                                                                    $foo = ($obtain_marks * 100) / $total_marks;
-                                                                                                    echo number_format((float) $foo, 0, '.', '') . "%";
-                                                                                                    ?>
+                                                                    $foo = ($obtain_marks * 100) / $total_marks;
+                                                                    echo number_format((float) $foo, 0, '.', '') . "%";
+                                                                    ?>
                                                                     </span>
                                                                 </h5>
                                                             </div>
@@ -1743,17 +1720,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <div class="description-block">
                                                                 <h5 class="description-header">
                                                                     <span class="description-text"><?php
-                                                                                                    if (!empty($gradeList)) {
-                                                                                                        foreach ($gradeList as $key => $value) {
-                                                                                                            if ($foo >= $value['mark_from'] && $foo <= $value['mark_upto']) {
-                                                                                                    ?>
+                                                                    if (!empty($gradeList)) {
+                                                                        foreach ($gradeList as $key => $value) {
+                                                                            if ($foo >= $value['mark_from'] && $foo <= $value['mark_upto']) {
+                                                                                ?>
                                                                                     <?php echo $this->lang->line('grade') . ": " . $value['name']; ?>
-                                                                        <?php
-                                                                                                                break;
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                        ?></span>
+                                                                                    <?php
+                                                                                    break;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?></span>
                                                                 </h5>
                                                             </div>
                                                         </div>
@@ -1762,7 +1739,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php }
                                         ?>
-                                <?php
+                                        <?php
                                     }
                                 }
                                 ?>
@@ -1784,7 +1761,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     </section>
 </div>
 <script type="text/javascript">
-    $("#myTimelineButton").click(function() {
+    $("#myTimelineButton").click(function () {
         $("#reset").click();
         $('.transport_fees_title').html("<b><?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('timeline'); ?></b>");
         $('#myTimelineModal').modal({
@@ -1794,7 +1771,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
         });
     });
-    $(".myTransportFeeBtn").click(function() {
+    $(".myTransportFeeBtn").click(function () {
         $("span[id$='_error']").html("");
         $('#transport_amount').val("");
         $('#transport_amount_discount').val("0");
@@ -1811,7 +1788,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     });
 
 
-    $(".returndoc").click(function() {
+    $(".returndoc").click(function () {
         $('.selectpicker').multiselect();
         $("span[id$='_error']").html("");
         $('#transport_amount').val("");
@@ -1867,13 +1844,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <form id="returndocform" name="returndocform" method="post" enctype="multipart/form-data">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div id='timeline_hide_show'>
-                                <input type="hidden" name="student_id" value="<?php echo $student["id"] ?>" id="student_id"><?php //var_dump($student_doc); 
-                                                                                                                            ?>
+                                <input type="hidden" name="student_id" value="<?php echo $student["id"] ?>"
+                                    id="student_id"><?php //var_dump($student_doc); 
+                                    ?>
                                 <h4></h4>
                                 <div class=" col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('documents'); ?><small class="req"> *</small></label>
-                                        <select id="documents" multiple="multiple" name="documents[]" placeholder="" class="form-control selectpicker" style="width: 100% !important;">
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('documents'); ?><small
+                                                class="req"> *</small></label>
+                                        <select id="documents" multiple="multiple" name="documents[]" placeholder=""
+                                            class="form-control selectpicker" style="width: 100% !important;">
                                             <option disabled="disabled" value="0">Please select</option>
                                             <?php $srdata = get_studreturn_doc($student["id"]);
                                             if (!empty($student_doc)) {
@@ -1881,40 +1862,55 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     if (!in_array($value['id'], $srdata)) { ?>
                                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['title']; ?>
                                                         </option>
-                                            <?php }
+                                                    <?php }
                                                 }
                                             } ?>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('documents'); ?></span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('returnfor'); ?></label><small class="req">*</small>
-                                        <input id="returnfor" name="returnfor" placeholder="" type="text" class="form-control" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('returnfor'); ?></label><small
+                                            class="req">*</small>
+                                        <input id="returnfor" name="returnfor" placeholder="" type="text"
+                                            class="form-control" />
                                         <span class="text-danger"><?php echo form_error('returnfor'); ?></span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('return_date'); ?></label><small class="req"> *</small>
-                                        <input id="return_date" value="<?php echo set_value('return_date', date('Y-m-d')); ?>" name="return_date" placeholder="" type="date" class="form-control" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('return_date'); ?></label><small
+                                            class="req"> *</small>
+                                        <input id="return_date"
+                                            value="<?php echo set_value('return_date', date('Y-m-d')); ?>"
+                                            name="return_date" placeholder="" type="date" class="form-control" />
                                         <span class="text-danger"><?php echo form_error('return_date'); ?></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('remarks'); ?></label>
-                                        <textarea id="remarks" name="remarks" placeholder="" class="form-control"></textarea>
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('remarks'); ?></label>
+                                        <textarea id="remarks" name="remarks" placeholder=""
+                                            class="form-control"></textarea>
                                         <span class="text-danger"><?php echo form_error('remarks'); ?></span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('returnsubmitdate'); ?></label>
-                                        <input id="returnsubmitdate" value="<?php echo set_value('returnsubmitdate', date($this->customlib->getSchoolDateFormat())); ?>" name="returnsubmitdate" placeholder="" type="date" class="form-control" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('returnsubmitdate'); ?></label>
+                                        <input id="returnsubmitdate"
+                                            value="<?php echo set_value('returnsubmitdate', date($this->customlib->getSchoolDateFormat())); ?>"
+                                            name="returnsubmitdate" placeholder="" type="date" class="form-control" />
                                         <span class="text-danger"><?php echo form_error('returnsubmitdate'); ?></span>
                                     </div>
 
                                 </div>
                             </div>
                             <div class="modal-footer" style="clear:both">
-                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
-                                <a onclick="saveReturn_doc()" onclick="saveReturn_doc()" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></a>
-                                <button type="reset" id="reset" style="display: none" class="btn btn-info pull-right">Reset</button>
+                                <button type="button" class="btn btn-default pull-left"
+                                    data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                                <a onclick="saveReturn_doc()" onclick="saveReturn_doc()"
+                                    class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></a>
+                                <button type="reset" id="reset" style="display: none"
+                                    class="btn btn-info pull-right">Reset</button>
                             </div>
                         </form>
                     </div>
@@ -1941,35 +1937,51 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <form id="timelineform" name="timelineform" method="post" enctype="multipart/form-data">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div id='timeline_hide_show'>
-                                <input type="hidden" name="student_id" value="<?php echo $student["id"] ?>" id="student_id">
+                                <input type="hidden" name="student_id" value="<?php echo $student["id"] ?>"
+                                    id="student_id">
                                 <h4></h4>
                                 <div class=" col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('title'); ?></label><small class="req"> *</small>
-                                        <input id="timeline_title" name="timeline_title" placeholder="" type="text" class="form-control" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('title'); ?></label><small
+                                            class="req"> *</small>
+                                        <input id="timeline_title" name="timeline_title" placeholder="" type="text"
+                                            class="form-control" />
                                         <span class="text-danger"><?php echo form_error('timeline_title'); ?></span>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
-                                        <input id="timeline_date" value="<?php echo set_value('timeline_date', date($this->customlib->getSchoolDateFormat())); ?>" name="timeline_date" placeholder="" type="text" class="form-control" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label><small
+                                            class="req"> *</small>
+                                        <input id="timeline_date"
+                                            value="<?php echo set_value('timeline_date', date($this->customlib->getSchoolDateFormat())); ?>"
+                                            name="timeline_date" placeholder="" type="text" class="form-control" />
                                         <span class="text-danger"><?php echo form_error('timeline_date'); ?></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('description'); ?></label>
-                                        <textarea id="timeline_desc" name="timeline_desc" placeholder="" class="form-control"></textarea>
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('description'); ?></label>
+                                        <textarea id="timeline_desc" name="timeline_desc" placeholder=""
+                                            class="form-control"></textarea>
                                         <span class="text-danger"><?php echo form_error('description'); ?></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('attach_document'); ?></label>
-                                        <div class="" style="margin-top:-5px; border:0; outline:none;"><input id="timeline_doc_id" name="timeline_doc" placeholder="" type="file" class="filestyle form-control" data-height="40" value="<?php echo set_value('timeline_doc'); ?>" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('attach_document'); ?></label>
+                                        <div class="" style="margin-top:-5px; border:0; outline:none;"><input
+                                                id="timeline_doc_id" name="timeline_doc" placeholder="" type="file"
+                                                class="filestyle form-control" data-height="40"
+                                                value="<?php echo set_value('timeline_doc'); ?>" />
                                             <span class="text-danger"><?php echo form_error('timeline_doc'); ?></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('visible'); ?></label>
-                                        <input id="visible_check" checked="checked" name="visible_check" value="yes" placeholder="" type="checkbox" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('visible'); ?></label>
+                                        <input id="visible_check" checked="checked" name="visible_check" value="yes"
+                                            placeholder="" type="checkbox" />
 
                                     </div>
 
@@ -1977,9 +1989,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 </div>
                             </div>
                             <div class="modal-footer" style="clear:both">
-                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
-                                <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
-                                <button type="reset" id="reset" style="display: none" class="btn btn-info pull-right">Reset</button>
+                                <button type="button" class="btn btn-default pull-left"
+                                    data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                                <button type="submit"
+                                    class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
+                                <button type="reset" id="reset" style="display: none"
+                                    class="btn btn-info pull-right">Reset</button>
                             </div>
                         </form>
                     </div>
@@ -1999,22 +2014,31 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             <div class="">
                 <div class="">
                     <div class="">
-                        <input type="hidden" class="form-control" id="transport_student_session_id" value="0" readonly="readonly" />
-                        <form id="form1" action="<?php echo site_url('student/create_doc') ?>" id="employeeform" name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" id="transport_student_session_id" value="0"
+                            readonly="readonly" />
+                        <form id="form1" action="<?php echo site_url('student/create_doc') ?>" id="employeeform"
+                            name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div id='upload_documents_hide_show'>
-                                <input type="hidden" name="student_id" value="<?php echo $student_doc_id; ?>" id="student_id">
+                                <input type="hidden" name="student_id" value="<?php echo $student_doc_id; ?>"
+                                    id="student_id">
                                 <h4><?php echo $this->lang->line('upload_documents1'); ?></h4>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('title'); ?><small class="req"> *</small></label>
-                                        <input id="first_title" name="first_title" placeholder="" type="text" class="form-control" value="<?php echo set_value('first_title'); ?>" />
+                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('title'); ?><small
+                                                class="req"> *</small></label>
+                                        <input id="first_title" name="first_title" placeholder="" type="text"
+                                            class="form-control" value="<?php echo set_value('first_title'); ?>" />
                                         <span class="text-danger"><?php echo form_error('first_title'); ?></span>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('Documents'); ?></label>
-                                        <div class="" style="margin-top:-5px; border:0; outline:none;"><input id="first_doc_id" name="first_doc" placeholder="" type="file" class="filestyle form-control" data-height="40" value="<?php echo set_value('first_doc'); ?>" />
+                                        <label
+                                            for="exampleInputEmail1"><?php echo $this->lang->line('Documents'); ?></label>
+                                        <div class="" style="margin-top:-5px; border:0; outline:none;"><input
+                                                id="first_doc_id" name="first_doc" placeholder="" type="file"
+                                                class="filestyle form-control" data-height="40"
+                                                value="<?php echo set_value('first_doc'); ?>" />
                                             <span class="text-danger"><?php echo form_error('first_doc'); ?></span>
                                         </div>
                                     </div>
@@ -2022,8 +2046,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 </div>
                             </div>
                             <div class="modal-footer" style="clear:both">
-                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
-                                <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
+                                <button type="button" class="btn btn-default pull-left"
+                                    data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                                <button type="submit"
+                                    class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
                             </div>
                         </form>
                     </div>
@@ -2043,7 +2069,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             <div class="modal-body_logindetail">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                <button type="button" class="btn btn-default"
+                    data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
             </div>
         </div>
     </div>
@@ -2057,11 +2084,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             type: 'POST',
             dataType: 'json',
             data: $("#returndocform").serialize(),
-            success: function(data) {
+            success: function (data) {
                 if (data.status == "fail") {
 
                     var message = "";
-                    $.each(data.error, function(index, value) {
+                    $.each(data.error, function (index, value) {
 
                         message += value;
                     });
@@ -2073,7 +2100,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 }
 
             },
-            error: function() {
+            error: function () {
                 alert("Fail")
             }
         });
@@ -2082,12 +2109,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     }
 
 
-    $(document).ready(function(e) {
+    $(document).ready(function (e) {
 
 
 
 
-        $("#timelineform").on('submit', (function(e) {
+        $("#timelineform").on('submit', (function (e) {
             var student_id = $("#student_id").val();
 
             e.preventDefault();
@@ -2099,12 +2126,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 contentType: false,
                 cache: false,
                 processData: false,
-                success: function(data) {
+                success: function (data) {
 
                     if (data.status == "fail") {
 
                         var message = "";
-                        $.each(data.error, function(index, value) {
+                        $.each(data.error, function (index, value) {
 
                             message += value;
                         });
@@ -2115,11 +2142,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         $.ajax({
                             url: '<?php echo base_url(); ?>admin/timeline/student_timeline/' + student_id,
-                            success: function(res) {
+                            success: function (res) {
                                 $('#timeline_list').html(res);
                                 $('#myTimelineModal').modal('toggle');
                             },
-                            error: function() {
+                            error: function () {
                                 alert("Fail")
                             }
                         });
@@ -2127,7 +2154,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     }
 
                 },
-                error: function(e) {
+                error: function (e) {
                     alert("Fail");
                     console.log(e);
                 }
@@ -2144,20 +2171,20 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
             $.ajax({
                 url: '<?php echo base_url(); ?>admin/timeline/delete_timeline/' + id,
-                success: function(res) {
+                success: function (res) {
                     $.ajax({
                         url: '<?php echo base_url(); ?>admin/timeline/student_timeline/' + student_id,
-                        success: function(res) {
+                        success: function (res) {
                             $('#timeline_list').html(res);
 
                         },
-                        error: function() {
+                        error: function () {
                             alert("Fail")
                         }
                     });
 
                 },
-                error: function() {
+                error: function () {
                     alert("Fail")
                 }
             });
@@ -2175,7 +2202,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     'student_id': student_id
                 },
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
 
                     var userid = response.id;
 
@@ -2202,7 +2229,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     'student_id': student_id
                 },
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
 
                     var userid = response.id;
 
@@ -2233,12 +2260,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 'role': role
             },
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 successMsg(data.msg);
             }
         });
     }
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.extend($.fn.dataTable.defaults, {
             searching: false,
             ordering: false,
@@ -2248,7 +2275,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         });
     });
 
-    $(document).on('click', '.schedule_modal', function() {
+    $(document).on('click', '.schedule_modal', function () {
         $('.modal-title_logindetail').html("");
         $('.modal-title_logindetail').html("<?php echo $this->lang->line('login_details'); ?>");
         var base_url = '<?php echo base_url() ?>';
@@ -2262,7 +2289,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 'student_id': student_id
             },
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 var data = "";
                 data += '<div class="col-md-12">';
                 data += '<div class="table-responsive">';
@@ -2276,7 +2303,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 data += '</tr>';
                 data += '</thead>';
                 data += '<tbody>';
-                $.each(response, function(i, obj) {
+                $.each(response, function (i, obj) {
                     data += '<tr>';
                     data += '<td><b>' + firstToUpperCase(obj.role) + '</b></td>';
                     data += '<input type=hidden name=userid id=userid value=' + obj.id + '>';
@@ -2300,14 +2327,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     }
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.detail_popover').popover({
             placement: 'right',
             title: '',
             trigger: 'hover',
             container: 'body',
             html: true,
-            content: function() {
+            content: function () {
                 return $(this).closest('td').find('.fee_detail_popover').html();
             }
         });

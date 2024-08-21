@@ -99,7 +99,7 @@ class Temporary_admission extends Admin_Controller
     function search()
     {
 
-        if (!$this->rbac->hasPrivilege('student', 'can_view')) {
+        if (!$this->rbac->hasPrivilege('temp_student_details', 'can_view')) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'Student Information');
@@ -108,8 +108,11 @@ class Temporary_admission extends Admin_Controller
         $data['sessionlist'] = $this->session_model->getsessionlist();
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
+        $staff_list=$this->temporary_admission_model->getstaff();
+        $data['staff_list']= $staff_list;
         $userdata = $this->session->userdata();
         $data['userdata'] = $userdata['admin'];
+$data['role']=$data['userdata']['roles'];
         // var_dump($data['userdata']);exit;
         $userdata = $this->customlib->getUserData();
         $carray = array();
@@ -265,7 +268,8 @@ class Temporary_admission extends Admin_Controller
         $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
-
+        $data['userdata'] = $userdata['admin'];
+        $data['role']=$data['userdata']['roles'];
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $userdata = $this->session->userdata();
         $this->load->view('layout/header', $data);
