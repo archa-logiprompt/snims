@@ -38,7 +38,7 @@ class TemporaryUser extends Temporary_Student_Controller
         $data['section'] = $section;
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
         $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
-
+        $data['existing_details']=$existing_details;
         $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
         $data['paymentsucceess'] = $paymentsucceess;
 

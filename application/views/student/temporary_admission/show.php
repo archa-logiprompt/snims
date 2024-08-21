@@ -202,7 +202,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <a href="<?php echo base_url(); ?>admin/temporary_admission/approve/<?php echo $getstudentdetails['uid'] ?>"
                                 class="btn btn-success pull-right" style="margin-top: 4px; margin-right: 4px">Approve</a>
                         <?php } ?>
-
+                        <?php if ( (array_key_exists("Cashier", $role))) { ?>
+                            <button class="btn btn-info pull-right" style="margin-top: 4px; margin-right: 4px"
+                            data-toggle="modal" data-target="#manualpayment">Manual Payment Entry</button>
+                        <?php } ?>
                         <?php if ($getstudentdetails['status'] == 2 && (array_key_exists("Cashier", $role))) { ?>
                             <a href="<?php echo base_url('admin/temporary_admission/admindownloadreceipt/' . $getstudentdetails['uid']) ?>"
                                 type="button" class="btn btn-primary pull-right"
@@ -245,6 +248,77 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="manualpayment" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?php echo base_url('admin/temporary_admission/manual_payment/'.$getstudentdetails['uid']); ?>" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title title text-center fees_title">Manual Payment Entry</h4>
+                </div>
+                <div class="modal-body pb0">
+                    <div class="form-horizontal">
+                        <div class="box-body">
+
+                            <!-- Hidden fields to pass student and fee details -->
+                            <input type="hidden" class="form-control" id="student_id" name="student_id" value="<?php echo $student['id']; ?>" />
+                            <input type="hidden" class="form-control" id="stud_name" name="stud_name" value="<?php echo $student['firstname'] . ' ' . $student['lastname']; ?>" />
+                            
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label"><?php echo $this->lang->line('date'); ?></label>
+                                <div class="col-sm-9">
+                                    <input id="date" name="date" type="text" class="form-control date" value="<?php echo date($this->customlib->getSchoolDateFormat()); ?>" readonly="readonly" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount" class="col-sm-3 control-label"><?php echo $this->lang->line('amount'); ?></label>
+                                <small class="req"> *</small>
+                                <div class="col-sm-9">
+                                    <input type="number" autofocus="" class="form-control modal_amount amountcheck" id="amount" name="amount" value="0" min="0">
+                                    <span class="text-danger" id="amount_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="payment_mode_fee" class="col-sm-3 control-label"><?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('mode'); ?><small class="req">*</small></label>
+                                <div class="col-sm-8">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="payment_mode" value="Cash" class="cash-radio" checked="checked"><?php echo $this->lang->line('cash'); ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="payment_mode" value="Cheque"><?php echo $this->lang->line('cheque'); ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="payment_mode" value="DD"><?php echo $this->lang->line('dd'); ?>
+                                    </label>
+                                    <span class="text-danger" id="payment_mode_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="col-sm-3 control-label"><?php echo "Description" ?></label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="3" id="description" name="description" placeholder=""></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="box-body">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                        <button type="submit" class="btn cfees save_button" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing">
+                            <?php echo $currency_symbol; ?> <?php echo $this->lang->line('collect_fees'); ?>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
                     <div class="modal fade" id="previouscommentsModal" tabindex="-1" role="dialog"
                         aria-labelledby="commentsModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">

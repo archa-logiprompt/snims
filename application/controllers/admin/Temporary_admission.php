@@ -108,11 +108,11 @@ class Temporary_admission extends Admin_Controller
         $data['sessionlist'] = $this->session_model->getsessionlist();
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
-        $staff_list=$this->temporary_admission_model->getstaff();
-        $data['staff_list']= $staff_list;
+        $staff_list = $this->temporary_admission_model->getstaff();
+        $data['staff_list'] = $staff_list;
         $userdata = $this->session->userdata();
         $data['userdata'] = $userdata['admin'];
-$data['role']=$data['userdata']['roles'];
+        $data['role'] = $data['userdata']['roles'];
         // var_dump($data['userdata']);exit;
         $userdata = $this->customlib->getUserData();
         $carray = array();
@@ -269,12 +269,40 @@ $data['role']=$data['userdata']['roles'];
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
         $data['userdata'] = $userdata['admin'];
-        $data['role']=$data['userdata']['roles'];
+        $data['role'] = $data['userdata']['roles'];
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $userdata = $this->session->userdata();
         $this->load->view('layout/header', $data);
         $this->load->view('student/temporary_admission/show', $data);
         $this->load->view('layout/footer', $data);
+    }
+    public function manual_payment($id)
+    {
+
+        $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($id);
+
+        $transaction_id = date('YmdHis');
+
+        $fee_details = array();
+
+        foreach ($categoryamounts as $categoryamount) {
+            $fee_details[] = $categoryamount['name'] . '-' . $categoryamount['type'];
+        }
+       
+        $fee_details = implode(',', $fee_details);
+
+        $data = array(
+            'date' => $this->input->post('date'),
+            'amount' => $this->input->post('amount'),
+            'payment_mode' => $this->input->post('payment_mode'),
+            'description' => $this->input->post('description'),
+            'transaction_id' => $transaction_id,
+            'temporary_student_id' => $id,
+            'fee_details' => $fee_details
+        );
+  
+        $this->db->insert('payment_suceess',$data);
+        redirect('admin/temporary_admission/show/'.$id);
     }
 
     public function pickup($id)
@@ -691,14 +719,14 @@ $data['role']=$data['userdata']['roles'];
             $staff_details = $this->db->select('staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
 
             $images[] =
-            [
-                'src' => FCPATH . 'uploads/upload_signature/' . $staff_details['sign'],
-                'pageno' => $signer_details['pageno'],
-                'x' => $signer_details['xcordinate'],
-                'y' => $signer_details['ycoordinate'],
-                'width' => 200,
-                'height' => 100,
-            ];
+                [
+                    'src' => FCPATH . 'uploads/upload_signature/' . $staff_details['sign'],
+                    'pageno' => $signer_details['pageno'],
+                    'x' => $signer_details['xcordinate'],
+                    'y' => $signer_details['ycoordinate'],
+                    'width' => 200,
+                    'height' => 100,
+                ];
         }
 
 
@@ -845,7 +873,7 @@ $data['role']=$data['userdata']['roles'];
         $dompdf->setPaper('A4', 'portrait');
 
         // Render the PDF
-        $dompdf->render(); 
+        $dompdf->render();
         $file_name = $id . '_approval_' . time() . '.pdf';
 
         $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
@@ -857,7 +885,7 @@ $data['role']=$data['userdata']['roles'];
             'created_at' => date('Y-m-d H:i:s') // optional: to track when the record was created
         ];
         $this->db->insert('document_records', $data); // 'document_records' is the new table where data will be stored
-    
+
         return $file_path;
     }
 
