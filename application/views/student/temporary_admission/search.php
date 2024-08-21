@@ -155,6 +155,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             foreach ($resultlist as $student) {
                                             ?>
                                                 <tr>
+
                                                     <td>
                                                         <a
                                                             href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
@@ -172,6 +173,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td>
                                                         <?php if (isset($student['status']) && $student['status'] == '3'): ?>
                                                             Payment Approved
+                                                        <?php elseif (isset($student['transaction_id']) && ($student['totalAmount'] > $student['paidAmount'])): ?>
+                                                            Partially Paid
                                                         <?php elseif (isset($student['transaction_id']) && !empty($student['transaction_id'])): ?>
                                                             Paid
                                                         <?php else: ?>

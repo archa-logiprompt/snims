@@ -148,6 +148,20 @@ class Temporary_admission extends Admin_Controller
                         $data['session_id'] = $this->input->post('session_id');
                         $data['search_text'] = $this->input->post('search_text');
                         $resultlist = $this->student_model->searchtemporarystudentadmission($class, $section, $session_id);
+                        foreach ($resultlist as $index => $student) {
+                            $totalAmount = 0;
+                            $paidAmount = 0;
+                            $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($student['id']);
+                            $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($student['id']);
+                            foreach ($categoryamounts as $amounts) {
+                                $totalAmount += (int)($amounts['amount']);
+                            }
+                            foreach ($paymentsucceess as $success) {
+                                $paidAmount += (int)($success['amount']);
+                            }
+                            $resultlist[$index]['paidAmount'] = $paidAmount;
+                            $resultlist[$index]['totalAmount'] = $totalAmount;
+                        }
                         $data['resultlist'] = $resultlist;
                         $title = $this->classsection_model->getDetailbyClassSection($data['class_id'], $data['section_id']);
                         $data['title'] = 'Student Details for ' . $title['class'] . "(" . $title['section'] . ")";
