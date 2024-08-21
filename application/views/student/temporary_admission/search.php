@@ -40,10 +40,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
                                                     foreach ($classlist as $class) {
-                                                        ?>
+                                                    ?>
                                                         <option value="<?php echo $class['id'] ?>" <?php if (set_value('class_id') == $class['id'])
-                                                               echo "selected=selected" ?>><?php echo $class['class'] ?></option>
-                                                        <?php
+                                                                                                        echo "selected=selected" ?>><?php echo $class['class'] ?></option>
+                                                    <?php
                                                         $count++;
                                                     }
                                                     ?>
@@ -69,8 +69,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php foreach ($sessionlist as $session) { ?>
                                                         <option value="<?php echo $session['id'] ?>" <?php if (set_value('class_id') == $session['id'])
-                                                               echo "selected=selected" ?>><?php echo $session['session'] ?></option>
-                                                        <?php $count++;
+                                                                                                            echo "selected=selected" ?>><?php echo $session['session'] ?></option>
+                                                    <?php $count++;
                                                     } ?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('section_id'); ?></span>
@@ -112,7 +112,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 <?php
                 if (isset($resultlist)) {
                     //var_dump($resultlist);
-                    ?>
+                ?>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><i
@@ -144,7 +144,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <tbody>
                                         <?php
                                         if (empty($resultlist)) {
-                                            ?>
+                                        ?>
                                             <!-- <tr>
                                                                 <td colspan="12" class="text-danger text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
                                                             </tr> -->
@@ -153,7 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $count = 1;
 
                                             foreach ($resultlist as $student) {
-                                                ?>
+                                            ?>
                                                 <tr>
                                                     <td>
                                                         <a
@@ -211,11 +211,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 title="<?php echo $this->lang->line('leave'); ?>">
                                                                 <i class="fa fa-sign-out"></i> <?php echo "Leave" ?>
                                                             </button>
-                                                        </td>
-                                                    <?php endif; ?>
+                                                    </td>
+                                                <?php endif; ?>
 
                                                 </tr>
-                                                <?php
+                                        <?php
                                                 $count++;
                                             }
                                         }
@@ -225,7 +225,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             </div>
                             <div class="tab-pane" id="tab_2">
                                 <?php if (empty($resultlist)) {
-                                    ?>
+                                ?>
                                     <div class="alert alert-info"><?php echo $this->lang->line('no_record_found'); ?></div>
                                     <?php
                                 } else {
@@ -237,7 +237,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         } else {
                                             $image = $student['image'];
                                         }
-                                        ?>
+                                    ?>
                                         <div class="carousel-row">
                                             <div class="slide-row">
                                                 <div id="carousel-2" class="carousel slide slide-carousel" data-ride="carousel">
@@ -288,7 +288,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         </a>
                                                         <?php
                                                         if ($this->rbac->hasPrivilege('student', 'can_edit')) {
-                                                            ?>
+                                                        ?>
                                                             <a href="<?php echo base_url(); ?>student/edit/<?php echo $student['id'] ?>"
                                                                 class="btn btn-default btn-xs" data-toggle="tooltip"
                                                                 title="<?php echo $this->lang->line('edit'); ?>">
@@ -296,7 +296,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             </a>
                                                         <?php }
                                                         if ($this->rbac->hasPrivilege('collect_fees', 'can_add')) {
-                                                            ?>
+                                                        ?>
                                                             <a href="<?php echo base_url(); ?>studentfee/addfee/<?php echo $student['id'] ?>"
                                                                 class="btn btn-default btn-xs" data-toggle="tooltip" title=""
                                                                 data-original-title="<?php echo $this->lang->line('add_fees'); ?>">
@@ -307,7 +307,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php
+                                <?php
                                     }
                                     $count++;
                                 }
@@ -315,7 +315,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             </div>
                         </div>
                     </div>
-                    <?php
+                <?php
                 }
                 ?>
             </div>
@@ -331,10 +331,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             $.ajax({
                 type: "GET",
                 url: base_url + "sections/getByClass",
-                data: { 'class_id': class_id },
+                data: {
+                    'class_id': class_id
+                },
                 dataType: "json",
-                success: function (data) {
-                    $.each(data, function (i, obj) {
+                success: function(data) {
+                    $.each(data, function(i, obj) {
                         var sel = "";
                         if (section_id == obj.section_id) {
                             sel = "selected";
@@ -346,11 +348,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             });
         }
     }
-    $(document).ready(function () {
+    $(document).ready(function() {
         var class_id = $('#class_id').val();
         var section_id = '<?php echo set_value('section_id') ?>';
         getSectionByClass(class_id, section_id);
-        $(document).on('change', '#class_id', function (e) {
+        $(document).on('change', '#class_id', function(e) {
             $('#section_id').html("");
             var class_id = $(this).val();
             var base_url = '<?php echo base_url() ?>';
@@ -358,10 +360,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             $.ajax({
                 type: "GET",
                 url: base_url + "sections/getByClass",
-                data: { 'class_id': class_id },
+                data: {
+                    'class_id': class_id
+                },
                 dataType: "json",
-                success: function (data) {
-                    $.each(data, function (i, obj) {
+                success: function(data) {
+                    $.each(data, function(i, obj) {
                         div_data += "<option value=" + obj.section_id + ">" + obj.section + "</option>";
                     });
                     $('#section_id').append(div_data);
@@ -375,8 +379,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         $.ajax({
             type: "POST",
             url: base_url + "admin/temporary_admission/leave",
-            data: { 'id': id },
-            success: function (data) {
+            data: {
+                'id': id
+            },
+            success: function(data) {
                 window.location.reload();
             }
         });

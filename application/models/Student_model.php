@@ -90,27 +90,25 @@ class Student_model extends CI_Model
         } else {
             return $query->result_array();
         }
-    
     }
 
-    public function getRecentRecordStudent($id = null) {
-        $admin=$this->session->userdata('student');
-        $centre_id=$admin['centre_id'];
- 
-        if($admin['role']=='parent'){
-            $centre_id=$this->db->where('id',$id)->get('students')->row()->centre_id;
+    public function getRecentRecordStudent($id = null)
+    {
+        $admin = $this->session->userdata('student');
+        $centre_id = $admin['centre_id'];
 
+        if ($admin['role'] == 'parent') {
+            $centre_id = $this->db->where('id', $id)->get('students')->row()->centre_id;
         }
         $this->db->select('classes.id AS `class_id`,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,students.category_id,    students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.father_phone,students.father_occupation,students.mother_name,students.mother_phone,students.mother_occupation,students.guardian_occupation,students.gender,students.guardian_is')->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
         $this->db->where('student_session.session_id', $this->current_session);
-        $this->db->where('students.centre_id',$centre_id);
+        $this->db->where('students.centre_id', $centre_id);
         if ($id != null) {
             $this->db->where('students.id', $id);
         } else {
-            
         }
         $this->db->order_by('students.id', 'desc');
         $this->db->limit(5);
@@ -120,7 +118,7 @@ class Student_model extends CI_Model
         } else {
             return $query->result_array();
         }
-    } 
+    }
 
     // public function get($id = null)
     // {
@@ -162,7 +160,7 @@ class Student_model extends CI_Model
     //     }
     // }
 
-public function get($id = null)
+    public function get($id = null)
     {
 
         $admin = $this->session->userdata('admin');
@@ -230,21 +228,21 @@ public function get($id = null)
     }
 
     public function searchtemporarystudentadmission($class_id, $section_id, $session_id)
-{
-    $result = $this->db->select('temporary_admission.status,temporary_admission.picked_by,temporary_admission.id as current_student_id,temporary_admission.*,classes.class,sections.section,payment_suceess.temporary_student_id,payment_suceess.transaction_id,payment_suceess.temporary_student_id')
-        ->from('temporary_admission')
-        ->where('class_id', $class_id)
-        ->where('section_id', $section_id)
-        ->where('session', $session_id)
-        ->join('classes','classes.id=temporary_admission.class_id')
-        ->join('sections','sections.id=temporary_admission.section_id')
-        ->join('payment_suceess', 'payment_suceess.temporary_student_id = temporary_admission.id', 'left')
-       
-        ->get()
-        ->result_array(); 
-       
-    return $result;
-}
+    {
+        $result = $this->db->select('temporary_admission.status,temporary_admission.picked_by,temporary_admission.id as current_student_id,temporary_admission.*,classes.class,sections.section,payment_suceess.temporary_student_id,payment_suceess.transaction_id,payment_suceess.temporary_student_id')
+            ->from('temporary_admission')
+            ->join('classes', 'classes.id=temporary_admission.class_id')
+            ->join('sections', 'sections.id=temporary_admission.section_id')
+            ->join('payment_suceess', 'payment_suceess.temporary_student_id = temporary_admission.id', 'left')
+            ->where('class_id', $class_id)
+            ->where('section_id', $section_id)
+            ->where('session', $session_id)
+            ->group_by('temporary_admission.id')
+            ->get()
+            ->result_array();
+
+        return $result;
+    }
 
     public function searchByClassSection($class_id = null, $section_id = null, $subject_id = null)
     {
@@ -276,16 +274,15 @@ public function get($id = null)
         $query = $this->db->get();
 
         return $query->result_array();
-
     }
     public function adddateofcompletion($data)
     {
-     
-    
+
+
         $this->db->where('id', $data['id']);
-        $this->db->update('students', $data); 
+        $this->db->update('students', $data);
     }
-    
+
 
     public function searchAllByClassSection($class_id = null, $section_id = null, $subject_id = null)
     {
@@ -316,7 +313,6 @@ public function get($id = null)
         $query = $this->db->get();
 
         return $query->result_array();
-
     }
 
     public function searchByClassSectionFull($class_id = null, $section_id = null, $subject_id = null)
@@ -348,7 +344,6 @@ public function get($id = null)
         $query = $this->db->get();
 
         return $query->result_array();
-
     }
 
     public function getstudentByclasssection($class, $section)
@@ -364,7 +359,6 @@ public function get($id = null)
 
         foreach ($student as $st) {
             array_push($ar, $st['student_session_id']);
-
         }
 
 
@@ -389,9 +383,6 @@ public function get($id = null)
         $query = $this->db->get();
 
         return $query->result_array();
-
-
-
     }
 
     public function getstudentByclasssectionforgroup($class, $section)
@@ -407,7 +398,6 @@ public function get($id = null)
 
         foreach ($student as $st) {
             array_push($ar, $st['student_session_id']);
-
         }
 
 
@@ -432,9 +422,6 @@ public function get($id = null)
         $query = $this->db->get();
 
         return $query->result_array();
-
-
-
     }
 
 
@@ -457,8 +444,6 @@ public function get($id = null)
         $this->db->group_by('clinical_group.group_id');
         $res = $this->db->get();
         return $res->result_array();
-
-
     }
 
 
@@ -497,8 +482,7 @@ public function get($id = null)
 
     public function searchByClassSectionCategoryGenderRte(
         $class_id = null,
-        $section_id = null
-        ,
+        $section_id = null,
         $category = null,
         $gender = null,
         $rte = null
@@ -632,7 +616,6 @@ public function get($id = null)
 
         $this->db->where('documents', $id);
         $this->db->delete('student_returndoc');
-
     }
 
     public function returnsubmit($id)
@@ -645,7 +628,7 @@ public function get($id = null)
     public function add($data)
     {
 
-        
+
         $userdata = $this->customlib->getLoggedInUserData();
         $centre_id = $userdata['centre_id'];
         $data['centre_id'] = $centre_id;
@@ -654,7 +637,6 @@ public function get($id = null)
             $this->db->where('id', $data['id']);
             $this->db->update('students', $data);
             return $data['id'];
-
         } else {
             $this->db->insert('students', $data);
             // echo $this->db->last_query();exit;
@@ -897,7 +879,7 @@ public function get($id = null)
         $this->db->where("students.is_active", "yes");
         $this->db->where('students.centre_id', $centre_id);
         $this->db->where('student_session.session_id', $this->current_session);
-        $this->db->where(array('student_session.class_id' => $class_id, 'student_session.section_id' => $section_id, ))->order_by('students.firstname');
+        $this->db->where(array('student_session.class_id' => $class_id, 'student_session.section_id' => $section_id,))->order_by('students.firstname');
         $query = $this->db->get("students");
 
         return $query->result_array();
@@ -967,7 +949,6 @@ public function get($id = null)
         $query = $this->db->query("SELECT  max(sessions.id) as student_session_id, max(sessions.session) as session from sessions join student_session on (sessions.id = student_session.session_id)  where student_session.student_id = " . $id);
 
         return $query->row_array();
-
     }
 
     public function studentSessionlist($id)
@@ -975,7 +956,6 @@ public function get($id = null)
         $query = $this->db->query("SELECT student_session.session_id   from student_session   where student_session.student_id = " . $id);
 
         return $query->result_array();
-
     }
 
 
@@ -1026,7 +1006,6 @@ public function get($id = null)
                 return FALSE;
             }
         }
-
     }
 
     function gethouselist()
@@ -1124,7 +1103,7 @@ public function get($id = null)
     public function getStudentClassSection($id, $sessionid)
     {
 
-        $query = $this->db->SELECT("students.firstname,students.admission_no,students.id,students.lastname,students.image,student_session.section_id")->join("student_session", "students.id = student_session.student_id")->where("student_session.class_id", $id)->where("student_session.session_id", $sessionid)->where("students.is_active", "yes")->order_by('students.firstname','asc')->get("students");
+        $query = $this->db->SELECT("students.firstname,students.admission_no,students.id,students.lastname,students.image,student_session.section_id")->join("student_session", "students.id = student_session.student_id")->where("student_session.class_id", $id)->where("student_session.session_id", $sessionid)->where("students.is_active", "yes")->order_by('students.firstname', 'asc')->get("students");
 
         return $query->result_array();
         //SELECT `students`.`firstname`, `students`.`id`, `students`.`lastname`, `students`.`image`, `student_session`.`section_id` FROM `students` JOIN `student_session` ON `students`.`id` = `student_session`.`student_id` WHERE `student_session`.`class_id` = '1' AND `student_session`.`session_id` = '14' AND `students`.`is_active` = 'yes'
@@ -1156,7 +1135,7 @@ public function get($id = null)
         $this->db->join('users', 'users.user_id = students.id', 'left');
         $this->db->where('student_session.session_id', $this->current_session);
         $this->db->where('users.role', 'student');
-        
+
         $this->db->where_in('students.id', $array);
         $this->db->order_by('students.id');
         $this->db->group_by('student_session_id');
@@ -1259,8 +1238,6 @@ public function get($id = null)
     public function removescholar($id)
     {
         $this->db->where('id', $id)->delete('scholarship');
-
-
     }
 
 
@@ -1342,7 +1319,6 @@ public function get($id = null)
         $this->db->select('warddetail.id,warddetail.wardname,warddetail.aliasname')->from('warddetail');
         $res = $this->db->get();
         return $res->result_array();
-
     }
 
 
@@ -1443,17 +1419,11 @@ public function get($id = null)
                 $a->group_id = $val['group_id'];
                 $a->student_count = $this->get_countofstudent($val['group_id']);
                 $arr[] = $a;
-
             }
 
 
             return $arr;
-
-
         }
-
-
-
     }
 
 
@@ -1469,8 +1439,6 @@ public function get($id = null)
         $student = $val->result();
         $c = count($student);
         return $c;
-
-
     }
 
 
@@ -1509,17 +1477,11 @@ public function get($id = null)
                 $a->group_id = $val['group_id'];
                 $a->student_count = $this->get_countofstudent($val['group_id']);
                 $arr[] = $a;
-
             }
 
 
             return $arr;
-
-
         }
-
-
-
     }
 
 
@@ -1545,9 +1507,6 @@ public function get($id = null)
 
         $res = $this->db->get();
         return $res->result_array();
-
-
-
     }
 
 
@@ -1604,8 +1563,6 @@ public function get($id = null)
         if ($this->check_data_exists($name, $id)) {
             $this->form_validation->set_message('check_exists', 'Record already exists');
             return FALSE;
-
-
         } else {
             return TRUE;
         }
@@ -1630,19 +1587,15 @@ public function get($id = null)
     {
         $this->db->insert('clinical_group', $data);
         return $this->db->insert_id();
-
-
     }
 
 
     function add_groupname($data_new)
     {
         $this->db->insert('clinical_groupname', $data_new);
-       
+
 
         return $this->db->insert_id();
-        
-
     }
 
 
@@ -1650,16 +1603,12 @@ public function get($id = null)
     {
         $this->db->insert('new_batch', $data_new);
         return $this->db->insert_id();
-
-
     }
 
     function addourgroup($data)
     {
         $this->db->insert('our_group', $data);
         return $this->db->insert_id();
-
-
     }
 
 
@@ -1681,8 +1630,6 @@ public function get($id = null)
         if ($this->check_group_exists($name, $id)) {
             $this->form_validation->set_message('check_exists_group', 'Group Name already exists');
             return FALSE;
-
-
         } else {
             return TRUE;
         }
@@ -1703,8 +1650,6 @@ public function get($id = null)
         if ($this->check_group_ourexists($name, $id)) {
             $this->form_validation->set_message('check_exists_ourgroup', 'Group Name already exists');
             return FALSE;
-
-
         } else {
             return TRUE;
         }
@@ -1747,7 +1692,6 @@ public function get($id = null)
         $this->db->select('*')->from('clinical_groupname');
         $this->db->where('session_id', $this->current_session);
         return $this->db->get()->result_array();
-
     }
 
 
@@ -1757,7 +1701,6 @@ public function get($id = null)
         $this->db->select('*')->from('new_batch');
         $this->db->where('session_id', $this->current_session);
         return $this->db->get()->result_array();
-
     }
 
     public function get_studentBygroup($group_id)
@@ -1771,8 +1714,6 @@ public function get($id = null)
         $this->db->where('clinical_group.group_id', $group_id);
         $res = $this->db->get();
         return $res->result();
-
-
     }
 
 
@@ -1787,22 +1728,18 @@ public function get($id = null)
         $this->db->where('our_group.group_id', $group_id);
         $res = $this->db->get();
         return $res->result();
-
-
     }
 
     public function release($stud_sess)
     {
         $this->db->where('student_session_id', $stud_sess);
         $this->db->delete('clinical_group');
-
     }
 
     public function releasestudents($stud_sess)
     {
         $this->db->where('student_session_id', $stud_sess);
         $this->db->delete('our_group');
-
     }
 
     public function check_Exits_group($data)
@@ -1832,10 +1769,6 @@ public function get($id = null)
         $this->db->where(array('student_session.id' => $student_session_id, 'student_session.session_id' => $this->current_session));
         $query = $this->db->get();
         return $query->row_array();
-
-
-
-
     }
 
 
@@ -1861,7 +1794,6 @@ public function get($id = null)
                 $sub->subject = $this->getsubject($value['section_id'], $value['class_id'], $value['student_session_id'], $student_id);
 
                 $array[] = $sub;
-
             }
         }
 
@@ -1902,13 +1834,9 @@ public function get($id = null)
 
                 $subarray[] = $a;
             }
-
-
         }
 
         return $subarray;
-
-
     }
 
     function conducted($teacher_subject_id)
@@ -1935,8 +1863,6 @@ public function get($id = null)
         $total_hour = $total_min / 60;
 
         return round($total_hour);
-
-
     }
 
 
@@ -1980,22 +1906,17 @@ public function get($id = null)
         }
 
         return round($total_hour);
-
-
-
     }
 
 
     function marks_secured($subject_id, $student_id)
     {
         $this->db->select('universitymarks.marks,exam_schedules.full_marks,exam_schedules.id')->from('universitymarks')
-        ->join('exam_schedules','universitymarks.exam_schedule_id=exam_schedules.id');
+            ->join('exam_schedules', 'universitymarks.exam_schedule_id=exam_schedules.id');
         $this->db->where(array('universitymarks.subject_id' => $subject_id, 'universitymarks.student_id' => $student_id));
         $query = $this->db->get();
         // echo $this->db->last_query();
         return $query->row();
-
-
     }
 
 
@@ -2006,7 +1927,6 @@ public function get($id = null)
         $res = $query->result();
 
         return $res[0]->total_hr;
-
     }
 
     function clinic_conducted($subject_id)
@@ -2016,7 +1936,6 @@ public function get($id = null)
         $res = $query->result();
 
         return $res[0]->total_hr;
-
     }
 
 
@@ -2026,8 +1945,6 @@ public function get($id = null)
     public function add_remarks($data)
     {
         $this->db->insert('character_conduct', $data);
-
-
     }
 
 
@@ -2040,8 +1957,6 @@ public function get($id = null)
 
         $result = $this->db->get();
         return $result->result_array();
-
-
     }
 
     public function get_working_days($student_session_id)
@@ -2065,11 +1980,9 @@ public function get($id = null)
             $a['working_day'] = $this->workingdays($value['id']);
 
             $ar[] = $a;
-
         }
 
         return $ar;
-
     }
 
 
@@ -2081,7 +1994,6 @@ public function get($id = null)
         $this->db->where('student_session_id', $student_session_id);
         $res = $this->db->get()->result_array();
         return count($res);
-
     }
 
     function sick_leave($student_session_id)
@@ -2115,7 +2027,6 @@ public function get($id = null)
         $query = $this->db->get();
         $result = $query->result_array();
         return count($result);
-
     }
 
 
@@ -2130,7 +2041,7 @@ public function get($id = null)
         $result = $res->result_array();
         if (isset($result)) {
             $ar = array();
-            foreach ($result as $key => $val) {     
+            foreach ($result as $key => $val) {
                 $a = new stdClass();
                 $a->class = $val['class'];
                 $a->section = $val['section'];
@@ -2138,12 +2049,9 @@ public function get($id = null)
                 $a->appear = $this->appearence($val['class_id'], $val['section_id'], $student_id);
 
                 $ar[] = $a;
-
             }
-
         }
         return $ar;
-
     }
 
 
@@ -2156,7 +2064,7 @@ public function get($id = null)
         $val = $this->db->get();
         $result = $val->result_array();
 
-// echo $this->db->last_query();
+        // echo $this->db->last_query();
 
         if (isset($result)) {
 
@@ -2171,11 +2079,7 @@ public function get($id = null)
             }
 
             return $array;
-
-
-
         }
-
     }
 
     function getallscholarship()
@@ -2195,9 +2099,6 @@ public function get($id = null)
         $result = $this->db->get();
 
         return $result->result_array();
-
-
-
     }
 
 
@@ -2207,7 +2108,6 @@ public function get($id = null)
 
         $this->db->where('id', $data['id']);
         $this->db->update('students', $data);
-
     }
 
     public function getnewval($id = null)
@@ -2300,7 +2200,6 @@ public function get($id = null)
 
         $result = $this->db->get();
         return $result->result_array();
-
     }
 
     function gettpreport()
@@ -2312,7 +2211,6 @@ public function get($id = null)
         // $this->db->group_by('staff_evaluation.date');
         $result = $this->db->get();
         return $result->result_array();
-
     }
     function getclireport()
     {
@@ -2324,7 +2222,6 @@ public function get($id = null)
         $this->db->group_by('staff.id');
         $result = $this->db->get();
         return $result->result_array();
-
     }
 
 
@@ -2341,7 +2238,6 @@ public function get($id = null)
 
         $result = $this->db->get();
         return $result->row_array();
-
     }
 
     function CheckKuhsDuplicate($value)
@@ -2351,12 +2247,9 @@ public function get($id = null)
     }
 
 
-    function getParentDetails($id){
-        $result=$this->db->select('guardian_name,firstname,lastname,guardian_address,guardian_phone,session')->join('student_session',"student_session.student_id=students.id")->join('sessions',"student_session.session_id=sessions.id")->where('students.id',$id)->get('students')->row();
+    function getParentDetails($id)
+    {
+        $result = $this->db->select('guardian_name,firstname,lastname,guardian_address,guardian_phone,session')->join('student_session', "student_session.student_id=students.id")->join('sessions', "student_session.session_id=sessions.id")->where('students.id', $id)->get('students')->row();
         return $result;
     }
-
-
-
-
 }

@@ -288,7 +288,7 @@ class Temporary_admission extends Admin_Controller
         foreach ($categoryamounts as $categoryamount) {
             $fee_details[] = $categoryamount['name'] . '-' . $categoryamount['type'];
         }
-       
+
         $fee_details = implode(',', $fee_details);
 
         $data = array(
@@ -300,9 +300,9 @@ class Temporary_admission extends Admin_Controller
             'temporary_student_id' => $id,
             'fee_details' => $fee_details
         );
-  
-        $this->db->insert('payment_suceess',$data);
-        redirect('admin/temporary_admission/show/'.$id);
+
+        $this->db->insert('payment_suceess', $data);
+        redirect('admin/temporary_admission/show/' . $id);
     }
 
     public function pickup($id)
@@ -384,8 +384,7 @@ class Temporary_admission extends Admin_Controller
         $password = "test";
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
-        ;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -840,15 +839,10 @@ class Temporary_admission extends Admin_Controller
                             <div class='image-container' style='left: {$signature['x']}; bottom: {$signature['y']}; width: {$signature['width']}px; height: {$signature['height']}px;'>
                             <img src='$base64' style='width: 100%; height: 100%;' />  
                             </div>";
-
                             }
-
                         }
                     }
-
                 }
-
-
             }
             if ($pageno == 1) {
 
