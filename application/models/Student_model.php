@@ -239,8 +239,9 @@ public function get($id = null)
         ->join('classes','classes.id=temporary_admission.class_id')
         ->join('sections','sections.id=temporary_admission.section_id')
         ->join('payment_suceess', 'payment_suceess.temporary_student_id = temporary_admission.id', 'left')
+       
         ->get()
-        ->result_array(); // Assuming you want to retrieve the result as an array of objects. Adjust as necessary.
+        ->result_array(); 
        
     return $result;
 }
