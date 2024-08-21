@@ -21,11 +21,11 @@ class Temporary_admission_model extends CI_Model
     public function getstaff()
     {
         $result = $this->db->select('staff.*,staff.id,staff.centre_id,staff_roles.*')
-        ->from('staff') // Specify the primary table
-        ->where('staff_roles.role_id', '44')
-        ->join('staff_roles', 'staff_roles.staff_id = staff.id')
-        ->get()
-        ->result_array();
+            ->from('staff') // Specify the primary table
+            ->where('staff_roles.role_id', '44')
+            ->join('staff_roles', 'staff_roles.staff_id = staff.id')
+            ->get()
+            ->result_array();
         return $result;
     }
     public function create($data)
@@ -297,5 +297,16 @@ class Temporary_admission_model extends CI_Model
                 return $this->db->insert_id();
             }
         }
+    }
+
+    public function getCandidateName($id)
+    {
+        $name = $this->db->select('firstname,lastname')->where('id', $id)->get('temporary_admission')->row();
+        return $name;
+    }
+
+    public function getCreateLog($data)
+    {
+        $this->db->insert('admission_log', $data);
     }
 }

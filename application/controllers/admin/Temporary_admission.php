@@ -154,10 +154,10 @@ class Temporary_admission extends Admin_Controller
                             $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($student['id']);
                             $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($student['id']);
                             foreach ($categoryamounts as $amounts) {
-                                $totalAmount += (int)($amounts['amount']);
+                                $totalAmount += (int) ($amounts['amount']);
                             }
                             foreach ($paymentsucceess as $success) {
-                                $paidAmount += (int)($success['amount']);
+                                $paidAmount += (int) ($success['amount']);
                             }
                             $resultlist[$index]['paidAmount'] = $paidAmount;
                             $resultlist[$index]['totalAmount'] = $totalAmount;
@@ -292,9 +292,9 @@ class Temporary_admission extends Admin_Controller
     }
     public function manual_payment($id)
     {
-
+        $userdata = $this->session->userdata();
         $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($id);
-
+        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
         $transaction_id = date('YmdHis');
 
         $fee_details = array();
@@ -314,20 +314,33 @@ class Temporary_admission extends Admin_Controller
             'temporary_student_id' => $id,
             'fee_details' => $fee_details
         );
-
+        
         $this->db->insert('payment_suceess', $data);
+        $log = array(
+            'user_name' => $userdata['admin']['username'],
+            'user_id' => $userdata['admin']['id'],
+            'description' => "Manual Payment of " . $candidate_name->firstname . " " . $candidate_name->lastname ,
+        );
+        $this->Temporary_admission_model->getCreateLog($log);
         redirect('admin/temporary_admission/show/' . $id);
     }
 
     public function pickup($id)
     {
         $userdata = $this->session->userdata();
+        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
         $curuserdata = $userdata['admin'];
         $data['sessionlist'] = $this->session_model->getsessionlist();
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
         $userdata = $this->session->userdata();
         $pickup = $this->temporary_admission_model->pickupupdate($id, $curuserdata['id']);
+        $log = array(
+            'user_name' => $userdata['admin']['username'],
+            'user_id' => $userdata['admin']['id'],
+            'description' => "User has Picked " . $candidate_name->firstname . " " . $candidate_name->lastname,
+        );
+        $this->Temporary_admission_model->getCreateLog($log);
 
 
         $this->load->view('layout/header');
@@ -338,12 +351,18 @@ class Temporary_admission extends Admin_Controller
     {
 
         $userdata = $this->session->userdata();
+        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
         $curuserdata = $userdata['admin'];
         $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
         $status = $this->Temporary_admission_model->status($id);
-
+        $log = array(
+            'user_name' => $userdata['admin']['username'],
+            'user_id' => $userdata['admin']['id'],
+            'description' => "Approved " . $candidate_name->firstname . " " . $candidate_name->lastname,
+        );
+        $this->Temporary_admission_model->getCreateLog($log);
         $userdata = $this->session->userdata();
         redirect('admin/temporary_admission/show/' . $id);
     }
@@ -377,8 +396,16 @@ class Temporary_admission extends Admin_Controller
     }
     public function leave()
     {
+        $userdata = $this->session->userdata();
         $id = $this->input->post('id');
         $this->Temporary_admission_model->pickedbyupdate($id);
+        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
+        $log = array(
+            'user_name' => $userdata['admin']['username'],
+            'user_id' => $userdata['admin']['id'],
+            'description' => $candidate_name->firstname . " " . $candidate_name->lastname. " ". "left",
+        );
+        $this->Temporary_admission_model->getCreateLog($log);
         echo ('success');
     }
     private function MakeUserId($length)
@@ -398,7 +425,8 @@ class Temporary_admission extends Admin_Controller
         $password = "test";
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
+        ;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -592,64 +620,62 @@ class Temporary_admission extends Admin_Controller
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 3]);
         // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
-
-        $result =  $this->db->where(['temp_user_id'=>$id,'status'=>1])->order_by('order_no','desc')->get('temp_admission_approval')->result_array();
-
-
-
-
-
-            if (count($result) > 0) {
-
-                $order_no = $result[0]['order_no'];
-
-            } else {
-                $order_no = 0;
-
-            }
-            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-
-            // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
-            if($signer_details['picked_by_id']==1)
-            {
-
-                $staff_details=$this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-
-                $arr = [
-                 'temp_user_id'=>$id,
-                 'sign_id'=>$signer_details['id'],
-                 'signer_email'=>$staff_details['email'],
-                 'order_no'=>$signer_details['orders'],
-                 'status'=>0
-             ];
-            }     
-              else{
-
-                  $arr = [
-                      'temp_user_id'=>$id,
-                      'sign_id'=>$signer_details['id'],
-                      'signer_email'=>$signer_details['mail'],
-                      'order_no'=>$signer_details['orders'],
-                      'status'=>0
-                  ];
-
-              }  
-
-
-
-
-
-        $this->db->insert('temp_admission_approval',$arr);
+        
+        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
+        
+        
+        
+        
+        
+        if (count($result) > 0) {
+            
+            $order_no = $result[0]['order_no'];
+            
+        } else {
+            $order_no = 0;
+            
+        }
+        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+        
+        // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
+        if ($signer_details['picked_by_id'] == 1) {
+            
+            $staff_details = $this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+            
+            $arr = [
+                'temp_user_id' => $id,
+                'sign_id' => $signer_details['id'],
+                'signer_email' => $staff_details['email'],
+                'order_no' => $signer_details['orders'],
+                'status' => 0
+            ];
+        } else {
+            
+            $arr = [
+                'temp_user_id' => $id,
+                'sign_id' => $signer_details['id'],
+                'signer_email' => $signer_details['mail'],
+                'order_no' => $signer_details['orders'],
+                'status' => 0
+            ];
+            
+        }
+        
+        
+        
+        
+        
+        $this->db->insert('temp_admission_approval', $arr);
         // $documentName = $this->createDocument($id);
-
-        $documentName = $this->sampledocument($id,$order_no,$arr);
-
-        $this->sendmail($documentName,$arr['signer_email'],$id);
-
-
-        $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
-
-        echo json_encode(['message' => $response_message]);
+        
+        $documentName = $this->sampledocument($id, $order_no, $arr);
+        
+        $this->sendmail($documentName, $arr['signer_email'], $id);
+        
+        
+        // $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+        
+        echo json_encode('success');
     }
 
 
@@ -691,16 +717,27 @@ class Temporary_admission extends Admin_Controller
         $documentName = $this->sampledocument($id, $order_no, $arr);
         $this->initialapprove($documentName, $arr['signer_email'], $id);
 
+
+
         $folderPath = './uploads/approved_documents/';
         if (!is_dir($folderPath)) {
             mkdir($folderPath, 0755, true);
         }
 
         $filePath = $documentName;
-        $this->updateStatusinmail($id);
-
+        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
+        $userdata = $this->session->userdata();
+        $log = array(
+            'user_name' => $userdata['admin']['username'],
+            'user_id' => $userdata['admin']['id'],
+            'description' => $candidate_name->firstname . " " . $candidate_name->lastname. " ". "payment has been verified",
+        );
+        $this->Temporary_admission_model->getCreateLog($log);
         $response_message = "Document has been saved to " . $filePath;
+        
+        $this->updateStatusinmail($id);
         echo json_encode(['message' => $response_message]);
+       
     }
     public function initialapprove($documentName, $signermail, $id)
     {
@@ -711,6 +748,7 @@ class Temporary_admission extends Admin_Controller
     }
     public function sampledocument($id, $order_no, $arr)
     {
+
         require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -878,7 +916,7 @@ class Temporary_admission extends Admin_Controller
 
         // Set paper size and orientation (optional)
         $dompdf->setPaper('A4', 'portrait');
-
+        
         // Render the PDF
         $dompdf->render();
         $file_name = $id . '_approval_' . time() . '.pdf';
@@ -891,6 +929,7 @@ class Temporary_admission extends Admin_Controller
             'staff_id' => $signer_details['picked_by_id'] == 1 ? $staff_details['id'] : NULL,
             'created_at' => date('Y-m-d H:i:s') // optional: to track when the record was created
         ];
+
         $this->db->insert('document_records', $data); // 'document_records' is the new table where data will be stored
 
         return $file_path;

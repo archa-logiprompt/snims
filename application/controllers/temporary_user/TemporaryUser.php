@@ -62,6 +62,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $quota = $this->Temporary_admission_model->getquota();
         $data['quota'] = $quota;
+
         $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/home', $data);
     }

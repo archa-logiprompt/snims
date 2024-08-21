@@ -657,11 +657,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                         <ul>
                                                         <?php foreach (explode(",", $getstudentdetails['documents']) as $document): ?>
-    <li>
-        <a target="_blank" href="<?= base_url('/uploads/temporary_admission/' . $document) ?>">View Uploaded Document</a>
-        <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" download>Download</a>
-    </li>
-<?php endforeach; ?>
+                                                            <li>
+                                                                <a target="_blank" href="<?= base_url('/uploads/temporary_admission/' . $document) ?>">View Uploaded Document</a>
+                                                                <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" download>Download</a>
+                                                            </li>
+                                                        <?php endforeach; ?>
 
                                                         </ul>
                                                     <?php else: ?>
