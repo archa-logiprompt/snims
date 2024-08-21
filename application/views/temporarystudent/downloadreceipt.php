@@ -66,10 +66,10 @@
         <?php foreach ($paymentsucceess as $payment) : ?>
             <div class="receipt" id="receipt<?php echo $count ?>">
                 <div class="header">
-                    <h1>Payment Receipt</h1>
-                    <p>Application Fee for Admission to M.B.B.S. Degree Course</p>
+                    <h1 style="text-align: center;">Payment Receipt</h1>
+                    <p style="text-align: center;">Application Fee for Admission to M.B.B.S. Degree Course</p>
                 </div>
-                <div class="content">
+                <div class="content" style="display:flex;justify-content:center">
                     <table>
                         <tr>
                             <th>Name:</th>
@@ -101,10 +101,18 @@
                         </tr>
                     </table>
                 </div>
-                <div class="footer">
+                <div class="footer" style="text-align: center;">
                     <p>Thank you for your payment!</p>
                 </div>
-                <button onclick="downloadReceipt(<?php echo $count++; ?>)" class="btn-receipt">
+                <style>
+                   
+                    @media print {
+                        .noprint {
+                            visibility: hidden;
+                        }
+                    }
+                </style>
+                <button onclick="downloadReceipt(<?php echo $count++; ?>)" class="btn-receipt noprint">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
                         <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
@@ -121,7 +129,7 @@
             printWindow.document.open();
             printWindow.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
             printWindow.document.close();
-            setTimeout(function () {
+            setTimeout(function() {
                 printWindow.close();
             }, 10);
         }
