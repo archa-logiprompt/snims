@@ -226,6 +226,7 @@ class Temporary_admission_model extends CI_Model
             ->join('classes', 'temp_user.class_id=classes.id')
             ->join('sections', 'temp_user.section_id=sections.id')
             ->where('temp_user.user_id', $id)
+            ->where('temp_user.action','1')
             ->get()
             ->row_array();
 
@@ -233,9 +234,9 @@ class Temporary_admission_model extends CI_Model
     }
     public function getdatafromstudentdetails($id)
     {
-        $result = $this->db->select('temp_user.*, temporary_admission.*, temp_user.documents as user_documents')
+        $result = $this->db->select('draft_user_details.*, temporary_admission.*, draft_user_details.documents as user_documents')
             ->from('temporary_admission')
-            ->join('temp_user', 'temp_user.user_id = temporary_admission.id', 'left')
+            ->join('draft_user_details', 'draft_user_details.user_id = temporary_admission.id', 'left')
             ->where('temporary_admission.id', $id)
             ->get()
             ->row();
@@ -282,6 +283,7 @@ class Temporary_admission_model extends CI_Model
 
     public function add($data)
     {
+
         if (!empty($data) && isset($data['user_id'])) {
             $this->db->where('user_id', $data['user_id']);
             $query = $this->db->get('temp_user')->row();
@@ -294,6 +296,24 @@ class Temporary_admission_model extends CI_Model
                 return $query->id;
             } else {
                 $this->db->insert('temp_user', $data);
+                return $this->db->insert_id();
+            }
+        }
+    }
+    public function draft_user_details($data)
+    {
+        if (!empty($data) && isset($data['user_id'])) {
+            $this->db->where('user_id', $data['user_id']);
+            $query = $this->db->get('draft_user_details')->row();
+            
+            if ($query) {
+                
+                $this->db->where('user_id', $data['user_id']);
+                $this->db->update('draft_user_details', $data);
+                return $query->user_id;
+            } else {
+
+                $this->db->insert('draft_user_details', $data);
                 return $this->db->insert_id();
             }
         }

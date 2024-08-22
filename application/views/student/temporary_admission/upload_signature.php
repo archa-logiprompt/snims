@@ -61,7 +61,7 @@
     </div>
 
     <div class="form-group">
-        <label for="exampleInputFile"><?php echo $this->lang->line('visitor'); ?> <?php echo $this->lang->line('attach_document'); ?></label>
+        <label for="exampleInputFile"> <?php echo $this->lang->line('attach_document'); ?></label>
         <div>
             <input class="filestyle form-control" type='file' name='file' id="file_upload" />
         </div>
@@ -71,6 +71,10 @@
     <div class="form-group">
         <input type="checkbox" id="picked_by_id" name="picked_by_id" value="1" onclick="toggleFields()"> Tick if you are the picked by staff
     </div>
+    <div class="form-group">
+        <input type="checkbox" id="picked_by_id" name="enable" value="1" onclick="toggleFields()"> Whatsapp Enable
+    </div>
+    
 </div>
                             
 

@@ -57,17 +57,37 @@
                                     <label for="email"><?php echo "Hierarchy of mail" ?></label> 
                                     <input type="text" class="form-control" value="<?php echo $document['orders'] ?>" name="orders">
                                 </div>
-                              
                                 <div class="form-group">
-                                    <label for="exampleInputFile"><?php echo $this->lang->line('visitor'); ?> <?php echo $this->lang->line('attach_document'); ?></label>
-                                    <div>
-                <a href="<?php echo base_url($document['file']); ?>" target="_blank" class="btn btn-info btn-xs">View Document</a>
-                <a href="<?php echo base_url($document['file']); ?>" download class="btn btn-success btn-xs">Download Document</a>
-                <input class="filestyle form-control" type='file' name='file'  />
-            </div>
-         
-                                    <span class="text-danger"><?php echo form_error('file'); ?></span></div>
+                                <label for="hierarchy"><?php echo "Select Role" ?></label> 
+                                <select class="form-control" id="role" name="role">
+    <option value="">Select Role</option>
+    <?php foreach($roles as $role): ?>
+        <option value="<?php echo $role['id']; ?>" 
+            <?php echo ($role['id'] == $document['role']) ? 'selected' : ''; ?>>
+            <?php echo $role['name']; ?>
+        </option>
+    <?php endforeach; ?>
+</select>
 
+
+                            </div>
+<div class="form-group">
+        <label for="email"><?php echo "Page No" ?></label> 
+        <input type="text" class="form-control" value="<?php echo $document['pageno']; ?>" name="page_no">
+    </div>
+                                <div class="form-group">
+        <label for="exampleInputFile"> <?php echo $this->lang->line('attach_document'); ?></label>
+        <div>
+            <input class="filestyle form-control" type='file' name='file' id="file_upload" />
+        </div>
+        <span class="text-danger"><?php echo form_error('file'); ?></span>
+    </div>
+    <div class="form-group">
+        <input type="checkbox" id="picked_by_id" name="picked_by_id" value="1" onclick="toggleFields()"> Tick if you are the picked by staff
+    </div>
+    <div class="form-group">
+        <input type="checkbox" id="picked_by_id" name="enable" value="1" onclick="toggleFields()"> Whatsapp Enable
+    </div>
                             </div><!-- /.box-body -->
 
 
@@ -111,7 +131,10 @@
                                         <th><?php echo "Y-coordinate" ?></th>
                                         <th><?php echo "Hierarchy "?>
                                         </th>
-                                       
+                                        <th><?php echo "Role "?>
+                                        </th>
+                                        <th><?php echo "Page No "?>
+                                        </th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -125,11 +148,26 @@
                                         foreach ($res as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td class="mailbox-name"><?php echo $value['staffname']; ?></td>
-                                                <td class="mailbox-name"><?php echo $value['mail']; ?></td>
+                                            <td class="mailbox-name">
+    <?php echo !empty($value['staffname']) ? $value['staffname'] : 'Pickup Staff'; ?>
+</td>
+<td class="mailbox-name">
+    <?php echo !empty($value['mail']) ? $value['mail'] : 'Pickup Mail'; ?>
+</td>
+                                           
                                                 <td class="mailbox-name"><?php echo $value['xcordinate']; ?> </td>
                                                 <td class="mailbox-name"> <?php echo $value['ycoordinate']; ?></td>
                                                 <td class="mailbox-name"> <?php echo $value['orders']; ?></td>
+                                                <td class="mailbox-name">
+                                                    <?php 
+                                                    foreach ($roles as $role) {
+                                                        if ($role['id'] == $value['role']) { 
+                                                            echo $role['name']; 
+                                                        }
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td class="mailbox-name"> <?php echo $value['pageno']; ?></td>
                                                 <td class="mailbox-date pull-right" "="">
                                                    
         <?php if ($value['file'] !== "") { ?>

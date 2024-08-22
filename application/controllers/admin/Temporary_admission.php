@@ -479,6 +479,8 @@ class Temporary_admission extends Admin_Controller
                 'orders' => $this->input->post('orders'),
                 'pageno' => $this->input->post('page_no'),
                 'picked_by_id' => $this->input->post('picked_by_id'),
+                'enable' => $this->input->post('enable'),
+
                 'role' => $this->input->post('role')
             );
 
@@ -532,7 +534,8 @@ class Temporary_admission extends Admin_Controller
         $this->session->set_userdata('sub_menu', 'temporary_admission/upload_signature');
         $res = $this->Temporary_admission_model->getalldocuments();
         $data['res'] = $res;
-
+        $roles = $this->role_model->get();
+        $data["roles"] = $roles;
         $document = $this->Temporary_admission_model->getDocumentById($id);
         if (!$document) {
 

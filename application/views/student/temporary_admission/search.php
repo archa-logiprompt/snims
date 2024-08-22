@@ -184,7 +184,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                     <td class="pull-right">
 
-                                                        <?php $show_button = ($student['picked_by'] == $userdata['id']) || (array_key_exists("Cashier", $role)); ?>
+                                                        <?php $show_button = ($student['picked_by'] == $userdata['id']) || (array_key_exists("Cashier", $role) ||$student['action']=='1'); ?>
 
                                                         <?php if ($show_button): ?>
                                                             <a href="<?php echo base_url(); ?>admin/temporary_admission/show/<?php echo $student['id'] ?>"
