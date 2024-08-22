@@ -1513,9 +1513,11 @@
             </div>
             
         </div> -->
-        <div class="box-footer">
-            <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
-        </div>
+       <div class="box-footer">
+    <button type="submit" class="btn btn-info pull-right" name="action" value="draft"><?php echo "Save as Draft";?></button>
+    <button type="submit" class="btn btn-success pull-right" name="action" value="request" style="margin-right: 10px;"><?php echo "Send Request";?></button>
+</div>
+
 
 </div>
 
