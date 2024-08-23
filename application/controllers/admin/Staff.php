@@ -973,8 +973,8 @@ $data1['date_of_leaving'] = "";
             if (isset($_FILES["sign"]) && !empty($_FILES['sign']['name'])) {
                 $fileInfo = pathinfo($_FILES["sign"]["name"]);
                 $img_name = $id . "signature" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/upload_signature/" . $img_name);
-                $data_img = array('id' => $id, 'sign' => $img_name);
+                $impath =  "./uploads/upload_signature/" . $img_name;
+                $data_img = array('id' => $id, 'sign' => $impath);
                 $this->staff_model->add($data_img);
             }
 

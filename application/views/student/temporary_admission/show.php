@@ -324,7 +324,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="commentModalLabel">Add Comment</h5>
+                                    <h5 class="modal-title" id="commentModalLabel">View Comment</h5>
 
                                 </div>
                                 <div class="modal-body">

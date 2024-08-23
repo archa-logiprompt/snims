@@ -482,7 +482,7 @@ class Site extends Public_Controller
                     $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
                     $images[] =
                     [
-                        'src' => FCPATH.'uploads/upload_signature/'.$staff_details['sign'],
+                        'src' => FCPATH.$staff_details['sign'],
                         'pageno' => $key['pageno'],
                         'x' => $key['xcordinate'],
                         'y' => $key['ycoordinate'],
@@ -638,8 +638,7 @@ class Site extends Public_Controller
 
 
 
-        $html .= "</body></html>"; 
-
+        $html .= "</body></html>";  
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
 

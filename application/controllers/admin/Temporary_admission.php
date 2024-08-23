@@ -773,7 +773,7 @@ class Temporary_admission extends Admin_Controller
 
             $images[] =
                 [
-                    'src' => FCPATH . 'uploads/upload_signature/' . $staff_details['sign'],
+                    'src' => FCPATH . $staff_details['sign'],
                     'pageno' => $signer_details['pageno'],
                     'x' => $signer_details['xcordinate'],
                     'y' => $signer_details['ycoordinate'],
@@ -910,9 +910,7 @@ class Temporary_admission extends Admin_Controller
 
 
 
-        $html .= "</body></html>";
-        // var_dump($html);
-        // exit;
+        $html .= "</body></html>"; 
 
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
