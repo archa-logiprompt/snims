@@ -199,7 +199,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <i class="fa fa-reorder"></i> <?php echo "Show"; ?>
                                                             </a>
                                                         <?php endif; ?>
-                                                        <?php if ($show_button): ?>
+                                                        <?php if ($student['picked_by'] == $userdata['id']): ?>
                                                             <a href="<?php echo base_url(); ?>admin/temporary_admission/home/<?php echo $student['id'] ?>"
                                                                 class="btn btn-success btn-xs"
                                                                 data-toggle="tooltip"
