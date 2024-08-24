@@ -96,6 +96,52 @@ class Temporary_admission extends Admin_Controller
     //     $this->load->view('student/temporary_admission/search',$data);
     //     $this->load->view('layout/footer');
     // }
+    function home($id)
+    {
+        $class = $this->Temporary_admission_model->getClass();
+        $data['classlist'] = $class;
+        $genderList = $this->customlib->getGender();
+        $data['genderList'] = $genderList;
+        $category = $this->Temporary_admission_model->getcat();
+        $data['categorylist'] = $category;
+        $feeyear = $this->Temporary_admission_model->getfee();
+        $data['feeyearlist'] = $feeyear;
+        $sch = $this->Temporary_admission_model->getscholar();
+        $data['sch'] = $sch;
+        $userdata = $this->session->userdata('temporary_student');
+        $data['userdata'] = $userdata;
+        $section = $this->Temporary_admission_model->getsections();
+        $data['section'] = $section;
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
+        $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
+        $data['existing_details']=$existing_details;
+        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $data['paymentsucceess'] = $paymentsucceess;
+
+        $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
+        $totalAmount = 0;
+        $paidAmount = 0;
+        foreach ($categoryamount as $amount) {
+            $totalAmount += (int)$amount['amount'];
+        }
+
+        foreach ($paymentsucceess as $amount) {
+            $paidAmount += (int)$amount['amount'];
+        }
+
+        // $data['feeBalance'] = $totalAmount - $paidAmount;
+        // $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
+        // $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+
+
+        // $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
+
+
+        // $quota = $this->Temporary_admission_model->getquota();
+        // $data['quota'] = $quota;
+        $this->load->view('temporarystudent/header', $data);
+        $this->load->view('student/temporary_admission/home', $id);
+    }
     function search()
     {
 
