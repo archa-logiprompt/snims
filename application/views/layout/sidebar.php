@@ -137,6 +137,7 @@ $centre_id = $admin['centre_id'];
                 if (($this->rbac->hasPrivilege('student', 'can_view') ||
                     $this->rbac->hasPrivilege('student', 'can_add') ||
                     $this->rbac->hasPrivilege('temporary_admission', 'can_add') ||
+                    $this->rbac->hasPrivilege('temp_student_details', 'can_add') ||
                     $this->rbac->hasPrivilege('parent_feedback', 'can_view') ||
                     $this->rbac->hasPrivilege('student_history', 'can_view') ||
                     $this->rbac->hasPrivilege('update_kuhs', 'can_view') ||

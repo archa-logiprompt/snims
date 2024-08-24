@@ -160,7 +160,7 @@
 
                 $.ajax({
 
-                    url: '<?php echo base_url(); ?>/admin/temporary_admission/updateStatus/' + student_id,
+                    url: '<?php echo base_url(); ?>admin/temporary_admission/cashierUpdateStatus/' + student_id,
                     type: 'POST',
 
                     success: function(data) {
