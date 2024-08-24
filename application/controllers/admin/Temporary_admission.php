@@ -129,8 +129,8 @@ class Temporary_admission extends Admin_Controller
             $paidAmount += (int)$amount['amount'];
         }
         // $data['feeBalance'] = $totalAmount - $paidAmount;
-        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails( $data['student_id']);
-        $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetailsforstaff($data['student_id']);
+             $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
 
         $data['status'] = $this->Temporary_admission_model->getstatus($id);
@@ -162,7 +162,8 @@ class Temporary_admission extends Admin_Controller
 
         $existing_details = $this->Temporary_admission_model->getexistingdetails($student_id);
         $data['existing_details'] = $existing_details;
-        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($student_id);
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetailsforstaff($student_id);
+        
         $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($student_id);
@@ -173,8 +174,7 @@ class Temporary_admission extends Admin_Controller
         $data['quota'] = $quota;
 
 
-       
-        $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
+        
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
 
      
@@ -187,7 +187,7 @@ class Temporary_admission extends Admin_Controller
         } else {
             $action=$this->input->post('action');
            
-            if($action=="0")
+            if($action=="1")
             {
                 $data = array(
                     'user_id' => $student_id,
@@ -329,14 +329,14 @@ class Temporary_admission extends Admin_Controller
                     'action'=>$action
     
                 );
-                $insert_id = $this->Temporary_admission_model->draft_user_details($data);
+                $insert_id = $this->Temporary_admission_model->add($data);
                 if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                     $fileInfo = pathinfo($_FILES["file"]["name"]);
                     $img_name = time() . '.' . $fileInfo['extension'];
                     move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
                     $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
                     
-                    $this->Temporary_admission_model->draft_user_details($data_img);
+                    $this->Temporary_admission_model->add($data_img);
                 }
                 if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
                     $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
@@ -344,21 +344,21 @@ class Temporary_admission extends Admin_Controller
                     move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
                     $data_img = array('user_id' => $insert_id, 'father_pic' => 'uploads/temporary_admission/' . $img_name);
 
-                    $this->Temporary_admission_model->draft_user_details($data_img);
+                    $this->Temporary_admission_model->add($data_img);
                 }
                 if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
                     $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
                     $img_name = time() . "mother" . '.' . $fileInfo['extension'];
                     move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
                     $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
-                    $this->Temporary_admission_model->draft_user_details($data_img);
+                    $this->Temporary_admission_model->add($data_img);
                 }
                 if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
                     $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
                     $img_name = time() . "mother" . '.' . $fileInfo['extension'];
                     move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
                     $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
-                    $this->Temporary_admission_model->draft_user_details($data_img);
+                    $this->Temporary_admission_model->add($data_img);
                 }
                 $image_arr = array();
                 if (!empty($_FILES['images']['name'][0])) {
@@ -373,26 +373,26 @@ class Temporary_admission extends Admin_Controller
                         }
                     }
                     $image_arr = implode(',', $image_arr);
-                    $this->db->where('id', $insert_id);
-                    $query = $this->db->get('draft_user_details')->row();
+                    $this->db->where('user_id', $insert_id);
+                    $query = $this->db->get('temp_user')->row();
                     if ($query) {
                         $this->db->where('user_id', $insert_id);
-                        $this->db->update('draft_user_details', ['documents' => $image_arr]);
+                        $this->db->update('temp_user', ['documents' => $image_arr]);
                     } else {
     
-                        $this->db->insert('draft_user_details', [
+                        $this->db->insert('temp_user', [
                             'user_id' => $insert_id,
                             'documents' => $image_arr
                         ]);
                     }
                 }
             }
-            else{
-                $getdetailsfromdraftuserdetails = $this->db->select('*')->from('draft_user_details')->where('user_id', $userdata['id'])->get()->row_array();
-                $getdetailsfromdraftuserdetails['action']='1';
-                $this->Temporary_admission_model->add($getdetailsfromdraftuserdetails);
+            // else{
+            //     $getdetailsfromdraftuserdetails = $this->db->select('*')->from('draft_user_details')->where('user_id', $userdata['id'])->get()->row_array();
+            //     $getdetailsfromdraftuserdetails['action']='1';
+            //     $this->Temporary_admission_model->add($getdetailsfromdraftuserdetails);
 
-            }
+            // }
 
 
           

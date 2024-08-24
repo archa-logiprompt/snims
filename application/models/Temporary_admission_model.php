@@ -233,22 +233,40 @@ class Temporary_admission_model extends CI_Model
         return $result;
     }
     public function getdatafromstudentdetails($id)
-    {
+    { 
         $result = $this->db->select('draft_user_details.*, temporary_admission.*, draft_user_details.documents as user_documents')
         ->from('temporary_admission')
         ->join('draft_user_details', 'draft_user_details.user_id = temporary_admission.id', 'left')
         ->where('temporary_admission.id', $id)
         ->get()
-        ->row();
-        if ($result && !empty($result->documents)) {
+        ->row_array();
+        if ($result && !empty($result['documents'])) {
             
-            $result->documents = explode(',', $result->documents);
+            $result['documents'] = explode(',', $result['documents']);
         } else {
 
-            $result->documents = [];
+            $result['documents'] = [];
         }
 
-        return $result;
+        return (object)$result;
+    }
+    public function getdatafromstudentdetailsforstaff($id)
+    {
+        $result = $this->db->select('temp_user.*, temporary_admission.*, temp_user.documents as user_documents')
+        ->from('temporary_admission')
+        ->join('temp_user', 'temp_user.user_id = temporary_admission.id', 'left')
+        ->where('temporary_admission.id', $id)
+        ->get()
+        ->row_array();
+        if ($result && !empty($result['documents'])) {
+            
+            $result['documents'] = explode(',', $result['documents']);
+        } else {
+
+            $result['documents'] = [];
+        }
+
+        return (object) $result;
     }
 
     public function paymentsucceess($id)
@@ -286,13 +304,13 @@ class Temporary_admission_model extends CI_Model
         if (!empty($data) && isset($data['user_id'])) {
             $this->db->where('user_id', $data['user_id']);
             $query = $this->db->get('temp_user')->row();
-
-            if ($query) {
+ 
+            if ($query) {   
 
                 $this->db->where('user_id', $data['user_id']);
                 $this->db->update('temp_user', $data);
 
-                return $query->id;
+                return $query->user_id;
             } else {
                 $this->db->insert('temp_user', $data);
                 return $this->db->insert_id();
