@@ -51,9 +51,9 @@
                 <?php if ($paymentsucceess): ?>
                     <a href="<?php echo base_url('temporary_user/TemporaryUser/downloadreceipt/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2"> Receipt</a>
                 <?php endif; ?>
-                <?php if ($feeBalance != 0): ?>
+                <?php //if ($feeBalance != 0): ?>
                     <a href="<?php echo base_url('temporary_user/TemporaryUser/payment/' . $userdata['id']) ?>" type="button" class="btn btn-outline-primary me-2">Payment</a>
-                <?php endif; ?>
+                <?php //endif; ?>
 
 
                 <a href="<?php echo base_url('site/logout') ?>" type="button"
