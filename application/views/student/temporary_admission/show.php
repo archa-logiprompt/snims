@@ -324,7 +324,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="commentModalLabel">Add Comment</h5>
+                                    <h5 class="modal-title" id="commentModalLabel">View Comment</h5>
 
                                 </div>
                                 <div class="modal-body">
@@ -656,13 +656,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php if (!empty($getstudentdetails)): ?>
 
                                                         <ul>
-                                                            <?php foreach (explode(",", $getstudentdetails['documents']) as $document): ?>
-                                                                <li>
-                                                                    <a
-                                                                        href="<?= base_url('/uploads/temporary_admission/' . $document) ?>">View
-                                                                        Uploaded Document
-                                                                </li>
-                                                            <?php endforeach; ?>
+                                                        <?php foreach (explode(",", $getstudentdetails['documents']) as $document): ?>
+                                                            <li>
+                                                                <a target="_blank" href="<?= base_url('/uploads/temporary_admission/' . $document) ?>">View Uploaded Document</a>
+                                                                <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" download>Download</a>
+                                                            </li>
+                                                        <?php endforeach; ?>
+
                                                         </ul>
                                                     <?php else: ?>
                                                         <p>No documents uploaded.</p>

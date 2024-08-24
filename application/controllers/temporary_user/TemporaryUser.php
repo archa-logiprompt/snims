@@ -62,6 +62,7 @@ class TemporaryUser extends Temporary_Student_Controller
 
         $quota = $this->Temporary_admission_model->getquota();
         $data['quota'] = $quota;
+
         $this->load->view('temporarystudent/header', $data);
         $this->load->view('temporarystudent/home', $data);
     }
@@ -334,205 +335,217 @@ class TemporaryUser extends Temporary_Student_Controller
             $this->load->view('temporarystudent/header', $data);
             $this->load->view('temporarystudent/home', $data);
         } else {
+            $action=$this->input->post('action');
+           
+            if($action=="0")
+            {
+                $data = array(
+                    'user_id' => $userdata['id'],
+                    'admission_no' => $this->input->post('admission_no'),
+                    'kuhs_reg' => $this->input->post('kuhs_reg'),
+                    'roll_no' => $this->input->post('roll_no'),
+                    'class_id' => $this->input->post('class_id'),
+                    'section_id' => $this->input->post('section_id'),
+                    // 'full_name' => $this->input->post('firstname') . ' ' . $this->input->post('lastname'),
+                    // 'firstname' => $this->input->post('firstname'),
+                    // 'lastname' => $this->input->post('lastname'),
+                    'gender' => $this->input->post('gender'),
+                    'dob' => $this->input->post('dob'),
+                    'age' => $this->input->post('age'),
+                    'category_id' => $this->input->post('category_id'),
+                    'religion' => $this->input->post('religion'),
+                    'cast' => $this->input->post('cast'),
+                    // 'mobileno' => $this->input->post('mobileno'),
+                    // 'email' => $this->input->post('email'),
+    
+                    'year' => $this->input->post('year'),
+                    'admission_date' => $this->input->post('admission_date'),
+                    // 'file' => $this->input->post('file'),
+                    // 'file' => 'uploads/student_images/no_image.png',
+                    'blood_group' => $this->input->post('blood_group'),
+                    'height' => $this->input->post('height'),
+                    'weight' => $this->input->post('weight'),
+                    'nationality' => $this->input->post('nationality'),
+                    'annual_income' => $this->input->post('annual_income'),
+                    'adhar_no' => $this->input->post('adhar_no'),
+                    'fees_discount' => $this->input->post('fees_discount'),
+                    'father_name' => $this->input->post('father_name'),
+                    'father_phone' => $this->input->post('father_phone'),
+                    'father_occupation' => $this->input->post('father_occupation'),
+                    // 'father_pic' => $this->input->post('father_pic'),
+                    'mother_name' => $this->input->post('mother_name'),
+                    'mother_phone' => $this->input->post('mother_phone'),
+                    'mother_occupation' => $this->input->post('mother_occupation'),
+                    // 'mother_pic' => $this->input->post('mother_pic'),
+                    'guardian_is' => $this->input->post('guardian_is'),
+                    'guardian_name' => $this->input->post('guardian_name'),
+                    'guardian_relation' => $this->input->post('guardian_relation'),
+                    'guardian_phone' => $this->input->post('guardian_phone'),
+                    'guardian_occupation' => $this->input->post('guardian_occupation'),
+                    'guardian_email' => $this->input->post('guardian_email'),
+                    // 'guardian_pic' => $this->input->post('guardian_pic'),
+                    'guardian_address' => $this->input->post('guardian_address'),
+                    'autofill_current_address' => $this->input->post('autofill_current_address'),
+                    'current_address' => $this->input->post('current_address'),
+                    'permanent_address' => $this->input->post('permanent_address'),
+    
+                    'qualifying_exam' => $this->input->post('qualifying_exam'),
+                    'regno' => $this->input->post('regno'),
+    
+                    'previous_school' => $this->input->post('previous_school'),
+                    'monthyear' => $this->input->post('monthyear'),
+                    'total_mark' => $this->input->post('total_mark'),
+                    'neetrank' => $this->input->post('neetrank'),
+                    'totmark' => $this->input->post('totmark'),
+                    'chem_markob' => $this->input->post('chem_markob'),
+                    'chem_maxmark' => $this->input->post('chem_maxmark'),
+                    'chem_per' => $this->input->post('chem_per'),
+                    'phy_markob' => $this->input->post('phy_markob'),
+                    'phy_maxmark' => $this->input->post('phy_maxmark'),
+                    'phy_per' => $this->input->post('phy_per'),
+                    'bio_markob' => $this->input->post('bio_markob'),
+                    'bio_maxmark' => $this->input->post('bio_maxmark'),
+                    'bio_per' => $this->input->post('bio_per'),
+                    'tot1' => $this->input->post('tot1'),
+                    'tot2' => $this->input->post('tot2'),
+                    'tot3' => $this->input->post('tot3'),
+                    'eng_markob' => $this->input->post('eng_markob'),
+                    'eng_maxmark' => $this->input->post('eng_maxmark'),
+                    'eng_per' => $this->input->post('eng_per'),
+                    // 'total_mark' => $this->input->post('total_mark'),
+                    'total_maxmark' => $this->input->post('total_maxmark'),
+                    'total_per' => $this->input->post('total_per'),
+                    'med_previous_school' => $this->input->post('med_previous_school'),
+                    'med_qualifying_exam' => $this->input->post('med_qualifying_exam'),
+                    'med_regno' => $this->input->post('med_regno'),
+                    'med_year' => $this->input->post('med_year'),
+    
+    
+    
+                    'quota' => $this->input->post('quota'),
+    
+    
+                    'dfs' => $this->input->post('dfs'),
+                    'first_mbbs_scored' => $this->input->post('first_mbbs_scored'),
+                    'first_mbbs_max' => $this->input->post('first_mbbs_max'),
+                    'first_mbbs_per' => $this->input->post('first_mbbs_per'),
+                    'first_mbbs_year' => $this->input->post('first_mbbs_year'),
+                    'total_markobtained' => $this->input->post('total_markobtained'),
+    
+                    'second_mbbs_scored' => $this->input->post('second_mbbs_scored'),
+                    'second_mbbs_max' => $this->input->post('second_mbbs_max'),
+                    'second_mbbs_per' => $this->input->post('second_mbbs_per'),
+                    'second_mbbs_year' => $this->input->post('second_mbbs_year'),
+    
+                    'third_mbbs_scored' => $this->input->post('third_mbbs_scored'),
+                    'third_mbbs_max' => $this->input->post('third_mbbs_max'),
+                    'third_mbbs_per' => $this->input->post('third_mbbs_per'),
+                    'third_mbbs_year' => $this->input->post('third_mbbs_year'),
+    
+                    'third_mbbs_scored2' => $this->input->post('third_mbbs_scored2'),
+                    'third_mbbs_max2' => $this->input->post('third_mbbs_max2'),
+                    'third_mbbs_per2' => $this->input->post('third_mbbs_per2'),
+                    'third_mbbs_year2' => $this->input->post('third_mbbs_year2'),
+    
+                    'med_total_scored' => $this->input->post('med_total_scored'),
+                    'med_total_per' => $this->input->post('med_total_per'),
+                    'med_total_year' => $this->input->post('med_total_year'),
+                    'med_total_max' => $this->input->post('med_total_max'),
+    
+                    'neet_reg' => $this->input->post('neet_reg'),
+                    'neet_rank' => $this->input->post('neet_rank'),
+                    'neet_marks' => $this->input->post('neet_marks'),
+                    'neet_phy_mark_obtained' => $this->input->post('neet_phy_mark_obtained'),
+                    'neet_chem_mark_obtained' => $this->input->post('neet_chem_mark_obtained'),
+                    'neet_bio_mark_biology' => $this->input->post('neet_bio_mark_biology'),
+                    'neet_percentile' => $this->input->post('neet_percentile'),
+                    'keam_roll_no' => $this->input->post('keam_roll_no'),
+                    'kerala_medical_rank' => $this->input->post('kerala_medical_rank'),
+                    'seat_type' => $this->input->post('seat_type'),
+    
+    
+                    'bank_account_no' => $this->input->post('bank_account_no'),
+                    'bank_name' => $this->input->post('bank_name'),
+                    'ifsc_code' => $this->input->post('ifsc_code'),
+                    'samagra_id' => $this->input->post('samagra_id'),
+                    'rte' => $this->input->post('rte'),
+                    // 'file'=>$this->input->post('file'),
+                    // 'father_pic'=>$this->input->post('father_pic'),
+                    // 'mother_pic'=>$this->input->post('mother_pic'),
+    
+    
+                    'note' => $this->input->post('note'),
+                    'scholarship' => $this->input->post('scholarship'),
+                    'action'=>$action
+    
+                );
+                $insert_id = $this->Temporary_admission_model->draft_user_details($data);
+                if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                    $fileInfo = pathinfo($_FILES["file"]["name"]);
+                    $img_name = time() . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
+    
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
+                    $img_name = time() . "father" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'father_pic' => 'uploads/temporary_admission/' . $img_name);
 
-            $data = array(
-                'user_id' => $userdata['id'],
-                'admission_no' => $this->input->post('admission_no'),
-                'kuhs_reg' => $this->input->post('kuhs_reg'),
-                'roll_no' => $this->input->post('roll_no'),
-                'class_id' => $this->input->post('class_id'),
-                'section_id' => $this->input->post('section_id'),
-                // 'full_name' => $this->input->post('firstname') . ' ' . $this->input->post('lastname'),
-                // 'firstname' => $this->input->post('firstname'),
-                // 'lastname' => $this->input->post('lastname'),
-                'gender' => $this->input->post('gender'),
-                'dob' => $this->input->post('dob'),
-                'age' => $this->input->post('age'),
-                'category_id' => $this->input->post('category_id'),
-                'religion' => $this->input->post('religion'),
-                'cast' => $this->input->post('cast'),
-                // 'mobileno' => $this->input->post('mobileno'),
-                // 'email' => $this->input->post('email'),
-
-                'year' => $this->input->post('year'),
-                'admission_date' => $this->input->post('admission_date'),
-                // 'file' => $this->input->post('file'),
-                // 'file' => 'uploads/student_images/no_image.png',
-                'blood_group' => $this->input->post('blood_group'),
-                'height' => $this->input->post('height'),
-                'weight' => $this->input->post('weight'),
-                'nationality' => $this->input->post('nationality'),
-                'annual_income' => $this->input->post('annual_income'),
-                'adhar_no' => $this->input->post('adhar_no'),
-                'fees_discount' => $this->input->post('fees_discount'),
-                'father_name' => $this->input->post('father_name'),
-                'father_phone' => $this->input->post('father_phone'),
-                'father_occupation' => $this->input->post('father_occupation'),
-                // 'father_pic' => $this->input->post('father_pic'),
-                'mother_name' => $this->input->post('mother_name'),
-                'mother_phone' => $this->input->post('mother_phone'),
-                'mother_occupation' => $this->input->post('mother_occupation'),
-                // 'mother_pic' => $this->input->post('mother_pic'),
-                'guardian_is' => $this->input->post('guardian_is'),
-                'guardian_name' => $this->input->post('guardian_name'),
-                'guardian_relation' => $this->input->post('guardian_relation'),
-                'guardian_phone' => $this->input->post('guardian_phone'),
-                'guardian_occupation' => $this->input->post('guardian_occupation'),
-                'guardian_email' => $this->input->post('guardian_email'),
-                // 'guardian_pic' => $this->input->post('guardian_pic'),
-                'guardian_address' => $this->input->post('guardian_address'),
-                'autofill_current_address' => $this->input->post('autofill_current_address'),
-                'current_address' => $this->input->post('current_address'),
-                'permanent_address' => $this->input->post('permanent_address'),
-
-                'qualifying_exam' => $this->input->post('qualifying_exam'),
-                'regno' => $this->input->post('regno'),
-
-                'previous_school' => $this->input->post('previous_school'),
-                'monthyear' => $this->input->post('monthyear'),
-                'total_mark' => $this->input->post('total_mark'),
-                'neetrank' => $this->input->post('neetrank'),
-                'totmark' => $this->input->post('totmark'),
-                'chem_markob' => $this->input->post('chem_markob'),
-                'chem_maxmark' => $this->input->post('chem_maxmark'),
-                'chem_per' => $this->input->post('chem_per'),
-                'phy_markob' => $this->input->post('phy_markob'),
-                'phy_maxmark' => $this->input->post('phy_maxmark'),
-                'phy_per' => $this->input->post('phy_per'),
-                'bio_markob' => $this->input->post('bio_markob'),
-                'bio_maxmark' => $this->input->post('bio_maxmark'),
-                'bio_per' => $this->input->post('bio_per'),
-                'tot1' => $this->input->post('tot1'),
-                'tot2' => $this->input->post('tot2'),
-                'tot3' => $this->input->post('tot3'),
-                'eng_markob' => $this->input->post('eng_markob'),
-                'eng_maxmark' => $this->input->post('eng_maxmark'),
-                'eng_per' => $this->input->post('eng_per'),
-                // 'total_mark' => $this->input->post('total_mark'),
-                'total_maxmark' => $this->input->post('total_maxmark'),
-                'total_per' => $this->input->post('total_per'),
-                'med_previous_school' => $this->input->post('med_previous_school'),
-                'med_qualifying_exam' => $this->input->post('med_qualifying_exam'),
-                'med_regno' => $this->input->post('med_regno'),
-                'med_year' => $this->input->post('med_year'),
-
-
-
-                'quota' => $this->input->post('quota'),
-
-
-                'dfs' => $this->input->post('dfs'),
-                'first_mbbs_scored' => $this->input->post('first_mbbs_scored'),
-                'first_mbbs_max' => $this->input->post('first_mbbs_max'),
-                'first_mbbs_per' => $this->input->post('first_mbbs_per'),
-                'first_mbbs_year' => $this->input->post('first_mbbs_year'),
-                'total_markobtained' => $this->input->post('total_markobtained'),
-
-                'second_mbbs_scored' => $this->input->post('second_mbbs_scored'),
-                'second_mbbs_max' => $this->input->post('second_mbbs_max'),
-                'second_mbbs_per' => $this->input->post('second_mbbs_per'),
-                'second_mbbs_year' => $this->input->post('second_mbbs_year'),
-
-                'third_mbbs_scored' => $this->input->post('third_mbbs_scored'),
-                'third_mbbs_max' => $this->input->post('third_mbbs_max'),
-                'third_mbbs_per' => $this->input->post('third_mbbs_per'),
-                'third_mbbs_year' => $this->input->post('third_mbbs_year'),
-
-                'third_mbbs_scored2' => $this->input->post('third_mbbs_scored2'),
-                'third_mbbs_max2' => $this->input->post('third_mbbs_max2'),
-                'third_mbbs_per2' => $this->input->post('third_mbbs_per2'),
-                'third_mbbs_year2' => $this->input->post('third_mbbs_year2'),
-
-                'med_total_scored' => $this->input->post('med_total_scored'),
-                'med_total_per' => $this->input->post('med_total_per'),
-                'med_total_year' => $this->input->post('med_total_year'),
-                'med_total_max' => $this->input->post('med_total_max'),
-
-                'neet_reg' => $this->input->post('neet_reg'),
-                'neet_rank' => $this->input->post('neet_rank'),
-                'neet_marks' => $this->input->post('neet_marks'),
-                'neet_phy_mark_obtained' => $this->input->post('neet_phy_mark_obtained'),
-                'neet_chem_mark_obtained' => $this->input->post('neet_chem_mark_obtained'),
-                'neet_bio_mark_biology' => $this->input->post('neet_bio_mark_biology'),
-                'neet_percentile' => $this->input->post('neet_percentile'),
-                'keam_roll_no' => $this->input->post('keam_roll_no'),
-                'kerala_medical_rank' => $this->input->post('kerala_medical_rank'),
-                'seat_type' => $this->input->post('seat_type'),
-
-
-                'bank_account_no' => $this->input->post('bank_account_no'),
-                'bank_name' => $this->input->post('bank_name'),
-                'ifsc_code' => $this->input->post('ifsc_code'),
-                'samagra_id' => $this->input->post('samagra_id'),
-                'rte' => $this->input->post('rte'),
-                // 'file'=>$this->input->post('file'),
-                // 'father_pic'=>$this->input->post('father_pic'),
-                // 'mother_pic'=>$this->input->post('mother_pic'),
-
-
-                'note' => $this->input->post('note'),
-                'scholarship' => $this->input->post('scholarship'),
-
-            );
-
-
-            $insert_id = $this->Temporary_admission_model->add($data);
-
-            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-                $fileInfo = pathinfo($_FILES["file"]["name"]);
-                $img_name = time() . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
-
-                $this->Temporary_admission_model->add($data_img);
-            }
-            if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
-                $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
-                $img_name = time() . "father" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'father_pic' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
-            }
-            if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
-                $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
-                $img_name = time() . "mother" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
-            }
-            if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
-                $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
-                $img_name = time() . "mother" . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
-                $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
-                $this->Temporary_admission_model->add($data_img);
-            }
-            $image_arr = array();
-            if (!empty($_FILES['images']['name'][0])) {
-                foreach ($_FILES['images']['name'] as $key => $name) {
-                    if ($_FILES['images']['error'][$key] == 0) {
-                        $file_name = $insert_id . '_' . time() . '_' . $key;
-                        $file_path = './uploads/temporary_admission/' . $file_name;
-                        $image_arr[] = $file_name;
-
-
-                        move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
+                    $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
+                    $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                $image_arr = array();
+                if (!empty($_FILES['images']['name'][0])) {
+                    foreach ($_FILES['images']['name'] as $key => $name) {
+                        if ($_FILES['images']['error'][$key] == 0) {
+                            $file_name = $insert_id . '_' . time() . '_' . $key;
+                            $file_path = './uploads/temporary_admission/' . $file_name;
+                            $image_arr[] = $file_name;
+    
+    
+                            move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
+                        }
+                    }
+                    $image_arr = implode(',', $image_arr);
+                    $this->db->where('id', $insert_id);
+                    $query = $this->db->get('temp_user')->row();
+                    if ($query) {
+                        $this->db->where('user_id', $insert_id);
+                        $this->db->update('draft_user_details', ['documents' => $image_arr]);
+                    } else {
+    
+                        $this->db->insert('draft_user_details', [
+                            'user_id' => $insert_id,
+                            'documents' => $image_arr
+                        ]);
                     }
                 }
-                $image_arr = implode(',', $image_arr);
-                $this->db->where('id', $insert_id);
-                $query = $this->db->get('temp_user')->row();
-                if ($query) {
-                    $this->db->where('id', $insert_id);
-                    $this->db->update('temp_user', ['documents' => $image_arr]);
-                } else {
-
-                    $this->db->insert('temp_user', [
-                        'id' => $insert_id,
-                        'documents' => $image_arr
-                    ]);
-                }
             }
+            else{
+                $getdetailsfromdraftuserdetails = $this->db->select('*')->from('draft_user_details')->where('user_id', $userdata['id'])->get()->row_array();
+                $getdetailsfromdraftuserdetails['action']='1';
+                $this->Temporary_admission_model->add($getdetailsfromdraftuserdetails);
+
+            }
+
+
+          
             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
             redirect('temporary_user/TemporaryUser');
         }

@@ -184,7 +184,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                     <td class="pull-right">
 
-                                                        <?php $show_button = ($student['picked_by'] == $userdata['id']) || (array_key_exists("Cashier", $role)); ?>
+                                                        <?php $show_button = ($student['picked_by'] == $userdata['id']) || (array_key_exists("Cashier", $role) ||$student['action']=='1'); ?>
 
                                                         <?php if ($show_button): ?>
                                                             <a href="<?php echo base_url(); ?>admin/temporary_admission/show/<?php echo $student['id'] ?>"
@@ -193,13 +193,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <i class="fa fa-reorder"></i> <?php echo "Show"; ?>
                                                             </a>
                                                         <?php endif; ?>
+                                                        <?php if ($show_button): ?>
+                                                            <a href="<?php echo base_url(); ?>admin/temporary_admission/home/<?php echo $student['id'] ?>"
+                                                                class="btn btn-success btn-xs" 
+                                                                data-toggle="tooltip"
+                                                                title="<?php echo $this->lang->line('show'); ?>"
+                                                                target="_blank">
+                                                                    <i class="fa fa-reorder"></i> <?php echo "Proceed to counseling"; ?>
+                                                                </a>
 
+                                                        <?php endif; ?>
                                                         <?php
 
                                                         $show_pickup = $student['picked_by'];
                                                         if ($show_pickup == null && !(array_key_exists("Cashier", $role))) : ?>
-                                                            <a href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>"
-                                                                class="btn btn-primary btn-xs" data-toggle="tooltip"
+                                                            <a   href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>"
+                                                                class="btn btn-primary btn-xs" target="_blank" data-toggle="tooltip"
                                                                 title="<?php echo $this->lang->line('pickup'); ?>">
                                                                 <i class="fa fa-hand-paper"></i> <?php echo "Pickup"; ?>
                                                             </a>
