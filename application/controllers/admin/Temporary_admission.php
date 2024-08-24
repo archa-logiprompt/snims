@@ -112,17 +112,12 @@ class Temporary_admission extends Admin_Controller
         $data['userdata'] = $userdata;
         $section = $this->Temporary_admission_model->getsections();
         $data['section'] = $section;
-<<<<<<< HEAD
+
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $existing_details = $this->Temporary_admission_model->getexistingdetails($id);
         $data['existing_details']=$existing_details;
         $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($id);
-=======
-        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
-        $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
-        $data['existing_details'] = $existing_details;
-        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
->>>>>>> origin/govind
+
         $data['paymentsucceess'] = $paymentsucceess;
 
         $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
@@ -137,13 +132,10 @@ class Temporary_admission extends Admin_Controller
         }
 
         // $data['feeBalance'] = $totalAmount - $paidAmount;
-<<<<<<< HEAD
+
         $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetailsforstaff($data['student_id']);
              $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
-=======
-        // $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
-        // $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
->>>>>>> origin/govind
+
 
 
         // $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
@@ -154,7 +146,7 @@ class Temporary_admission extends Admin_Controller
         $this->load->view('temporarystudent/header', $data);
         $this->load->view('student/temporary_admission/home', $id);
     }
-<<<<<<< HEAD
+
 
 
     public function create()
@@ -416,8 +408,6 @@ class Temporary_admission extends Admin_Controller
         }
     }
 
-=======
->>>>>>> origin/govind
     function search()
     {
 
@@ -602,8 +592,8 @@ class Temporary_admission extends Admin_Controller
         $data['userdata'] = $userdata['temporary_student'];
         $curuserdata = $userdata['admin'];
         $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
-<<<<<<< HEAD
-=======
+
+
         $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($id);
         $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($id);
         $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($id);
@@ -621,7 +611,6 @@ class Temporary_admission extends Admin_Controller
             $paid = true;
         }
         $data['paid'] = $paid;
->>>>>>> origin/govind
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
         $data['userdata'] = $userdata['admin'];
@@ -968,30 +957,7 @@ class Temporary_admission extends Admin_Controller
         $this->db->where('id', $id);
         $this->db->update('temporary_admission', ['status' => 3]);
         // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
-<<<<<<< HEAD
-        
-        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
-        
-        
-        
-        
-        
-        if (count($result) > 0) {
-            
-            $order_no = $result[0]['order_no'];
-            
-        } else {
-            $order_no = 0;
-            
-        }
-        $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-        
-        // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
-        if ($signer_details['picked_by_id'] == 1) {
-            
-            $staff_details = $this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-            
-=======
+
 
         $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
 
@@ -1012,7 +978,7 @@ class Temporary_admission extends Admin_Controller
 
             $staff_details = $this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
 
->>>>>>> origin/govind
+
             $arr = [
                 'temp_user_id' => $id,
                 'sign_id' => $signer_details['id'],
@@ -1021,11 +987,7 @@ class Temporary_admission extends Admin_Controller
                 'status' => 0
             ];
         } else {
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> origin/govind
             $arr = [
                 'temp_user_id' => $id,
                 'sign_id' => $signer_details['id'],
@@ -1033,7 +995,7 @@ class Temporary_admission extends Admin_Controller
                 'order_no' => $signer_details['orders'],
                 'status' => 0
             ];
-<<<<<<< HEAD
+
             
         }
         
@@ -1056,28 +1018,7 @@ class Temporary_admission extends Admin_Controller
 
 
     public function updateStatus($id)
-=======
-        }
 
-
-
-
-
-        $this->db->insert('temp_admission_approval', $arr);
-        // $documentName = $this->createDocument($id);
-
-        $documentName = $this->sampledocument($id, $order_no, $arr);
-
-        $this->sendmail($documentName, $arr['signer_email'], $id);
-
-
-        // $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
-
-        echo json_encode('success');
-    }
-
-    public function cashierUpdateStatus($id)
->>>>>>> origin/govind
     {
 
         $this->db->where('id', $id);
@@ -1087,7 +1028,7 @@ class Temporary_admission extends Admin_Controller
 
         echo json_encode(['message' => "success"]);
     }
-    public function updateStatus($id)
+    public function cashierUpdateStatus($id)
     {
 
         $this->db->where('id', $id);
