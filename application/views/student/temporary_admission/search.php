@@ -212,7 +212,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <?php
 
                                                         $show_pickup = $student['picked_by'];
-                                                        if ($show_pickup == null && !(array_key_exists("Cashier", $role))) : ?>
+                                                        if ($show_pickup == null && !(array_key_exists("Cashier", $role)) && !(array_key_exists("Finance Controller", $role))) : ?>
                                                             <a href="<?php echo base_url(); ?>admin/temporary_admission/pickup/<?php echo $student['current_student_id']; ?>"
                                                                 class="btn btn-primary btn-xs" target="_blank" data-toggle="tooltip"
                                                                 title="<?php echo $this->lang->line('pickup'); ?>">
