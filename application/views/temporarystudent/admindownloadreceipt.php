@@ -125,9 +125,16 @@
 
     </div>
     <div class="row">
-        <button class="btn-receipt" id="verify-payment" onclick="confirmPayment()" style="margin-top:20px;text-align:center"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
-            </svg>Verify Payment</button>
+        <?php if (array_key_exists("Cashier", $role)) { ?>
+            <button class="btn-receipt" id="verify-payment" onclick="confirmPayment()" style="margin-top:20px;text-align:center"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                </svg>Verify Payment</button>
+        <?php } elseif (array_key_exists("Finance Controller", $role)) { ?>
+
+            <button class="btn-receipt" id="verify-payment" onclick="controllerConfirmPayment()" style="margin-top:20px;text-align:center"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                </svg>Verify Payment</button>
+        <?php } ?>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -161,6 +168,39 @@
                 $.ajax({
 
                     url: '<?php echo base_url(); ?>admin/temporary_admission/cashierUpdateStatus/' + student_id,
+                    type: 'POST',
+
+                    success: function(data) {
+                        // console.log(data);
+                        // var response = JSON.parse(data);
+                        // alert(response.message);
+                        window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;
+                    },
+
+                });
+            } else {
+                alert("Operation canceled.");
+            }
+        }
+
+        function controllerConfirmPayment() {
+            // Get the user ID from the hidden input field
+            var student_id = $("#user_id").val();
+            console.log(student_id);
+            // Ask for user confirmation
+            var confirmation = confirm("Are you sure you want to proceed?");
+
+            if (confirmation) {
+                $("#verify-payment").prop('disabled', true).css({
+                    'filter': 'blur(2px)',
+                    'opacity': '0.5'
+                });
+
+                $("#loading-screen").fadeIn();
+
+                $.ajax({
+
+                    url: '<?php echo base_url(); ?>admin/temporary_admission/updateStatus/' + student_id,
                     type: 'POST',
 
                     success: function(data) {

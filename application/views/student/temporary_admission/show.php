@@ -190,14 +190,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <li class="active"><a href="#activity" data-toggle="tab"
                                 aria-expanded="true"><?php echo $this->lang->line('profile'); ?></a></li>
 
-
-
-
-
-
-
-
-
                         <?php if ($getstudentdetails['status'] == 0) { ?>
                             <a href="<?php echo base_url(); ?>admin/temporary_admission/approve/<?php echo $getstudentdetails['uid'] ?>"
                                 class="btn btn-success pull-right" style="margin-top: 4px; margin-right: 4px">Approve</a>
@@ -211,7 +203,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 type="button" class="btn btn-primary pull-right"
                                 style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
                         <?php } ?>
-                        <?php if ($getstudentdetails['financial_verification'] == 1 && (array_key_exists("Finance Controller", $role)) && ($paid)) { ?>
+                        <?php if ($getstudentdetails['status'] == 3 && $getstudentdetails['financial_verification'] == 0 && (array_key_exists("Finance Controller", $role)) && ($paid)) { ?>
                             <a href="<?php echo base_url('admin/temporary_admission/admindownloadreceipt/' . $getstudentdetails['uid']) ?>"
                                 type="button" class="btn btn-primary pull-right"
                                 style="margin-top: 4px; margin-right: 4px">Verify Payment</a>
