@@ -112,6 +112,8 @@ class Temporary_admission extends Admin_Controller
         $data['userdata'] = $userdata;
         $section = $this->Temporary_admission_model->getsections();
         $data['section'] = $section;
+        $quota = $this->Temporary_admission_model->getquota();
+        $data['quota'] = $quota;
 
         $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
         $existing_details = $this->Temporary_admission_model->getexistingdetails($id);
@@ -133,18 +135,16 @@ class Temporary_admission extends Admin_Controller
 
         // $data['feeBalance'] = $totalAmount - $paidAmount;
 
-        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetailsforstaff($data['student_id']);
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetailsforstaff($id);
              $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
-
-
+            $data['id']=$id;
 
         // $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
-
 
         // $quota = $this->Temporary_admission_model->getquota();
         // $data['quota'] = $quota;
         $this->load->view('temporarystudent/header', $data);
-        $this->load->view('student/temporary_admission/home', $id);
+        $this->load->view('student/temporary_admission/home', $data);
     }
 
 
@@ -152,7 +152,7 @@ class Temporary_admission extends Admin_Controller
     public function create()
     {
         $student_id=$this->input->post('student_id');
-      
+    
         $class = $this->Temporary_admission_model->getClass();
         $data['classlist'] = $class;
 
@@ -330,7 +330,7 @@ class Temporary_admission extends Admin_Controller
                     // 'father_pic'=>$this->input->post('father_pic'),
                     // 'mother_pic'=>$this->input->post('mother_pic'),
     
-    
+                    'remarks'=>$this->input->post('remarks'),
                     'note' => $this->input->post('note'),
                     'scholarship' => $this->input->post('scholarship'),
                     'action'=>$action
@@ -404,7 +404,7 @@ class Temporary_admission extends Admin_Controller
 
           
             $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
-            redirect('admin/temporary_admission/home/'.$student_id);
+            redirect('admin/temporary_admission/search');
         }
     }
 
@@ -1017,7 +1017,7 @@ class Temporary_admission extends Admin_Controller
     }
 
 
-    public function updateStatus($id)
+    public function cashierUpdateStatus($id)
 
     {
 
@@ -1028,7 +1028,7 @@ class Temporary_admission extends Admin_Controller
 
         echo json_encode(['message' => "success"]);
     }
-    public function cashierUpdateStatus($id)
+    public function updateStatus($id)
     {
 
         $this->db->where('id', $id);

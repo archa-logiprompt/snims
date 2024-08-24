@@ -171,7 +171,7 @@
                     type: 'POST',
 
                     success: function(data) {
-                        // console.log(data);
+                        console.log(data);
                         // var response = JSON.parse(data);
                         // alert(response.message);
                         window.location.href = "<?php echo base_url(); ?>admin/temporary_admission/show/" + student_id;

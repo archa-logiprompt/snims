@@ -25,7 +25,7 @@
             <?php if ($this->session->flashdata('msg1')) { ?>
                 <?php echo $this->session->flashdata('msg1') ?>
             <?php } ?>
-            <input type="hidden" value= "<?php echo $student_id?>" name="student_id">
+            <input type="hidden" value= "<?php echo $id?>" name="student_id">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -1104,6 +1104,13 @@
             <?php endif; ?>                  
                     
              </div>
+             <div class="form-group">
+             Remarks:
+<textarea class="form-control" name="remarks" placeholder="Separated Remarks by comma"><?php echo htmlspecialchars($getdatafromstudentdetails->remarks); ?></textarea>
+
+              
+               
+        </div>
             </div>
 
              
