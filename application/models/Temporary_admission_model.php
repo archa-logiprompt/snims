@@ -235,14 +235,13 @@ class Temporary_admission_model extends CI_Model
     public function getdatafromstudentdetails($id)
     {
         $result = $this->db->select('draft_user_details.*, temporary_admission.*, draft_user_details.documents as user_documents')
-            ->from('temporary_admission')
-            ->join('draft_user_details', 'draft_user_details.user_id = temporary_admission.id', 'left')
-            ->where('temporary_admission.id', $id)
-            ->get()
-            ->row();
-
+        ->from('temporary_admission')
+        ->join('draft_user_details', 'draft_user_details.user_id = temporary_admission.id', 'left')
+        ->where('temporary_admission.id', $id)
+        ->get()
+        ->row();
         if ($result && !empty($result->documents)) {
-
+            
             $result->documents = explode(',', $result->documents);
         } else {
 
