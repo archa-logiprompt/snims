@@ -393,68 +393,213 @@ class Site extends Public_Controller
         $this->updateStatus($id);
         return 'Approved';
     }
+    function convertDateToDMY($dateString)
+    {
+        // Create a DateTime object from the string, PHP will automatically detect the format
+        $date = DateTime::createFromFormat('Y-m-d', $dateString) ?: DateTime::createFromFormat('d-m-Y', $dateString);
+
+        // Return the date in d-m-Y format
+        return $date ? $date->format('d-m-Y') : "Invalid date format";
+    }
+
+    public function paymentRecieptDocument($id)
+    {
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+
+        $student_details = $this->db->select('*')->where('id', $id)->get('temporary_admission')->row_array();
+        $payment_details = $this->db->select('*')->where('temporary_student_id', $id)->get('payment_suceess')->result();
+
+        // var_dump($student_details);exit;
+
+        $html = "<html><head></head><body>";
+        $html .= '<style>
+                ' . file_get_contents(FCPATH . "backend\login\bootstrap.min.css") . '
+                </style>';
+        $html .= "<div style='position: relative;'>";
+        $html .= "<h2 class='text-center mb-3'><u>Student Payment History</u></h2>";
+        $html .= "<p>Student Name: $student_details[firstname] $student_details[lastname]</p>";
+        $html .= "<p>Student Email: $student_details[email]</p>";
+        $html .= "<p>Student Phone: $student_details[phone]</p>";
+
+        $html .= "<table class='table table-bordered' style='width: 100%;'>
+        <thead class='thead-light'>
+        <tr>
+        <th class='text-center'>#</th>
+        <th class='text-center'>Amount</th>
+        <th class='text-center'>Payment Mode</th>
+        <th class='text-center'>Date</th> 
+        <th class='text-center'>Details</th>
+        </tr>
+     
+        ";
+        $payment_count = 1;
+        $payment_total = 0;
+        foreach ($payment_details as $pkey => $payment) {
+
+            $html .= "
+            <tr>
+            <td style='max-width:175px; word-wrap:break-word;'>$payment_count</th>
+            <td style='max-width:175px; word-wrap:break-word;'>$payment->amount <span style='font-family: DejaVu Sans; sans-serif;'>&#8377;</span></td>
+            <td style='max-width:175px; word-wrap:break-word;'>$payment->payment_mode</td>
+            <td style='max-width:175px; word-wrap:break-word;'>" . $this->convertDateToDMY($payment->date) . "</td>
+            <td style='max-width:175px; word-wrap:break-word;'>$payment->description</td>
+            </tr>
+            ";
+
+            $payment_total += $payment->amount;
+            $payment_count++;
+        }
+
+
+        $html .= "</thead>
+        <tfoot ><th colspan='5'>Total: $payment_total <span style='font-family: DejaVu Sans; sans-serif;'>&#8377;</span></th></tfoot>
+        </table>";
+        $html .= "</div></body></html>";
+        // echo $html;exit;
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+ 
+        // $dompdf->stream("student_payment_history.pdf", ["Attachment" => false]);
+        // exit;
+ 
+        $file_name = $id . '_payment_history_' . time() . '.pdf';
+
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+
+        return $file_path;
+    }
+    
+    public function remarkDocument($id)
+    {
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+
+        $student_details = $this->db->select('*')->where('id', $id)->get('temporary_admission')->row_array();
+        $student_remarks = $this->db->select('remarks')->where('user_id', $id)->get('temp_user')->row_array();
+        $remarks = explode(',',$student_remarks['remarks']);
+        // var_dump($remarks);exit;
+        $html = "<html><head></head><body>";
+        $html .= '<style>
+                ' . file_get_contents(FCPATH . "backend\login\bootstrap.min.css") . '
+                </style>';
+        $html .= "<div style='position: relative;'>";
+        $html .= "<h2 class='text-center mb-3'><u>Student Admission Remarks</u></h2>";
+        $html .= "<p>Student Name: $student_details[firstname] $student_details[lastname]</p>";
+        $html .= "<p>Student Email: $student_details[email]</p>";
+        $html .= "<p>Student Phone: $student_details[phone]</p>";
+        $html .= "<h4>Remarks</h4>";
+
+        $html .= "<ul>"; 
+
+        foreach ($remarks as $rkey => $remark) {
+
+            $html .= "
+            <li class='p-2'>$remark</li>
+            ";
+ 
+        }
+
+        $html .= "</div></body></html>";
+        // echo $html;exit;
+        // Load the HTML content into Dompdf
+        $dompdf->loadHtml($html);
+
+        // Set paper size and orientation (optional)
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+ 
+        // $dompdf->stream("student_remarks.pdf", ["Attachment" => false]);
+        // exit;
+ 
+        $file_name = $id . '_remarks_' . time() . '.pdf';
+
+        $file_path = FCPATH . 'uploads/candidate_documents/' . $file_name;
+        file_put_contents($file_path, $dompdf->output());
+
+
+        return $file_path;
+    }
+
+
 
     public function updateStatus($id)
     {
         $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
-       
-        $student_details=$this->db->select('*')->where('id',$id)->get('temporary_admission')->row_array();
+
+        $student_details = $this->db->select('*')->where('id', $id)->get('temporary_admission')->row_array();
 
         if (count($result) > 0) {
-            
+
             $order_no = $result[0]['order_no'];
-            
-            $signer_details = $this->db->where('orders', $order_no+1)->get('upload_signature')->row_array(); 
-            
+
+            $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
+
             $documentName = $this->sampledocument($id, $order_no);
 
         } else {
 
             $order_no = 1;
 
-            $signer_details = $this->db->where('orders', $order_no)->get('upload_signature')->row_array(); 
+            $signer_details = $this->db->where('orders', $order_no)->get('upload_signature')->row_array();
 
             $documentName = $this->sampledocument($id, $order_no);
 
         }
-     
- 
+
+
         $max_order = $this->db->select_max('orders')->get('upload_signature')->row_array();
 
         $arr = [
             'temp_user_id' => $id,
             'sign_id' => $signer_details['id'],
             'signer_email' => $signer_details['mail'],
-            'order_no' => $signer_details['orders'], 
+            'order_no' => $signer_details['orders'],
             'status' => 0
         ];
 
 
 
-    
+
 
         // $documentName = $this->createDocument($id);
         $welcomeDocument = '';
-        if($signer_details['role']=='42'){
+        $paymentRecieptDocument = '';
+        $remarkDocument = '';
+        if ($signer_details['role'] == '42') {
             $welcomeDocument = $this->welcomedocument($id, $order_no + 1);
-        }
-        
-    
-        if($result[0]['order_no']==$max_order['orders'])
-        {
-            $welcomeDocument = $this->welcomedocument($id, $order_no + 1,true);
-            $this->db->where('id', $id)->update('temporary_admission', ['status' => 4]);
-   
-            $this->sendmail($welcomeDocument, $student_details['email'], $id,true);
-        }
-        else
-        {
-            $this->db->insert('temp_admission_approval', $arr);
-                  
-            $this->sendmail($documentName, $signer_details['mail'], $id,false,$welcomeDocument);
+            $paymentRecieptDocument = $this->paymentRecieptDocument($id);
+            $remarkDocument = $this->remarkDocument($id);
         }
 
-     
+        //send mail to student
+        if ($result[0]['order_no'] == $max_order['orders']) {
+ 
+            $welcomeDocument = $this->welcomedocument($id, $order_no + 1, true);
+            $paymentRecieptDocument = $this->paymentRecieptDocument($id);
+            $remarkDocument = $this->remarkDocument($id);
+            $this->db->where('id', $id)->update('temporary_admission', ['status' => 4]);
+
+            $this->sendMailToStudent($student_details['email'],  $welcomeDocument, $paymentRecieptDocument, $remarkDocument);
+        } else {
+            $this->db->insert('temp_admission_approval', $arr);
+
+            $this->sendmail($documentName, $signer_details['mail'], $id, false, $welcomeDocument, $paymentRecieptDocument, $remarkDocument);
+        }
+
+
 
         $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
 
@@ -463,35 +608,33 @@ class Site extends Public_Controller
 
     public function sampledocument($id, $order_no)
     {
-        require_once (APPPATH . 'libraries/dompdf/autoload.inc.php');
+        require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
         $dompdf = new Dompdf($options);
         $images = [];
-        
+
         if ($order_no > 0) {
-            
+
+            $staff_details = $this->db->select('staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
             $uploadsignature = $this->Temporary_admission_model->getsignaturedetails($order_no);
-          
-          
+
+
             foreach ($uploadsignature as $key) {
-             
-                if($key['picked_by_id']==1)
-                {
-                    $staff_details=$this->db->select('staff.*')->where('temporary_admission.id',$id)->join('staff','temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+
+                if ($key['picked_by_id'] == 1) {
+
                     $images[] =
-                    [
-                        'src' => FCPATH.$staff_details['sign'],
-                        'pageno' => $key['pageno'],
-                        'x' => $key['xcordinate'],
-                        'y' => $key['ycoordinate'],
-                        'width' => 200,
-                        'height' => 100,
-                    ];
-                }
-                else
-                {
+                        [
+                            'src' => FCPATH . $staff_details['sign'],
+                            'pageno' => $key['pageno'],
+                            'x' => $key['xcordinate'],
+                            'y' => $key['ycoordinate'],
+                            'width' => 200,
+                            'height' => 100,
+                        ];
+                } else {
                     $images[] =
                         [
                             'src' => $key['file'],
@@ -505,7 +648,7 @@ class Site extends Public_Controller
                 }
 
             }
-        }  
+        }
 
         $getstudentdetails = $this->Temporary_admission_model->getstudentdetails($id);
         $pageIndexArray = [
@@ -568,6 +711,7 @@ class Site extends Public_Controller
                 'Adhar No' => $getstudentdetails['adhar_no'],
             ]
         ];
+
         $html = "<html><head><style>
         .page-break { page-break-before: always; }
         .image-container { position: absolute; }
@@ -629,7 +773,7 @@ class Site extends Public_Controller
                 <p style='margin-top: 20px;'><strong>Declaration:</strong> I hereby declare that the information provided above is true and accurate to the best of my knowledge and belief.</p>    
                 </div>";
             }
-            if(count($pageIndexArray)!=$pageno){
+            if (count($pageIndexArray) != $pageno) {
 
                 $html .= " <div class='page-break'></div> ";
             }
@@ -638,7 +782,7 @@ class Site extends Public_Controller
 
 
 
-        $html .= "</body></html>";  
+        $html .= "</body></html>";
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
 
@@ -660,7 +804,7 @@ class Site extends Public_Controller
         return $file_path;
     }
 
-    public function welcomedocument($id, $order_no,$is_student=false)
+    public function welcomedocument($id, $order_no, $is_student = false)
     {
         require_once(APPPATH . 'libraries/dompdf/autoload.inc.php');
         $options = new Options();
@@ -670,29 +814,29 @@ class Site extends Public_Controller
         $images = [];
 
         // Your logic for fetching images remains the same...
-        $principal_signature = $this->db->where('role',42)->get('upload_signature')->row();
+        $principal_signature = $this->db->where('role', 42)->get('upload_signature')->row();
 
 
 
-        if($is_student){ 
-            
+        if ($is_student) {
+
             $images[] = [
-            'src' => $principal_signature->file,
-            'pageno' => 1,
-            'x' => $key['xcordinate'],
-            'y' => $key['ycoordinate'],
-            'width' => 200,
-            'height' => 100,
+                'src' => $principal_signature->file,
+                'pageno' => 1,
+                'x' => $key['xcordinate'],
+                'y' => $key['ycoordinate'],
+                'width' => 200,
+                'height' => 100,
             ];
 
         }
 
-       
+
         // if ($order_no > 0) {
         //     foreach ($uploadsignature as $key) {
         //         if ($key['picked_by_id'] == 1) {
         //             $staff_details = $this->db->select('staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-                   
+
         //         } else {
         //             $images[] = [
         //                 'src' => $key['file'],
@@ -738,7 +882,7 @@ class Site extends Public_Controller
         Sree Narayana Institute of Medical Sciences</p>";
 
 
-       
+
         // Logic to add images to the HTML document (if any)
         foreach ($images as $signature) {
             $impath = $signature['src'];
@@ -757,7 +901,7 @@ class Site extends Public_Controller
                       </div>";
             }
         }
-        
+
 
 
         $html .= "</div></body></html>";
@@ -778,7 +922,45 @@ class Site extends Public_Controller
 
         return $file_path;
     }
-    public function sendmail($documentName, $signermail, $tempid,$to_student=false,$welcomeDocument='')
+    public function sendMailToStudent($signermail, $welcomeDocument = '', $paymentRecieptDocument = '', $remarkDocument = '' )
+    {
+        require 'PHPMailer/src/Exception.php';
+        require 'PHPMailer/src/PHPMailer.php';
+        require 'PHPMailer/src/SMTP.php';
+
+        $this->load->library('form_validation');
+        $this->load->library('email');
+        $email_subject = 'Your Registration Details';
+        $email_message = '<html><body>';
+        $email_message .= '<h3>Hello, please find the attached documents:</h3>';
+      
+
+        $email_message .= '</body></html>';
+ 
+        $Body = "hai";
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Host = "smtp.gmail.com";
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "medicalcollege@drmoopensmc.ac.in";
+        $mail->Password = "ayxuwqtlvgmxwnbi";
+        $mail->setFrom("medicalcollege@drmoopensmc.ac.in");
+        $mail->addAddress($signermail);
+        $mail->Subject = $email_subject;
+        $mail->Body = $email_message;
+        $mail->Subject = 'Your Enquiry Has been recieved.We will contact You Soon';
+        $mail->msgHTML($email_message); 
+        $mail->addAttachment($welcomeDocument, 'welcomedocument.pdf');
+        $mail->addAttachment($paymentRecieptDocument, 'student payment history.pdf');
+        $mail->addAttachment($remarkDocument, 'remarks.pdf');
+        
+        // $mail->AltBody = 'HTML messaging not supported';
+        $mail->send();
+    }
+    public function sendmail($documentName, $signermail, $tempid, $to_student = false, $welcomeDocument = '', $paymentRecieptDocument = '', $remarkDocument = '' )
     {
         require 'PHPMailer/src/Exception.php';
         require 'PHPMailer/src/PHPMailer.php';
@@ -789,13 +971,13 @@ class Site extends Public_Controller
         $email_subject = 'Your Registration Details';
         $email_message = '<html><body>';
         $email_message .= '<h3>Thank you for your enquiry. Here are your details:</h3>';
-        if(!$to_student){
-            
-        $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
-        $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
-      
-        $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
-        $email_message .= '</table>';
+        if (!$to_student) {
+
+            $email_message .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
+            $email_message .= '<tr><th>Field</th><th>Details</th></tr>';
+
+            $email_message .= '<tr><td>Approve</td><td><a href=' . base_url('site/approvemail/' . $signermail . '/' . $tempid) . '>Click here to sign the document</a></td></tr>';
+            $email_message .= '</table>';
         }
 
         $email_message .= '</body></html>';
@@ -820,10 +1002,12 @@ class Site extends Public_Controller
         $mail->msgHTML($email_message);
         $mail->addAttachment($file_path, 'document.pdf');
 
-        if($welcomeDocument!=''){
+        if ($welcomeDocument != '') {
 
             $welcome_file_path = $welcomeDocument;
             $mail->addAttachment($welcome_file_path, 'welcomedocument.pdf');
+            $mail->addAttachment($paymentRecieptDocument, 'student payment history.pdf');
+            $mail->addAttachment($remarkDocument, 'remarks.pdf');
         }
         // $mail->AltBody = 'HTML messaging not supported';
         $mail->send();
