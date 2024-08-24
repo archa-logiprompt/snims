@@ -8,37 +8,12 @@
     $readonly = ($existing_details->status >= '1') ? 'readonly' : ''; 
 
 ?>
-
-    <?php if ($status['status'] == '1'): ?>
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">
-            25%
-        </div>
-    </div>
-<?php elseif ($status['status'] == '2'): ?> 
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
-            50%
-        </div>
-    </div>
-<?php elseif ($status['status'] == '3'): ?> 
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
-            75%
-        </div>
-    </div>
-<?php elseif ($status['status'] == '4'): ?> 
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-            100%
-        </div>
-    </div>
-<?php endif; ?>
+    
 
 
 
 <br/> 
-    <form id="form1" action="<?php echo site_url('temporary_user/TemporaryUser/create') ?>" id="employeeform"
+    <form id="form1" action="<?php echo site_url('admin/temporary_admission/create') ?>" id="employeeform"
         name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
 
         <div class="row bg-secondary rounded-top p-3">
@@ -50,7 +25,7 @@
             <?php if ($this->session->flashdata('msg1')) { ?>
                 <?php echo $this->session->flashdata('msg1') ?>
             <?php } ?>
-
+            <input type="hidden" value= "<?php echo $student_id?>" name="student_id">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -1373,7 +1348,7 @@
                 <span class="fw-bold "><?php echo "Upload Documents"; ?></span>
             </div>
         </div>
-        <div class="row bg-light rounded-bottom shadow p-3 mb-4">
+         <div class="row bg-light rounded-bottom shadow p-3 mb-4">
 
             <div class="row">
             <div class="col-md-4">
@@ -1385,7 +1360,6 @@
                 <ul>
                     <?php foreach ($getdatafromstudentdetails->documents as $document): ?>
                         <li>
-                            <!-- <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" target="_blank"><?= htmlspecialchars($document) ?></a> -->
                             <a href="<?= base_url('/uploads/temporary_admission/' . $document) ?>" >View Uploaded Document
                     
                 </a>
@@ -1402,21 +1376,8 @@
              
             </div>
 
-            <div class="row around10">
-
-                <!-- <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">
-                            <?php echo $this->lang->line('local_identification_no'); ?>
-                        </label>
-                        <input id="samagra_id" name="samagra_id" placeholder="" type="text" class="form-control"
-                            value="<?php echo set_value('samagra_id'); ?>" />
-                        <span class="text-danger"><?php echo form_error('samagra_id'); ?></span>
-                    </div>
-                </div> -->
-
-            </div>
-        </div>
+            
+        </div> 
 
       
 

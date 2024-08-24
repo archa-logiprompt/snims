@@ -112,13 +112,13 @@ class Temporary_admission extends Admin_Controller
         $data['userdata'] = $userdata;
         $section = $this->Temporary_admission_model->getsections();
         $data['section'] = $section;
-        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($userdata['id']);
-        $existing_details = $this->Temporary_admission_model->getexistingdetails($userdata['id']);
-        $data['existing_details'] = $existing_details;
-        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($userdata['id']);
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($id);
+        $existing_details = $this->Temporary_admission_model->getexistingdetails($id);
+        $data['existing_details']=$existing_details;
+        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($id);
         $data['paymentsucceess'] = $paymentsucceess;
-
-        $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($userdata['id']);
+        $data['student_id']=$id;
+        $categoryamount = $this->Temporary_admission_model->getamountbasedoncategory($id);
         $totalAmount = 0;
         $paidAmount = 0;
         foreach ($categoryamount as $amount) {
@@ -128,20 +128,279 @@ class Temporary_admission extends Admin_Controller
         foreach ($paymentsucceess as $amount) {
             $paidAmount += (int)$amount['amount'];
         }
-
         // $data['feeBalance'] = $totalAmount - $paidAmount;
-        // $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($userdata['id']);
-        // $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails( $data['student_id']);
+        $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
 
 
-        // $data['status'] = $this->Temporary_admission_model->getstatus($userdata['id']);
+        $data['status'] = $this->Temporary_admission_model->getstatus($id);
 
-
-        // $quota = $this->Temporary_admission_model->getquota();
-        // $data['quota'] = $quota;
+        $quota = $this->Temporary_admission_model->getquota();
+        $data['quota'] = $quota;
         $this->load->view('temporarystudent/header', $data);
         $this->load->view('student/temporary_admission/home', $id);
     }
+
+
+    public function create()
+    {
+        $student_id=$this->input->post('student_id');
+      
+        $class = $this->Temporary_admission_model->getClass();
+        $data['classlist'] = $class;
+
+        $genderList = $this->customlib->getGender();
+        $data['genderList'] = $genderList;
+        $category = $this->Temporary_admission_model->getcat();
+        $data['categorylist'] = $category;
+        $feeyear = $this->Temporary_admission_model->getfee();
+        $data['feeyearlist'] = $feeyear;
+
+        $sch = $this->Temporary_admission_model->getscholar();
+        $data['sch'] = $sch;
+        $userdata = $this->session->userdata('temporary_student');
+
+        $existing_details = $this->Temporary_admission_model->getexistingdetails($student_id);
+        $data['existing_details'] = $existing_details;
+        $getdatafromstudentdetails = $this->Temporary_admission_model->getdatafromstudentdetails($student_id);
+        $data['getdatafromstudentdetails'] = $getdatafromstudentdetails;
+
+        $data['commentdetails'] = $this->Temporary_admission_model->commentdetails($student_id);
+
+        $section = $this->Temporary_admission_model->getsections();
+        $data['section'] = $section;
+        $quota = $this->Temporary_admission_model->getquota();
+        $data['quota'] = $quota;
+
+
+       
+        $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
+
+     
+
+
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->load->view('temporarystudent/header', $data);
+            $this->load->view('student/temporary_admission/home',$existing_details);
+        } else {
+            $action=$this->input->post('action');
+           
+            if($action=="0")
+            {
+                $data = array(
+                    'user_id' => $student_id,
+                    'admission_no' => $this->input->post('admission_no'),
+                    'kuhs_reg' => $this->input->post('kuhs_reg'),
+                    'roll_no' => $this->input->post('roll_no'),
+                    'class_id' => $this->input->post('class_id'),
+                    'section_id' => $this->input->post('section_id'),
+                    // 'full_name' => $this->input->post('firstname') . ' ' . $this->input->post('lastname'),
+                    // 'firstname' => $this->input->post('firstname'),
+                    // 'lastname' => $this->input->post('lastname'),
+                    'gender' => $this->input->post('gender'),
+                    'dob' => $this->input->post('dob'),
+                    'age' => $this->input->post('age'),
+                    'category_id' => $this->input->post('category_id'),
+                    'religion' => $this->input->post('religion'),
+                    'cast' => $this->input->post('cast'),
+                    // 'mobileno' => $this->input->post('mobileno'),
+                    // 'email' => $this->input->post('email'),
+    
+                    'year' => $this->input->post('year'),
+                    'admission_date' => $this->input->post('admission_date'),
+                    // 'file' => $this->input->post('file'),
+                    // 'file' => 'uploads/student_images/no_image.png',
+                    'blood_group' => $this->input->post('blood_group'),
+                    'height' => $this->input->post('height'),
+                    'weight' => $this->input->post('weight'),
+                    'nationality' => $this->input->post('nationality'),
+                    'annual_income' => $this->input->post('annual_income'),
+                    'adhar_no' => $this->input->post('adhar_no'),
+                    'fees_discount' => $this->input->post('fees_discount'),
+                    'father_name' => $this->input->post('father_name'),
+                    'father_phone' => $this->input->post('father_phone'),
+                    'father_occupation' => $this->input->post('father_occupation'),
+                    // 'father_pic' => $this->input->post('father_pic'),
+                    'mother_name' => $this->input->post('mother_name'),
+                    'mother_phone' => $this->input->post('mother_phone'),
+                    'mother_occupation' => $this->input->post('mother_occupation'),
+                    // 'mother_pic' => $this->input->post('mother_pic'),
+                    'guardian_is' => $this->input->post('guardian_is'),
+                    'guardian_name' => $this->input->post('guardian_name'),
+                    'guardian_relation' => $this->input->post('guardian_relation'),
+                    'guardian_phone' => $this->input->post('guardian_phone'),
+                    'guardian_occupation' => $this->input->post('guardian_occupation'),
+                    'guardian_email' => $this->input->post('guardian_email'),
+                    // 'guardian_pic' => $this->input->post('guardian_pic'),
+                    'guardian_address' => $this->input->post('guardian_address'),
+                    'autofill_current_address' => $this->input->post('autofill_current_address'),
+                    'current_address' => $this->input->post('current_address'),
+                    'permanent_address' => $this->input->post('permanent_address'),
+    
+                    'qualifying_exam' => $this->input->post('qualifying_exam'),
+                    'regno' => $this->input->post('regno'),
+    
+                    'previous_school' => $this->input->post('previous_school'),
+                    'monthyear' => $this->input->post('monthyear'),
+                    'total_mark' => $this->input->post('total_mark'),
+                    'neetrank' => $this->input->post('neetrank'),
+                    'totmark' => $this->input->post('totmark'),
+                    'chem_markob' => $this->input->post('chem_markob'),
+                    'chem_maxmark' => $this->input->post('chem_maxmark'),
+                    'chem_per' => $this->input->post('chem_per'),
+                    'phy_markob' => $this->input->post('phy_markob'),
+                    'phy_maxmark' => $this->input->post('phy_maxmark'),
+                    'phy_per' => $this->input->post('phy_per'),
+                    'bio_markob' => $this->input->post('bio_markob'),
+                    'bio_maxmark' => $this->input->post('bio_maxmark'),
+                    'bio_per' => $this->input->post('bio_per'),
+                    'tot1' => $this->input->post('tot1'),
+                    'tot2' => $this->input->post('tot2'),
+                    'tot3' => $this->input->post('tot3'),
+                    'eng_markob' => $this->input->post('eng_markob'),
+                    'eng_maxmark' => $this->input->post('eng_maxmark'),
+                    'eng_per' => $this->input->post('eng_per'),
+                    // 'total_mark' => $this->input->post('total_mark'),
+                    'total_maxmark' => $this->input->post('total_maxmark'),
+                    'total_per' => $this->input->post('total_per'),
+                    'med_previous_school' => $this->input->post('med_previous_school'),
+                    'med_qualifying_exam' => $this->input->post('med_qualifying_exam'),
+                    'med_regno' => $this->input->post('med_regno'),
+                    'med_year' => $this->input->post('med_year'),
+    
+    
+    
+                    'quota' => $this->input->post('quota'),
+    
+    
+                    'dfs' => $this->input->post('dfs'),
+                    'first_mbbs_scored' => $this->input->post('first_mbbs_scored'),
+                    'first_mbbs_max' => $this->input->post('first_mbbs_max'),
+                    'first_mbbs_per' => $this->input->post('first_mbbs_per'),
+                    'first_mbbs_year' => $this->input->post('first_mbbs_year'),
+                    'total_markobtained' => $this->input->post('total_markobtained'),
+    
+                    'second_mbbs_scored' => $this->input->post('second_mbbs_scored'),
+                    'second_mbbs_max' => $this->input->post('second_mbbs_max'),
+                    'second_mbbs_per' => $this->input->post('second_mbbs_per'),
+                    'second_mbbs_year' => $this->input->post('second_mbbs_year'),
+    
+                    'third_mbbs_scored' => $this->input->post('third_mbbs_scored'),
+                    'third_mbbs_max' => $this->input->post('third_mbbs_max'),
+                    'third_mbbs_per' => $this->input->post('third_mbbs_per'),
+                    'third_mbbs_year' => $this->input->post('third_mbbs_year'),
+    
+                    'third_mbbs_scored2' => $this->input->post('third_mbbs_scored2'),
+                    'third_mbbs_max2' => $this->input->post('third_mbbs_max2'),
+                    'third_mbbs_per2' => $this->input->post('third_mbbs_per2'),
+                    'third_mbbs_year2' => $this->input->post('third_mbbs_year2'),
+    
+                    'med_total_scored' => $this->input->post('med_total_scored'),
+                    'med_total_per' => $this->input->post('med_total_per'),
+                    'med_total_year' => $this->input->post('med_total_year'),
+                    'med_total_max' => $this->input->post('med_total_max'),
+    
+                    'neet_reg' => $this->input->post('neet_reg'),
+                    'neet_rank' => $this->input->post('neet_rank'),
+                    'neet_marks' => $this->input->post('neet_marks'),
+                    'neet_phy_mark_obtained' => $this->input->post('neet_phy_mark_obtained'),
+                    'neet_chem_mark_obtained' => $this->input->post('neet_chem_mark_obtained'),
+                    'neet_bio_mark_biology' => $this->input->post('neet_bio_mark_biology'),
+                    'neet_percentile' => $this->input->post('neet_percentile'),
+                    'keam_roll_no' => $this->input->post('keam_roll_no'),
+                    'kerala_medical_rank' => $this->input->post('kerala_medical_rank'),
+                    'seat_type' => $this->input->post('seat_type'),
+    
+    
+                    'bank_account_no' => $this->input->post('bank_account_no'),
+                    'bank_name' => $this->input->post('bank_name'),
+                    'ifsc_code' => $this->input->post('ifsc_code'),
+                    'samagra_id' => $this->input->post('samagra_id'),
+                    'rte' => $this->input->post('rte'),
+                    // 'file'=>$this->input->post('file'),
+                    // 'father_pic'=>$this->input->post('father_pic'),
+                    // 'mother_pic'=>$this->input->post('mother_pic'),
+    
+    
+                    'note' => $this->input->post('note'),
+                    'scholarship' => $this->input->post('scholarship'),
+                    'action'=>$action
+    
+                );
+                $insert_id = $this->Temporary_admission_model->draft_user_details($data);
+                if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                    $fileInfo = pathinfo($_FILES["file"]["name"]);
+                    $img_name = time() . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'file' => 'uploads/temporary_admission/' . $img_name);
+                    
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
+                    $img_name = time() . "father" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'father_pic' => 'uploads/temporary_admission/' . $img_name);
+
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
+                    $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'mother_pic' => 'uploads/temporary_admission/' . $img_name);
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
+                    $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
+                    $img_name = time() . "mother" . '.' . $fileInfo['extension'];
+                    move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/temporary_admission/" . $img_name);
+                    $data_img = array('user_id' => $insert_id, 'guardian_pic' => 'uploads/temporary_admission/' . $img_name);
+                    $this->Temporary_admission_model->draft_user_details($data_img);
+                }
+                $image_arr = array();
+                if (!empty($_FILES['images']['name'][0])) {
+                    foreach ($_FILES['images']['name'] as $key => $name) {
+                        if ($_FILES['images']['error'][$key] == 0) {
+                            $file_name = $insert_id . '_' . time() . '_' . $key;
+                            $file_path = './uploads/temporary_admission/' . $file_name;
+                            $image_arr[] = $file_name;
+    
+    
+                            move_uploaded_file($_FILES['images']['tmp_name'][$key], $file_path);
+                        }
+                    }
+                    $image_arr = implode(',', $image_arr);
+                    $this->db->where('id', $insert_id);
+                    $query = $this->db->get('draft_user_details')->row();
+                    if ($query) {
+                        $this->db->where('user_id', $insert_id);
+                        $this->db->update('draft_user_details', ['documents' => $image_arr]);
+                    } else {
+    
+                        $this->db->insert('draft_user_details', [
+                            'user_id' => $insert_id,
+                            'documents' => $image_arr
+                        ]);
+                    }
+                }
+            }
+            else{
+                $getdetailsfromdraftuserdetails = $this->db->select('*')->from('draft_user_details')->where('user_id', $userdata['id'])->get()->row_array();
+                $getdetailsfromdraftuserdetails['action']='1';
+                $this->Temporary_admission_model->add($getdetailsfromdraftuserdetails);
+
+            }
+
+
+          
+            $this->session->set_flashdata('msg1', '<div class="alert alert-success">Student data has been Updated Successfully</div>');
+            redirect('admin/temporary_admission/home/'.$student_id);
+        }
+    }
+
     function search()
     {
 
@@ -326,21 +585,6 @@ class Temporary_admission extends Admin_Controller
         $data['userdata'] = $userdata['temporary_student'];
         $curuserdata = $userdata['admin'];
         $data['getstudentdetails'] = $this->temporary_admission_model->getstudentdetails($id);
-        $categoryamounts = $this->Temporary_admission_model->getamountbasedoncategory($id);
-        $paymentsucceess = $this->Temporary_admission_model->paymentsucceess($id);
-        $totalAmount = 0;
-        $paidAmount = 0;
-        $paid = false;
-        foreach ($categoryamounts as $amounts) {
-            $totalAmount += (int) ($amounts['amount']);
-        }
-        foreach ($paymentsucceess as $success) {
-            $paidAmount += (int) ($success['amount']);
-        }
-        if ($totalAmount == $paidAmount) {
-            $paid = true;
-        }
-        $data['paid'] = $paid;
         $category_list = $this->category_model->get();
         $data['category_list'] = $category_list;
         $data['userdata'] = $userdata['admin'];
@@ -375,12 +619,12 @@ class Temporary_admission extends Admin_Controller
             'temporary_student_id' => $id,
             'fee_details' => $fee_details
         );
-
+        
         $this->db->insert('payment_suceess', $data);
         $log = array(
             'user_name' => $userdata['admin']['username'],
             'user_id' => $userdata['admin']['id'],
-            'description' => "Manual Payment of " . $candidate_name->firstname . " " . $candidate_name->lastname,
+            'description' => "Manual Payment of " . $candidate_name->firstname . " " . $candidate_name->lastname ,
         );
         $this->Temporary_admission_model->getCreateLog($log);
         redirect('admin/temporary_admission/show/' . $id);
@@ -464,7 +708,7 @@ class Temporary_admission extends Admin_Controller
         $log = array(
             'user_name' => $userdata['admin']['username'],
             'user_id' => $userdata['admin']['id'],
-            'description' => $candidate_name->firstname . " " . $candidate_name->lastname . " " . "left",
+            'description' => $candidate_name->firstname . " " . $candidate_name->lastname. " ". "left",
         );
         $this->Temporary_admission_model->getCreateLog($log);
         echo ('success');
@@ -486,7 +730,8 @@ class Temporary_admission extends Admin_Controller
         $password = "test";
         $fullApi = 'http://prioritysms.a4add.com/api/sendhttp.php?authkey=341137A6fjmQ8YSgq95f588459P1&mobiles={num}&message={msg}&sender=AMCSFN&route=4&country=91&unicode=1&DLT_TE_ID={tid}';
         $tid = '1207162731815046564';
-        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";;
+        $msg = "AMCSFNCK B.Sc Nursing Application 2024-25. Your Applicant ID: " . $user_id . " and Password: " . $password . ".\n For more details www.amcsfnck.com or https://bit.ly/3AR0uPs";
+        ;
         $msg = urlencode($msg);
         $num = $phone;
         $api = str_replace(['{msg}', '{num}', '{tid}'], [$msg, $num, $tid], $fullApi);
@@ -681,84 +926,30 @@ class Temporary_admission extends Admin_Controller
     public function updateStatusinmail($id)
     {
         $this->db->where('id', $id);
-        $this->db->update('temporary_admission', ['financial_verification' => 1]);
+        $this->db->update('temporary_admission', ['status' => 3]);
         // $getpickedbyid=$this->db->select('picked_by_id')->from('upload_signature')->get()->row_array();
-
-        // $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
-
-
-
-
-
-        // if (count($result) > 0) {
-
-        //     $order_no = $result[0]['order_no'];
-        // } else {
-        //     $order_no = 0;
-        // }
-        // $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-
-        // // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
-        // if ($signer_details['picked_by_id'] == 1) {
-
-        //     $staff_details = $this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
-
-        //     $arr = [
-        //         'temp_user_id' => $id,
-        //         'sign_id' => $signer_details['id'],
-        //         'signer_email' => $staff_details['email'],
-        //         'order_no' => $signer_details['orders'],
-        //         'status' => 0
-        //     ];
-        // } else {
-
-        //     $arr = [
-        //         'temp_user_id' => $id,
-        //         'sign_id' => $signer_details['id'],
-        //         'signer_email' => $signer_details['mail'],
-        //         'order_no' => $signer_details['orders'],
-        //         'status' => 0
-        //     ];
-        // }
-
-
-
-
-
-        // $this->db->insert('temp_admission_approval', $arr);
-        // // $documentName = $this->createDocument($id);
-
-        // $documentName = $this->sampledocument($id, $order_no, $arr);
-
-        // $this->sendmail($documentName, $arr['signer_email'], $id);
-
-
-        // // $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
-
-        echo json_encode('success');
-    }
-
-    public function updateStatus($id)
-    {
-
-
-
-        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])
-            ->order_by('order_no', 'desc')
-            ->get('temp_admission_approval')
-            ->result_array();
-
-        $order_no = count($result) > 0 ? $result[0]['order_no'] : 0;
-
+        
+        $result = $this->db->where(['temp_user_id' => $id, 'status' => 1])->order_by('order_no', 'desc')->get('temp_admission_approval')->result_array();
+        
+        
+        
+        
+        
+        if (count($result) > 0) {
+            
+            $order_no = $result[0]['order_no'];
+            
+        } else {
+            $order_no = 0;
+            
+        }
         $signer_details = $this->db->where('orders', $order_no + 1)->get('upload_signature')->row_array();
-
+        
+        // $signer_details = $this->db->where('orders',$order_no+1)->get('upload_signature')->row_array();
         if ($signer_details['picked_by_id'] == 1) {
-            $staff_details = $this->db->select('temporary_admission.*, staff.*')
-                ->where('temporary_admission.id', $id)
-                ->join('staff', 'temporary_admission.picked_by = staff.id')
-                ->get('temporary_admission')
-                ->row_array();
-
+            
+            $staff_details = $this->db->select('temporary_admission.*,staff.*')->where('temporary_admission.id', $id)->join('staff', 'temporary_admission.picked_by=staff.id')->get('temporary_admission')->row_array();
+            
             $arr = [
                 'temp_user_id' => $id,
                 'sign_id' => $signer_details['id'],
@@ -766,36 +957,37 @@ class Temporary_admission extends Admin_Controller
                 'order_no' => $signer_details['orders'],
                 'status' => 0
             ];
+        } else {
+            
+            $arr = [
+                'temp_user_id' => $id,
+                'sign_id' => $signer_details['id'],
+                'signer_email' => $signer_details['mail'],
+                'order_no' => $signer_details['orders'],
+                'status' => 0
+            ];
+            
         }
-
+        
+        
+        
+        
+        
         $this->db->insert('temp_admission_approval', $arr);
-
-
+        // $documentName = $this->createDocument($id);
+        
         $documentName = $this->sampledocument($id, $order_no, $arr);
-        $this->initialapprove($documentName, $arr['signer_email'], $id);
-
-
-
-        $folderPath = './uploads/approved_documents/';
-        if (!is_dir($folderPath)) {
-            mkdir($folderPath, 0755, true);
-        }
-
-        $filePath = $documentName;
-        $candidate_name = $this->Temporary_admission_model->getCandidateName($id);
-        $userdata = $this->session->userdata();
-        $log = array(
-            'user_name' => $userdata['admin']['username'],
-            'user_id' => $userdata['admin']['id'],
-            'description' => $candidate_name->firstname . " " . $candidate_name->lastname . " " . "payment has been verified",
-        );
-        $this->Temporary_admission_model->getCreateLog($log);
-        $response_message = "Document has been saved to " . $filePath;
-
-        $this->updateStatusinmail($id);
-        echo json_encode(['message' => $response_message]);
+        
+        $this->sendmail($documentName, $arr['signer_email'], $id);
+        
+        
+        // $response_message = "Document processed and sent to " . $signer_details['mail'] . " for approval.";
+        
+        echo json_encode('success');
     }
-    public function cashierUpdateStatus($id)
+
+
+    public function updateStatus($id)
     {
 
         $this->db->where('id', $id);
@@ -846,13 +1038,14 @@ class Temporary_admission extends Admin_Controller
         $log = array(
             'user_name' => $userdata['admin']['username'],
             'user_id' => $userdata['admin']['id'],
-            'description' => $candidate_name->firstname . " " . $candidate_name->lastname . " " . "payment has been verified",
+            'description' => $candidate_name->firstname . " " . $candidate_name->lastname. " ". "payment has been verified",
         );
         $this->Temporary_admission_model->getCreateLog($log);
         $response_message = "Document has been saved to " . $filePath;
-
+        
         $this->updateStatusinmail($id);
         echo json_encode(['message' => $response_message]);
+       
     }
     public function initialapprove($documentName, $signermail, $id)
     {
@@ -1022,14 +1215,14 @@ class Temporary_admission extends Admin_Controller
 
 
 
-        $html .= "</body></html>";
+        $html .= "</body></html>"; 
 
         // Load the HTML content into Dompdf
         $dompdf->loadHtml($html);
 
         // Set paper size and orientation (optional)
         $dompdf->setPaper('A4', 'portrait');
-
+        
         // Render the PDF
         $dompdf->render();
         $file_name = $id . '_approval_' . time() . '.pdf';
