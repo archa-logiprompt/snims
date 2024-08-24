@@ -191,7 +191,7 @@ class TemporaryUser extends Temporary_Student_Controller
         // $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('admission_no', 'Admission Number', 'trim|required|xss_clean');
         // $this->form_validation->set_rules('kuhs_reg', 'centre or board registration', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('roll_no', 'Roll Number', 'trim|required|xss_clean');
         $this->form_validation->set_rules('class_id', 'Class Id', 'trim|required|xss_clean');
 
         // $this->form_validation->set_rules('section_id', 'Section Id', 'trim|required|xss_clean');
