@@ -514,7 +514,8 @@ class TemporaryUser extends Temporary_Student_Controller
                 if (!empty($_FILES['images']['name'][0])) {
                     foreach ($_FILES['images']['name'] as $key => $name) {
                         if ($_FILES['images']['error'][$key] == 0) {
-                            $file_name = $insert_id . '_' . time() . '_' . $key;
+                          $fileInfo = pathinfo($_FILES["image"]["name"]);
+                            $file_name = $insert_id . '_' . time() . '_' . $key  . '.' . $fileInfo['extension'];
                             $file_path = './uploads/temporary_admission/' . $file_name;
                             $image_arr[] = $file_name;
     
